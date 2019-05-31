@@ -1,0 +1,9 @@
+name: Property
+type: module
+description: Demonstrates how to create a property entity.
+package: WOTAPI
+core: 8.x
+# These modules are required by the tests, must be available at bootstrap time
+dependencies:
+  - drupal:options
+  - drupal:user

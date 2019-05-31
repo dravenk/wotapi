@@ -1,0 +1,11 @@
+# All action links for this module
+
+property.property_add:
+  # Which route will be called by the link
+  route_name: property.property_add
+  title: 'Add property'
+
+  # Where will the link appear, defined by route name.
+  appears_on:
+    - entity.property.collection
+    - entity.property.canonical

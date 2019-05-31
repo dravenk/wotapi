@@ -1,0 +1,11 @@
+# Define the menu links for this module
+
+entity.property.collection:
+  title: 'Property Entity'
+  route_name: entity.property.collection
+  description: 'List properties'
+property.admin.structure.settings:
+  title: 'Property settings'
+  description: 'Configure property entity'
+  route_name:  property.property_settings
+  parent: system.admin_structure
