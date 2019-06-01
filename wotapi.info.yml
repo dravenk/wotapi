@@ -1,0 +1,5 @@
+name: WOT-API
+type: module
+description: Web Thing API Implementation for drupal module.
+core: 8.x
+package: WOTAPI
