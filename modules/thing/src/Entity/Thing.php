@@ -211,7 +211,7 @@ class Thing extends ContentEntityBase implements ThingInterface {
     // Users with correct privileges can change the view and edit configuration.
     $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Name'))
-      ->setDescription(t('The name of the Thing entity.'))
+      ->setDescription(t('The name member is a human friendly string which describes the device.'))
       ->setSettings([
         'max_length' => 255,
         'text_processing' => 0,
@@ -230,9 +230,9 @@ class Thing extends ContentEntityBase implements ThingInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['first_name'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('First Name'))
-      ->setDescription(t('The first name of the Thing entity.'))
+    $fields['description'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Description'))
+      ->setDescription(t('The description member is a human friendly string which describes the device and its functions. '))
       ->setSettings([
         'max_length' => 255,
         'text_processing' => 0,
@@ -277,28 +277,27 @@ class Thing extends ContentEntityBase implements ThingInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-    // Role field for the thing.
-    // The values shown in options are 'administrator' and 'user'.
-    $fields['role'] = BaseFieldDefinition::create('list_string')
-      ->setLabel(t('Role'))
-      ->setDescription(t('The role of the Thing entity.'))
-      ->setSettings([
-        'allowed_values' => [
-          'administrator' => 'administrator',
-          'user' => 'user',
-        ],
-      ])
-      // Set the default value of this field to 'user'.
-      ->setDefaultValue('user')
+    // Owner property of the thing.
+    $fields['properties'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Property'))
+      ->setDescription(t('The Property.'))
+      ->setSetting('target_type', 'property')
+      ->setSetting('handler', 'default')
       ->setDisplayOptions('view', [
         'label' => 'above',
-        'type' => 'string',
-        'weight' => -2,
+        'type' => 'property',
+        'weight' => -3,
       ])
       ->setDisplayOptions('form', [
-        'type' => 'options_select',
-        'weight' => -2,
+        'type' => 'entity_reference_autocomplete',
+        'settings' => [
+          'match_operator' => 'CONTAINS',
+          'size' => 60,
+          'placeholder' => '',
+        ],
+        'weight' => -3,
       ])
+      ->setCardinality(BaseFieldDefinition::CARDINALITY_UNLIMITED)
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 

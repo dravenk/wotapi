@@ -77,8 +77,7 @@ class PropertyListBuilder extends EntityListBuilder {
   public function buildHeader() {
     $header['id'] = $this->t('PropertyID');
     $header['name'] = $this->t('Name');
-    $header['first_name'] = $this->t('First Name');
-    $header['role'] = $this->t('Role');
+    $header['description'] = $this->t('Description');
     return $header + parent::buildHeader();
   }
 
@@ -89,8 +88,7 @@ class PropertyListBuilder extends EntityListBuilder {
     /* @var $entity \Drupal\property\Entity\Property */
     $row['id'] = $entity->id();
     $row['name'] = $entity->link();
-    $row['first_name'] = $entity->first_name->value;
-    $row['role'] = $entity->role->value;
+    $row['Description'] = $entity->description->value;
     return $row + parent::buildRow($entity);
   }
 

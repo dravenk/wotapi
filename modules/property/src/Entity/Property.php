@@ -211,7 +211,7 @@ class Property extends ContentEntityBase implements PropertyInterface {
     // Users with correct privileges can change the view and edit configuration.
     $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Name'))
-      ->setDescription(t('The name of the Property entity.'))
+      ->setDescription(t('The name member is a human friendly string which describes the device. '))
       ->setSettings([
         'max_length' => 255,
         'text_processing' => 0,
@@ -230,9 +230,9 @@ class Property extends ContentEntityBase implements PropertyInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['first_name'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('First Name'))
-      ->setDescription(t('The first name of the Property entity.'))
+    $fields['description'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Description'))
+      ->setDescription(t('The description member is a human friendly string which describes the device and its functions. '))
       ->setSettings([
         'max_length' => 255,
         'text_processing' => 0,
@@ -273,31 +273,6 @@ class Property extends ContentEntityBase implements PropertyInterface {
           'placeholder' => '',
         ],
         'weight' => -3,
-      ])
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayConfigurable('view', TRUE);
-
-    // Role field for the property.
-    // The values shown in options are 'administrator' and 'user'.
-    $fields['role'] = BaseFieldDefinition::create('list_string')
-      ->setLabel(t('Role'))
-      ->setDescription(t('The role of the Property entity.'))
-      ->setSettings([
-        'allowed_values' => [
-          'administrator' => 'administrator',
-          'user' => 'user',
-        ],
-      ])
-      // Set the default value of this field to 'user'.
-      ->setDefaultValue('user')
-      ->setDisplayOptions('view', [
-        'label' => 'above',
-        'type' => 'string',
-        'weight' => -2,
-      ])
-      ->setDisplayOptions('form', [
-        'type' => 'options_select',
-        'weight' => -2,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);

@@ -77,8 +77,8 @@ class ThingListBuilder extends EntityListBuilder {
   public function buildHeader() {
     $header['id'] = $this->t('ThingID');
     $header['name'] = $this->t('Name');
-    $header['first_name'] = $this->t('First Name');
-    $header['role'] = $this->t('Role');
+    $header['description'] = $this->t('Description');
+//    $header['properties'] = $this->t('Properties');
     return $header + parent::buildHeader();
   }
 
@@ -89,8 +89,8 @@ class ThingListBuilder extends EntityListBuilder {
     /* @var $entity \Drupal\thing\Entity\Thing */
     $row['id'] = $entity->id();
     $row['name'] = $entity->link();
-    $row['first_name'] = $entity->first_name->value;
-    $row['role'] = $entity->role->value;
+    $row['description'] = $entity->description->value;
+//    $row['properties'] = $entity->properties->value;
     return $row + parent::buildRow($entity);
   }
 
