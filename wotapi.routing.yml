@@ -1,0 +1,2 @@
+route_callbacks:
+  - '\Drupal\wotapi\Routing\Routes::routes'

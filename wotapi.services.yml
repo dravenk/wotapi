@@ -1,0 +1,31 @@
+parameters:
+  wotapi.base_path: /wotapi
+
+services:
+  wotapi.resource_type.repository:
+    class: Drupal\wotapi\ResourceType\ResourceTypeRepository
+    arguments: ['@entity_type.manager', '@entity_type.bundle.info', '@entity_field.manager', '@cache.wotapi_resource_types']
+  wotapi.route_enhancer:
+    class: Drupal\wotapi\Routing\RouteEnhancer
+    tags:
+      - { name: route_enhancer }
+
+  # Cache.
+  cache.wotapi_resource_types:
+    class: Drupal\Core\Cache\MemoryCache\MemoryCache
+    # We need this to add this to the Drupal's cache_tags.invalidator service.
+    # This way it can invalidate the data in here based on tags.
+    tags: [{ name: cache.bin }]
+
+  # Controller.
+  wotapi.entity_resource:
+    class: Drupal\wotapi\Controller\EntityResource
+    arguments:
+      - '@entity_type.manager'
+      - '@entity_field.manager'
+      - '@wotapi.resource_type.repository'
+      - '@renderer'
+      - '@entity.repository'
+      - '@jsonapi.serializer'
+      - '@datetime.time'
+      - '@current_user'
