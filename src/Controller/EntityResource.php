@@ -410,278 +410,278 @@ class EntityResource {
     $response->addCacheableDependency($entity);
     return $response;
   }
+//
+//  /**
+//   * Adds a relationship to a to-many relationship.
+//   *
+//   * @param \Drupal\wotapi\ResourceType\ResourceType $resource_type
+//   *   The base WOT:API resource type for the request to be served.
+//   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
+//   *   The requested entity.
+//   * @param string $related
+//   *   The related field name.
+//   * @param \Symfony\Component\HttpFoundation\Request $request
+//   *   The request object.
+//   *
+//   * @return \Drupal\wotapi\ResourceResponse
+//   *   The response.
+//   *
+//   * @throws \Drupal\wotapi\Exception\EntityAccessDeniedHttpException
+//   *   Thrown when the current user is not allowed to PATCH the selected
+//   *   field(s).
+//   * @throws \Symfony\Component\HttpKernel\Exception\ConflictHttpException
+//   *   Thrown when POSTing to a "to-one" relationship.
+//   * @throws \Drupal\Core\Entity\EntityStorageException
+//   *   Thrown when the underlying entity cannot be saved.
+//   * @throws \Drupal\wotapi\Exception\UnprocessableHttpEntityException
+//   *   Thrown when the updated entity does not pass validation.
+//   */
+//  public function addToRelationshipData(ResourceType $resource_type, FieldableEntityInterface $entity, $related, Request $request) {
+//    $resource_identifiers = $this->deserialize($resource_type, $request, ResourceIdentifier::class, $related);
+//    $related = $resource_type->getInternalName($related);
+//    // According to the specification, you are only allowed to POST to a
+//    // relationship if it is a to-many relationship.
+//    /* @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
+//    $field_list = $entity->{$related};
+//    /* @var \Drupal\field\Entity\FieldConfig $field_definition */
+//    $field_definition = $field_list->getFieldDefinition();
+//    $is_multiple = $field_definition->getFieldStorageDefinition()->isMultiple();
+//    if (!$is_multiple) {
+//      throw new ConflictHttpException(sprintf('You can only POST to to-many properties. %s is a to-one relationship.', $related));
+//    }
+//
+//    $original_resource_identifiers = ResourceIdentifier::toResourceIdentifiersWithArityRequired($field_list);
+//    $new_resource_identifiers = array_udiff(
+//      ResourceIdentifier::deduplicate(array_merge($original_resource_identifiers, $resource_identifiers)),
+//      $original_resource_identifiers,
+//      [ResourceIdentifier::class, 'compare']
+//    );
+//
+//    // There are no properties that need to be added so we can exit early.
+//    if (empty($new_resource_identifiers)) {
+//      $status = static::relationshipResponseRequiresBody($resource_identifiers, $original_resource_identifiers) ? 200 : 204;
+//      return $this->getRelationship($resource_type, $entity, $related, $request, $status);
+//    }
+//
+//    $main_property_name = $field_definition->getItemDefinition()->getMainPropertyName();
+//    foreach ($new_resource_identifiers as $new_resource_identifier) {
+//      $new_field_value = [$main_property_name => $this->getEntityFromResourceIdentifier($new_resource_identifier)->id()];
+//      // Remove `arity` from the received extra properties, otherwise this
+//      // will fail field validation.
+//      $new_field_value += array_diff_key($new_resource_identifier->getMeta(), array_flip([ResourceIdentifier::ARITY_KEY]));
+//      $field_list->appendItem($new_field_value);
+//    }
+//
+//    $this->validate($entity);
+//    $entity->save();
+//
+//    $final_resource_identifiers = ResourceIdentifier::toResourceIdentifiersWithArityRequired($field_list);
+//    $status = static::relationshipResponseRequiresBody($resource_identifiers, $final_resource_identifiers) ? 200 : 204;
+//    return $this->getRelationship($resource_type, $entity, $related, $request, $status);
+//  }
 
-  /**
-   * Adds a relationship to a to-many relationship.
-   *
-   * @param \Drupal\wotapi\ResourceType\ResourceType $resource_type
-   *   The base WOT:API resource type for the request to be served.
-   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
-   *   The requested entity.
-   * @param string $related
-   *   The related field name.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
-   *
-   * @return \Drupal\wotapi\ResourceResponse
-   *   The response.
-   *
-   * @throws \Drupal\wotapi\Exception\EntityAccessDeniedHttpException
-   *   Thrown when the current user is not allowed to PATCH the selected
-   *   field(s).
-   * @throws \Symfony\Component\HttpKernel\Exception\ConflictHttpException
-   *   Thrown when POSTing to a "to-one" relationship.
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   *   Thrown when the underlying entity cannot be saved.
-   * @throws \Drupal\wotapi\Exception\UnprocessableHttpEntityException
-   *   Thrown when the updated entity does not pass validation.
-   */
-  public function addToRelationshipData(ResourceType $resource_type, FieldableEntityInterface $entity, $related, Request $request) {
-    $resource_identifiers = $this->deserialize($resource_type, $request, ResourceIdentifier::class, $related);
-    $related = $resource_type->getInternalName($related);
-    // According to the specification, you are only allowed to POST to a
-    // relationship if it is a to-many relationship.
-    /* @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
-    $field_list = $entity->{$related};
-    /* @var \Drupal\field\Entity\FieldConfig $field_definition */
-    $field_definition = $field_list->getFieldDefinition();
-    $is_multiple = $field_definition->getFieldStorageDefinition()->isMultiple();
-    if (!$is_multiple) {
-      throw new ConflictHttpException(sprintf('You can only POST to to-many properties. %s is a to-one relationship.', $related));
-    }
+//  /**
+//   * Updates the relationship of an entity.
+//   *
+//   * @param \Drupal\wotapi\ResourceType\ResourceType $resource_type
+//   *   The base WOT:API resource type for the request to be served.
+//   * @param \Drupal\Core\Entity\EntityInterface $entity
+//   *   The requested entity.
+//   * @param string $related
+//   *   The related field name.
+//   * @param \Symfony\Component\HttpFoundation\Request $request
+//   *   The request object.
+//   *
+//   * @return \Drupal\wotapi\ResourceResponse
+//   *   The response.
+//   *
+//   * @throws \Drupal\Core\Entity\EntityStorageException
+//   *   Thrown when the underlying entity cannot be saved.
+//   * @throws \Drupal\wotapi\Exception\UnprocessableHttpEntityException
+//   *   Thrown when the updated entity does not pass validation.
+//   */
+//  public function replaceRelationshipData(ResourceType $resource_type, EntityInterface $entity, $related, Request $request) {
+//    $resource_identifiers = $this->deserialize($resource_type, $request, ResourceIdentifier::class, $related);
+//    $related = $resource_type->getInternalName($related);
+//    /* @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $resource_identifiers */
+//    // According to the specification, PATCH works a little bit different if the
+//    // relationship is to-one or to-many.
+//    /* @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
+//    $field_list = $entity->{$related};
+//    $field_definition = $field_list->getFieldDefinition();
+//    $is_multiple = $field_definition->getFieldStorageDefinition()->isMultiple();
+//    $method = $is_multiple ? 'doPatchMultipleRelationship' : 'doPatchIndividualRelationship';
+//    $this->{$method}($entity, $resource_identifiers, $field_definition);
+//    $this->validate($entity);
+//    $entity->save();
+//    $requires_response = static::relationshipResponseRequiresBody($resource_identifiers, ResourceIdentifier::toResourceIdentifiersWithArityRequired($field_list));
+//    return $this->getRelationship($resource_type, $entity, $related, $request, $requires_response ? 200 : 204);
+//  }
+//
+//  /**
+//   * Update a to-one relationship.
+//   *
+//   * @param \Drupal\Core\Entity\EntityInterface $entity
+//   *   The requested entity.
+//   * @param \Drupal\wotapi\WotApiResource\ResourceIdentifier[] $resource_identifiers
+//   *   The client-sent resource identifiers which should be set on the given
+//   *   entity. Should be an empty array or an array with a single value.
+//   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+//   *   The field definition of the entity field to be updated.
+//   *
+//   * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
+//   *   Thrown when a "to-one" relationship is not provided.
+//   */
+//  protected function doPatchIndividualRelationship(EntityInterface $entity, array $resource_identifiers, FieldDefinitionInterface $field_definition) {
+//    if (count($resource_identifiers) > 1) {
+//      throw new BadRequestHttpException(sprintf('Provide a single relationship so to-one relationship fields (%s).', $field_definition->getName()));
+//    }
+//    $this->doPatchMultipleRelationship($entity, $resource_identifiers, $field_definition);
+//  }
+//
+//  /**
+//   * Update a to-many relationship.
+//   *
+//   * @param \Drupal\Core\Entity\EntityInterface $entity
+//   *   The requested entity.
+//   * @param \Drupal\wotapi\WotApiResource\ResourceIdentifier[] $resource_identifiers
+//   *   The client-sent resource identifiers which should be set on the given
+//   *   entity.
+//   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+//   *   The field definition of the entity field to be updated.
+//   */
+//  protected function doPatchMultipleRelationship(EntityInterface $entity, array $resource_identifiers, FieldDefinitionInterface $field_definition) {
+//    $main_property_name = $field_definition->getItemDefinition()->getMainPropertyName();
+//    $entity->{$field_definition->getName()} = array_map(function (ResourceIdentifier $resource_identifier) use ($main_property_name) {
+//      $field_properties = [$main_property_name => $this->getEntityFromResourceIdentifier($resource_identifier)->id()];
+//      // Remove `arity` from the received extra properties, otherwise this
+//      // will fail field validation.
+//      $field_properties += array_diff_key($resource_identifier->getMeta(), array_flip([ResourceIdentifier::ARITY_KEY]));
+//      return $field_properties;
+//    }, $resource_identifiers);
+//  }
 
-    $original_resource_identifiers = ResourceIdentifier::toResourceIdentifiersWithArityRequired($field_list);
-    $new_resource_identifiers = array_udiff(
-      ResourceIdentifier::deduplicate(array_merge($original_resource_identifiers, $resource_identifiers)),
-      $original_resource_identifiers,
-      [ResourceIdentifier::class, 'compare']
-    );
+//  /**
+//   * Deletes the relationship of an entity.
+//   *
+//   * @param \Drupal\wotapi\ResourceType\ResourceType $resource_type
+//   *   The base WOT:API resource type for the request to be served.
+//   * @param \Drupal\Core\Entity\EntityInterface $entity
+//   *   The requested entity.
+//   * @param string $related
+//   *   The related field name.
+//   * @param \Symfony\Component\HttpFoundation\Request $request
+//   *   The request object.
+//   *
+//   * @return \Drupal\wotapi\ResourceResponse
+//   *   The response.
+//   *
+//   * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
+//   *   Thrown when not body was provided for the DELETE operation.
+//   * @throws \Symfony\Component\HttpKernel\Exception\ConflictHttpException
+//   *   Thrown when deleting a "to-one" relationship.
+//   * @throws \Drupal\Core\Entity\EntityStorageException
+//   *   Thrown when the underlying entity cannot be saved.
+//   */
+//  public function removeFromRelationshipData(ResourceType $resource_type, EntityInterface $entity, $related, Request $request) {
+//    $resource_identifiers = $this->deserialize($resource_type, $request, ResourceIdentifier::class, $related);
+//    /* @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
+//    $field_list = $entity->{$related};
+//    $is_multiple = $field_list->getFieldDefinition()
+//      ->getFieldStorageDefinition()
+//      ->isMultiple();
+//    if (!$is_multiple) {
+//      throw new ConflictHttpException(sprintf('You can only DELETE from to-many properties. %s is a to-one relationship.', $related));
+//    }
+//
+//    // Compute the list of current values and remove the ones in the payload.
+//    $original_resource_identifiers = ResourceIdentifier::toResourceIdentifiersWithArityRequired($field_list);
+//    $removed_resource_identifiers = array_uintersect($resource_identifiers, $original_resource_identifiers, [ResourceIdentifier::class, 'compare']);
+//    $deltas_to_be_removed = [];
+//    foreach ($removed_resource_identifiers as $removed_resource_identifier) {
+//      foreach ($original_resource_identifiers as $delta => $existing_resource_identifier) {
+//        // Identify the field item deltas which should be removed.
+//        if (ResourceIdentifier::isDuplicate($removed_resource_identifier, $existing_resource_identifier)) {
+//          $deltas_to_be_removed[] = $delta;
+//        }
+//      }
+//    }
+//    // Field item deltas are reset when an item is removed. This removes
+//    // items in descending order so that the deltas yet to be removed will
+//    // continue to exist.
+//    rsort($deltas_to_be_removed);
+//    foreach ($deltas_to_be_removed as $delta) {
+//      $field_list->removeItem($delta);
+//    }
+//
+//    // Save the entity and return the response object.
+//    static::validate($entity);
+//    $entity->save();
+//    return $this->getRelationship($resource_type, $entity, $related, $request, 204);
+//  }
 
-    // There are no properties that need to be added so we can exit early.
-    if (empty($new_resource_identifiers)) {
-      $status = static::relationshipResponseRequiresBody($resource_identifiers, $original_resource_identifiers) ? 200 : 204;
-      return $this->getRelationship($resource_type, $entity, $related, $request, $status);
-    }
-
-    $main_property_name = $field_definition->getItemDefinition()->getMainPropertyName();
-    foreach ($new_resource_identifiers as $new_resource_identifier) {
-      $new_field_value = [$main_property_name => $this->getEntityFromResourceIdentifier($new_resource_identifier)->id()];
-      // Remove `arity` from the received extra properties, otherwise this
-      // will fail field validation.
-      $new_field_value += array_diff_key($new_resource_identifier->getMeta(), array_flip([ResourceIdentifier::ARITY_KEY]));
-      $field_list->appendItem($new_field_value);
-    }
-
-    $this->validate($entity);
-    $entity->save();
-
-    $final_resource_identifiers = ResourceIdentifier::toResourceIdentifiersWithArityRequired($field_list);
-    $status = static::relationshipResponseRequiresBody($resource_identifiers, $final_resource_identifiers) ? 200 : 204;
-    return $this->getRelationship($resource_type, $entity, $related, $request, $status);
-  }
-
-  /**
-   * Updates the relationship of an entity.
-   *
-   * @param \Drupal\wotapi\ResourceType\ResourceType $resource_type
-   *   The base WOT:API resource type for the request to be served.
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The requested entity.
-   * @param string $related
-   *   The related field name.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
-   *
-   * @return \Drupal\wotapi\ResourceResponse
-   *   The response.
-   *
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   *   Thrown when the underlying entity cannot be saved.
-   * @throws \Drupal\wotapi\Exception\UnprocessableHttpEntityException
-   *   Thrown when the updated entity does not pass validation.
-   */
-  public function replaceRelationshipData(ResourceType $resource_type, EntityInterface $entity, $related, Request $request) {
-    $resource_identifiers = $this->deserialize($resource_type, $request, ResourceIdentifier::class, $related);
-    $related = $resource_type->getInternalName($related);
-    /* @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $resource_identifiers */
-    // According to the specification, PATCH works a little bit different if the
-    // relationship is to-one or to-many.
-    /* @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
-    $field_list = $entity->{$related};
-    $field_definition = $field_list->getFieldDefinition();
-    $is_multiple = $field_definition->getFieldStorageDefinition()->isMultiple();
-    $method = $is_multiple ? 'doPatchMultipleRelationship' : 'doPatchIndividualRelationship';
-    $this->{$method}($entity, $resource_identifiers, $field_definition);
-    $this->validate($entity);
-    $entity->save();
-    $requires_response = static::relationshipResponseRequiresBody($resource_identifiers, ResourceIdentifier::toResourceIdentifiersWithArityRequired($field_list));
-    return $this->getRelationship($resource_type, $entity, $related, $request, $requires_response ? 200 : 204);
-  }
-
-  /**
-   * Update a to-one relationship.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The requested entity.
-   * @param \Drupal\wotapi\WotApiResource\ResourceIdentifier[] $resource_identifiers
-   *   The client-sent resource identifiers which should be set on the given
-   *   entity. Should be an empty array or an array with a single value.
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
-   *   The field definition of the entity field to be updated.
-   *
-   * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
-   *   Thrown when a "to-one" relationship is not provided.
-   */
-  protected function doPatchIndividualRelationship(EntityInterface $entity, array $resource_identifiers, FieldDefinitionInterface $field_definition) {
-    if (count($resource_identifiers) > 1) {
-      throw new BadRequestHttpException(sprintf('Provide a single relationship so to-one relationship fields (%s).', $field_definition->getName()));
-    }
-    $this->doPatchMultipleRelationship($entity, $resource_identifiers, $field_definition);
-  }
-
-  /**
-   * Update a to-many relationship.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The requested entity.
-   * @param \Drupal\wotapi\WotApiResource\ResourceIdentifier[] $resource_identifiers
-   *   The client-sent resource identifiers which should be set on the given
-   *   entity.
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
-   *   The field definition of the entity field to be updated.
-   */
-  protected function doPatchMultipleRelationship(EntityInterface $entity, array $resource_identifiers, FieldDefinitionInterface $field_definition) {
-    $main_property_name = $field_definition->getItemDefinition()->getMainPropertyName();
-    $entity->{$field_definition->getName()} = array_map(function (ResourceIdentifier $resource_identifier) use ($main_property_name) {
-      $field_properties = [$main_property_name => $this->getEntityFromResourceIdentifier($resource_identifier)->id()];
-      // Remove `arity` from the received extra properties, otherwise this
-      // will fail field validation.
-      $field_properties += array_diff_key($resource_identifier->getMeta(), array_flip([ResourceIdentifier::ARITY_KEY]));
-      return $field_properties;
-    }, $resource_identifiers);
-  }
-
-  /**
-   * Deletes the relationship of an entity.
-   *
-   * @param \Drupal\wotapi\ResourceType\ResourceType $resource_type
-   *   The base WOT:API resource type for the request to be served.
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The requested entity.
-   * @param string $related
-   *   The related field name.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
-   *
-   * @return \Drupal\wotapi\ResourceResponse
-   *   The response.
-   *
-   * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
-   *   Thrown when not body was provided for the DELETE operation.
-   * @throws \Symfony\Component\HttpKernel\Exception\ConflictHttpException
-   *   Thrown when deleting a "to-one" relationship.
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   *   Thrown when the underlying entity cannot be saved.
-   */
-  public function removeFromRelationshipData(ResourceType $resource_type, EntityInterface $entity, $related, Request $request) {
-    $resource_identifiers = $this->deserialize($resource_type, $request, ResourceIdentifier::class, $related);
-    /* @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
-    $field_list = $entity->{$related};
-    $is_multiple = $field_list->getFieldDefinition()
-      ->getFieldStorageDefinition()
-      ->isMultiple();
-    if (!$is_multiple) {
-      throw new ConflictHttpException(sprintf('You can only DELETE from to-many properties. %s is a to-one relationship.', $related));
-    }
-
-    // Compute the list of current values and remove the ones in the payload.
-    $original_resource_identifiers = ResourceIdentifier::toResourceIdentifiersWithArityRequired($field_list);
-    $removed_resource_identifiers = array_uintersect($resource_identifiers, $original_resource_identifiers, [ResourceIdentifier::class, 'compare']);
-    $deltas_to_be_removed = [];
-    foreach ($removed_resource_identifiers as $removed_resource_identifier) {
-      foreach ($original_resource_identifiers as $delta => $existing_resource_identifier) {
-        // Identify the field item deltas which should be removed.
-        if (ResourceIdentifier::isDuplicate($removed_resource_identifier, $existing_resource_identifier)) {
-          $deltas_to_be_removed[] = $delta;
-        }
-      }
-    }
-    // Field item deltas are reset when an item is removed. This removes
-    // items in descending order so that the deltas yet to be removed will
-    // continue to exist.
-    rsort($deltas_to_be_removed);
-    foreach ($deltas_to_be_removed as $delta) {
-      $field_list->removeItem($delta);
-    }
-
-    // Save the entity and return the response object.
-    static::validate($entity);
-    $entity->save();
-    return $this->getRelationship($resource_type, $entity, $related, $request, 204);
-  }
-
-  /**
-   * Deserializes a request body, if any.
-   *
-   * @param \Drupal\wotapi\ResourceType\ResourceType $resource_type
-   *   The WOT:API resource type for the current request.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
-   * @param string $class
-   *   The class into which the request data needs to be deserialized.
-   * @param string $relationship_field_name
-   *   The public relationship field name of the data to be deserialized if the
-   *   incoming request is for a relationship update. Not required for non-
-   *   relationship requests.
-   *
-   * @return array
-   *   An object normalization.
-   *
-   * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
-   *   Thrown if the request body cannot be decoded, or when no request body was
-   *   provided with a POST or PATCH request.
-   * @throws \Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException
-   *   Thrown if the request body cannot be denormalized.
-   */
-  protected function deserialize(ResourceType $resource_type, Request $request, $class, $relationship_field_name = NULL) {
-    assert($class === WotApiDocumentTopLevel::class || $class === ResourceIdentifier::class && !empty($relationship_field_name) && is_string($relationship_field_name));
-    $received = (string) $request->getContent();
-    if (!$received) {
-      assert($request->isMethod('POST') || $request->isMethod('PATCH') || $request->isMethod('DELETE'));
-      if ($request->isMethod('DELETE') && $relationship_field_name) {
-        throw new BadRequestHttpException(sprintf('You need to provide a body for DELETE operations on a relationship (%s).', $relationship_field_name));
-      }
-      else {
-        throw new BadRequestHttpException('Empty request body.');
-      }
-    }
-    // First decode the request data. We can then determine if the serialized
-    // data was malformed.
-    try {
-      $decoded = $this->serializer->decode($received, 'api_json');
-    }
-    catch (UnexpectedValueException $e) {
-      // If an exception was thrown at this stage, there was a problem decoding
-      // the data. Throw a 400 HTTP exception.
-      throw new BadRequestHttpException($e->getMessage());
-    }
-
-    try {
-      $context = ['resource_type' => $resource_type];
-      if ($relationship_field_name) {
-        $context['related'] = $resource_type->getInternalName($relationship_field_name);
-      }
-      return $this->serializer->denormalize($decoded, $class, 'api_json', $context);
-    }
-    // These two serialization exception types mean there was a problem with
-    // the structure of the decoded data and it's not valid.
-    catch (UnexpectedValueException $e) {
-      throw new UnprocessableHttpEntityException($e->getMessage());
-    }
-    catch (InvalidArgumentException $e) {
-      throw new UnprocessableHttpEntityException($e->getMessage());
-    }
-  }
+//  /**
+//   * Deserializes a request body, if any.
+//   *
+//   * @param \Drupal\wotapi\ResourceType\ResourceType $resource_type
+//   *   The WOT:API resource type for the current request.
+//   * @param \Symfony\Component\HttpFoundation\Request $request
+//   *   The request object.
+//   * @param string $class
+//   *   The class into which the request data needs to be deserialized.
+//   * @param string $relationship_field_name
+//   *   The public relationship field name of the data to be deserialized if the
+//   *   incoming request is for a relationship update. Not required for non-
+//   *   relationship requests.
+//   *
+//   * @return array
+//   *   An object normalization.
+//   *
+//   * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
+//   *   Thrown if the request body cannot be decoded, or when no request body was
+//   *   provided with a POST or PATCH request.
+//   * @throws \Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException
+//   *   Thrown if the request body cannot be denormalized.
+//   */
+//  protected function deserialize(ResourceType $resource_type, Request $request, $class, $relationship_field_name = NULL) {
+//    assert($class === WotApiDocumentTopLevel::class || $class === ResourceIdentifier::class && !empty($relationship_field_name) && is_string($relationship_field_name));
+//    $received = (string) $request->getContent();
+//    if (!$received) {
+//      assert($request->isMethod('POST') || $request->isMethod('PATCH') || $request->isMethod('DELETE'));
+//      if ($request->isMethod('DELETE') && $relationship_field_name) {
+//        throw new BadRequestHttpException(sprintf('You need to provide a body for DELETE operations on a relationship (%s).', $relationship_field_name));
+//      }
+//      else {
+//        throw new BadRequestHttpException('Empty request body.');
+//      }
+//    }
+//    // First decode the request data. We can then determine if the serialized
+//    // data was malformed.
+//    try {
+//      $decoded = $this->serializer->decode($received, 'api_json');
+//    }
+//    catch (UnexpectedValueException $e) {
+//      // If an exception was thrown at this stage, there was a problem decoding
+//      // the data. Throw a 400 HTTP exception.
+//      throw new BadRequestHttpException($e->getMessage());
+//    }
+//
+//    try {
+//      $context = ['resource_type' => $resource_type];
+//      if ($relationship_field_name) {
+//        $context['related'] = $resource_type->getInternalName($relationship_field_name);
+//      }
+//      return $this->serializer->denormalize($decoded, $class, 'api_json', $context);
+//    }
+//    // These two serialization exception types mean there was a problem with
+//    // the structure of the decoded data and it's not valid.
+//    catch (UnexpectedValueException $e) {
+//      throw new UnprocessableHttpEntityException($e->getMessage());
+//    }
+//    catch (InvalidArgumentException $e) {
+//      throw new UnprocessableHttpEntityException($e->getMessage());
+//    }
+//  }
 
   /**
    * Gets a basic query for a collection.
@@ -788,22 +788,22 @@ class EntityResource {
     return $targeted_resource;
   }
 
-  /**
-   * Determines if the client needs to be updated with new relationship data.
-   *
-   * @param array $received_resource_identifiers
-   *   The array of resource identifiers given by the client.
-   * @param array $final_resource_identifiers
-   *   The final array of resource identifiers after applying the requested
-   *   changes.
-   *
-   * @return bool
-   *   Whether the final array of resource identifiers is different than the
-   *   client-sent data.
-   */
-  protected static function relationshipResponseRequiresBody(array $received_resource_identifiers, array $final_resource_identifiers) {
-    return !empty(array_udiff($final_resource_identifiers, $received_resource_identifiers, [ResourceIdentifier::class, 'compare']));
-  }
+//  /**
+//   * Determines if the client needs to be updated with new relationship data.
+//   *
+//   * @param array $received_resource_identifiers
+//   *   The array of resource identifiers given by the client.
+//   * @param array $final_resource_identifiers
+//   *   The final array of resource identifiers after applying the requested
+//   *   changes.
+//   *
+//   * @return bool
+//   *   Whether the final array of resource identifiers is different than the
+//   *   client-sent data.
+//   */
+//  protected static function relationshipResponseRequiresBody(array $received_resource_identifiers, array $final_resource_identifiers) {
+//    return !empty(array_udiff($final_resource_identifiers, $received_resource_identifiers, [ResourceIdentifier::class, 'compare']));
+//  }
 
   /**
    * Builds a response with the appropriate wrapped document.

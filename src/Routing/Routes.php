@@ -228,15 +228,17 @@ class Routes implements ContainerInjectionInterface {
       $relationship_route->addDefaults(['related' => $relationship_field_name]);
       $relationship_route->setRequirement(RelationshipFieldAccess::ROUTE_REQUIREMENT_KEY, $relationship_field_name);
       $relationship_route->setRequirement('_csrf_request_header_token', 'TRUE');
-      $relationship_route_methods = $resource_type->isMutable()
-        ? ['GET', 'POST', 'PATCH', 'DELETE']
-        : ['GET'];
-      $relationship_controller_methods = [
-        'GET' => 'getRelationship',
-        'POST' => 'addToRelationshipData',
-        'PATCH' => 'replaceRelationshipData',
-        'DELETE' => 'removeFromRelationshipData',
-      ];
+//      $relationship_route_methods = $resource_type->isMutable()
+//        ? ['GET', 'POST', 'PATCH', 'DELETE']
+//        : ['GET'];
+//      $relationship_controller_methods = [
+//        'GET' => 'getRelationship',
+//        'POST' => 'addToRelationshipData',
+//        'PATCH' => 'replaceRelationshipData',
+//        'DELETE' => 'removeFromRelationshipData',
+//      ];
+      $relationship_route_methods =  ['GET'];
+      $relationship_controller_methods = ['GET' => 'getRelationship'];
       foreach ($relationship_route_methods as $method) {
         $method_specific_relationship_route = clone $relationship_route;
         $method_specific_relationship_route->addDefaults([RouteObjectInterface::CONTROLLER_NAME => static::CONTROLLER_SERVICE_NAME . ":{$relationship_controller_methods[$method]}"]);
