@@ -1,0 +1,7 @@
+wotapi.settings:
+  type: config_object
+  label: 'WOT:API settings'
+  mapping:
+    read_only:
+      type: boolean
+      label: 'Restrict WOT:API to only read operations'

@@ -3,7 +3,7 @@
 namespace Drupal\wotapi\WotApiResource;
 
 use Drupal\Component\Assertion\Inspector;
-//use Drupal\wotapi\Exception\EntityAccessDeniedHttpException;
+use Drupal\wotapi\Exception\EntityAccessDeniedHttpException;
 
 /**
  * Represents the `data` and `included` objects of a top-level object.

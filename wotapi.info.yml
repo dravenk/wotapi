@@ -1,5 +1,8 @@
-name: WOT-API
+name: WOT:API
 type: module
-description: Web Thing API Implementation for drupal module.
+description: Exposes entities as a WOT:API-specification-compliant web API.
 core: 8.x
-package: WOTAPI
+package: Web services
+configure: wotapi.settings
+dependencies:
+  - drupal:serialization

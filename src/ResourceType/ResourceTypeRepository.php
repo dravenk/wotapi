@@ -32,6 +32,8 @@ use Symfony\Component\HttpKernel\Exception\PreconditionFailedHttpException;
  * @internal WOT:API maintains no PHP API since its API is the HTTP API. This
  *   class may change at any time and this will break any dependencies on it.
  *
+ * @see https://www.drupal.org/project/wotapi/issues/3032787
+ * @see wotapi.api.php
  *
  * @see \Drupal\wotapi\ResourceType\ResourceType
  */
@@ -103,10 +105,10 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
           return $this->createResourceType($entity_type, $bundle);
         }, array_keys($this->entityTypeBundleInfo->getBundleInfo($entity_type->id()))));
       }
-//      foreach ($resource_types as $resource_type) {
-//        $relatable_resource_types = $this->calculateRelatableResourceTypes($resource_type, $resource_types);
-//        $resource_type->setRelatableResourceTypes($relatable_resource_types);
-//      }
+      foreach ($resource_types as $resource_type) {
+        $relatable_resource_types = $this->calculateRelatableResourceTypes($resource_type, $resource_types);
+        $resource_type->setRelatableResourceTypes($relatable_resource_types);
+      }
       $this->staticCache->set('wotapi.resource_types', $resource_types, Cache::PERMANENT, ['wotapi_resource_types']);
     }
     return $cached ? $cached->data : $resource_types;
@@ -132,6 +134,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
       $entity_type->isInternal(),
       static::isLocatableResourceType($entity_type, $bundle),
       static::isMutableResourceType($entity_type, $bundle),
+      static::isVersionableResourceType($entity_type),
       static::getFieldMapping($raw_fields, $entity_type, $bundle)
     );
   }
@@ -208,7 +211,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
     //   cases.
     // - exposing its revision ID as an attribute will compete with any profile
     //   defined meta members used for resource object versioning.
-    // @see http://jsonapi.org/format/#document-resource-identifier-objects
+    // @see http://wotapi.org/format/#document-resource-identifier-objects
     $id_field_name = $entity_type->getKey('id');
     $uuid_field_name = $entity_type->getKey('uuid');
     if ($uuid_field_name !== 'id') {
@@ -230,7 +233,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
     // For all other fields,  use their internal field name also as their public
     // field name.  Unless they're called "id" or "type": those names are
     // reserved by the WOT:API spec.
-    // @see http://jsonapi.org/format/#document-resource-object-fields
+    // @see http://wotapi.org/format/#document-resource-object-fields
     foreach (array_diff($field_names, array_keys($mapping)) as $field_name) {
       if ($field_name === 'id' || $field_name === 'type') {
         $alias = $entity_type->id() . '_' . $field_name;

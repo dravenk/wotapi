@@ -2,6 +2,78 @@ parameters:
   wotapi.base_path: /wotapi
 
 services:
+  wotapi.serializer:
+    class: Drupal\wotapi\Serializer\Serializer
+    calls:
+      - [setFallbackNormalizer, ['@serializer']]
+    arguments: [{  }, {  }]
+  serializer.normalizer.http_exception.wotapi:
+    class: Drupal\wotapi\Normalizer\HttpExceptionNormalizer
+    arguments: ['@current_user']
+    tags:
+      - { name: wotapi_normalizer }
+  serializer.normalizer.unprocessable_entity_exception.wotapi:
+    class: Drupal\wotapi\Normalizer\UnprocessableHttpEntityExceptionNormalizer
+    arguments: ['@current_user']
+    tags:
+      # This must have a higher priority than the 'serializer.normalizer.http_exception.wotapi' to take effect.
+      - { name: wotapi_normalizer, priority: 1 }
+  serializer.normalizer.entity_access_exception.wotapi:
+    class: Drupal\wotapi\Normalizer\EntityAccessDeniedHttpExceptionNormalizer
+    arguments: ['@current_user']
+    tags:
+      # This must have a higher priority than the 'serializer.normalizer.http_exception.wotapi' to take effect.
+      - { name: wotapi_normalizer, priority: 1 }
+  serializer.normalizer.field_item.wotapi:
+    class: Drupal\wotapi\Normalizer\FieldItemNormalizer
+    arguments: ['@entity_type.manager']
+    tags:
+      - { name: wotapi_normalizer }
+  serializer.normalizer.field.wotapi:
+    class: Drupal\wotapi\Normalizer\FieldNormalizer
+    tags:
+      - { name: wotapi_normalizer }
+  serializer.normalizer.resource_identifier.wotapi:
+    class: Drupal\wotapi\Normalizer\ResourceIdentifierNormalizer
+    arguments: ['@entity_field.manager']
+    tags:
+      - { name: wotapi_normalizer }
+  serializer.normalizer.data.wotapi:
+    class: Drupal\wotapi\Normalizer\DataNormalizer
+    tags:
+      - { name: wotapi_normalizer }
+  serializer.normalizer.resource_object.wotapi:
+    class: Drupal\wotapi\Normalizer\ResourceObjectNormalizer
+    tags:
+      - { name: wotapi_normalizer }
+  serializer.normalizer.content_entity.wotapi:
+    class: Drupal\wotapi\Normalizer\ContentEntityDenormalizer
+    arguments: ['@entity_type.manager', '@entity_field.manager', '@plugin.manager.field.field_type']
+    tags:
+      - { name: wotapi_normalizer }
+  serializer.normalizer.config_entity.wotapi:
+    class: Drupal\wotapi\Normalizer\ConfigEntityDenormalizer
+    arguments: ['@entity_type.manager', '@entity_field.manager', '@plugin.manager.field.field_type']
+    tags:
+      - { name: wotapi_normalizer }
+  serializer.normalizer.wotapi_document_toplevel.wotapi:
+    class: Drupal\wotapi\Normalizer\WotApiDocumentTopLevelNormalizer
+    arguments: ['@entity_type.manager', '@wotapi.resource_type.repository']
+    tags:
+      - { name: wotapi_normalizer }
+  serializer.normalizer.link_collection.wotapi:
+    class: Drupal\wotapi\Normalizer\LinkCollectionNormalizer
+    tags:
+      - { name: wotapi_normalizer }
+  serializer.normalizer.entity_reference_field.wotapi:
+    class: Drupal\wotapi\Normalizer\EntityReferenceFieldNormalizer
+    tags:
+      # This must have a higher priority than the 'serializer.normalizer.field.wotapi' to take effect.
+      - { name: wotapi_normalizer, priority: 1 }
+  serializer.encoder.wotapi:
+    class: Drupal\wotapi\Encoder\JsonEncoder
+    tags:
+      - { name: wotapi_encoder, format: 'api_json' }
   wotapi.resource_type.repository:
     class: Drupal\wotapi\ResourceType\ResourceTypeRepository
     arguments: ['@entity_type.manager', '@entity_type.bundle.info', '@entity_field.manager', '@cache.wotapi_resource_types']
@@ -9,6 +81,36 @@ services:
     class: Drupal\wotapi\Routing\RouteEnhancer
     tags:
       - { name: route_enhancer }
+  wotapi.field_resolver:
+    class: Drupal\wotapi\Context\FieldResolver
+    arguments: ['@entity_type.manager', '@entity_field.manager', '@entity_type.bundle.info', '@wotapi.resource_type.repository', '@module_handler']
+  wotapi.include_resolver:
+    class: Drupal\wotapi\IncludeResolver
+    arguments:
+      - '@entity_type.manager'
+      - '@wotapi.entity_access_checker'
+  paramconverter.wotapi.entity_uuid:
+    parent: paramconverter.entity
+    class: Drupal\wotapi\ParamConverter\EntityUuidConverter
+    calls:
+      - [setLanguageManager, ['@language_manager']]
+    tags:
+      # Priority 10, to ensure it runs before @paramconverter.entity.
+      - { name: paramconverter, priority: 10 }
+  paramconverter.wotapi.resource_type:
+    class: Drupal\wotapi\ParamConverter\ResourceTypeConverter
+    arguments: ['@wotapi.resource_type.repository']
+    tags:
+      - { name: paramconverter }
+  wotapi.exception_subscriber:
+    class: Drupal\wotapi\EventSubscriber\DefaultExceptionSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@wotapi.serializer', '%serializer.formats%']
+
+  logger.channel.wotapi:
+    parent: logger.channel_base
+    arguments: ['wotapi']
 
   # Cache.
   cache.wotapi_resource_types:
@@ -16,6 +118,37 @@ services:
     # We need this to add this to the Drupal's cache_tags.invalidator service.
     # This way it can invalidate the data in here based on tags.
     tags: [{ name: cache.bin }]
+
+  # Route filter.
+  wotapi.route_filter.format_setter:
+    class: Drupal\wotapi\Routing\EarlyFormatSetter
+    tags:
+      # Set to a high priority so it runs before content_type_header_matcher
+      # and other filters that might throw exceptions.
+      - { name: route_filter, priority: 100 }
+
+  # Access Control
+  wotapi.entity_access_checker:
+    class: Drupal\wotapi\Access\EntityAccessChecker
+    public: false
+    arguments: ['@wotapi.resource_type.repository', '@router.no_access_checks', '@current_user', '@entity.repository']
+    calls:
+      - [setNodeRevisionAccessCheck, ['@?access_check.node.revision']] # This is only injected when the service is available.
+      - [setMediaRevisionAccessCheck, ['@?access_check.media.revision']] # This is only injected when the service is available.
+      # This is a temporary measure. WOT:API should not need to be aware of the Content Moderation module.
+      - [setLatestRevisionCheck, ['@?access_check.latest_revision']] # This is only injected when the service is available.
+  access_check.wotapi.relationship_field_access:
+    class: Drupal\wotapi\Access\RelationshipFieldAccess
+    arguments: ['@wotapi.entity_access_checker']
+    tags:
+      - { name: access_check, applies_to: _wotapi_relationship_field_access, needs_incoming_request: TRUE }
+
+  # Route filters.
+  method_filter.wotapi:
+    public: false
+    class: Drupal\wotapi\Routing\ReadOnlyModeMethodFilter
+    decorates: method_filter
+    arguments: ['@method_filter.wotapi.inner', '@config.factory']
 
   # Controller.
   wotapi.entity_resource:
@@ -26,5 +159,73 @@ services:
       - '@wotapi.resource_type.repository'
       - '@renderer'
       - '@entity.repository'
+      - '@wotapi.include_resolver'
+      - '@wotapi.entity_access_checker'
+      - '@wotapi.field_resolver'
+      - '@wotapi.serializer'
       - '@datetime.time'
       - '@current_user'
+  wotapi.file_upload:
+    class: Drupal\wotapi\Controller\FileUpload
+    arguments:
+      - '@current_user'
+      - '@entity_field.manager'
+      - '@wotapi.file.uploader.field'
+      - '@http_kernel'
+
+  # Event subscribers.
+  wotapi.custom_query_parameter_names_validator.subscriber:
+    class: Drupal\wotapi\EventSubscriber\WotApiRequestValidator
+    tags:
+      - { name: event_subscriber }
+  wotapi.resource_response.subscriber:
+    class: Drupal\wotapi\EventSubscriber\ResourceResponseSubscriber
+    arguments: ['@wotapi.serializer']
+    tags:
+      - { name: event_subscriber }
+  wotapi.resource_response_validator.subscriber:
+    class: Drupal\wotapi\EventSubscriber\ResourceResponseValidator
+    arguments: ['@wotapi.serializer', '@logger.channel.wotapi', '@module_handler', '@app.root']
+    calls:
+      - [setValidator, []]
+    tags:
+      - { name: event_subscriber, priority: 1000 }
+
+  # Revision management.
+  wotapi.version_negotiator:
+    class: Drupal\wotapi\Revisions\VersionNegotiator
+    public: false
+    tags:
+      - { name: service_collector, tag: wotapi_version_negotiator, call: addVersionNegotiator }
+  wotapi.version_negotiator.default:
+    arguments: ['@entity_type.manager']
+    public: false
+    abstract: true
+  wotapi.version_negotiator.id:
+    class: Drupal\wotapi\Revisions\VersionById
+    parent: wotapi.version_negotiator.default
+    tags:
+      - { name: wotapi_version_negotiator, negotiator_name: 'id' }
+  wotapi.version_negotiator.rel:
+    class: Drupal\wotapi\Revisions\VersionByRel
+    parent: wotapi.version_negotiator.default
+    tags:
+      - { name: wotapi_version_negotiator, negotiator_name: 'rel' }
+  wotapi.resource_version.route_enhancer:
+    class: Drupal\wotapi\Revisions\ResourceVersionRouteEnhancer
+    public: false
+    arguments:
+      - '@wotapi.version_negotiator'
+    tags:
+      - { name: route_enhancer }
+
+  # Deprecated services.
+  serializer.normalizer.htt_exception.wotapi:
+    alias: serializer.normalizer.http_exception.wotapi
+    deprecated: The "%service_id%" service is deprecated. You should use the 'serializer.normalizer.http_exception.wotapi' service instead.
+
+  # @todo Remove once https://www.drupal.org/project/drupal/issues/2940383 lands.
+  wotapi.file.uploader.field:
+    class: Drupal\wotapi\Controller\TemporaryJsonapiFileFieldUploader
+    public: false
+    arguments: ['@logger.channel.file', '@file_system', '@file.mime_type.guesser', '@token', '@lock', '@config.factory']

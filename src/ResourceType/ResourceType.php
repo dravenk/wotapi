@@ -11,6 +11,9 @@ namespace Drupal\wotapi\ResourceType;
  * @internal WOT:API maintains no PHP API since its API is the HTTP API. This
  *   class may change at any time and this will break any dependencies on it.
  *
+ * @see https://www.drupal.org/project/wotapi/issues/3032787
+ * @see wotapi.api.php
+ *
  * @see \Drupal\wotapi\ResourceType\ResourceTypeRepository
  */
 class ResourceType {
@@ -64,6 +67,12 @@ class ResourceType {
    */
   protected $isMutable;
 
+  /**
+   * Whether this resource type's resources are versionable.
+   *
+   * @var bool
+   */
+  protected $isVersionable;
 
   /**
    * The list of fields on the underlying entity type + bundle.
@@ -272,6 +281,16 @@ class ResourceType {
   }
 
   /**
+   * Whether resources of this resource type are versionable.
+   *
+   * @return bool
+   *   TRUE if the resource type's resources are versionable. FALSE otherwise.
+   */
+  public function isVersionable() {
+    return $this->isVersionable;
+  }
+
+  /**
    * Instantiates a ResourceType object.
    *
    * @param string $entity_type_id
@@ -286,16 +305,19 @@ class ResourceType {
    *   (optional) Whether the resource type is locatable.
    * @param bool $is_mutable
    *   (optional) Whether the resource type is mutable.
+   * @param bool $is_versionable
+   *   (optional) Whether the resource type is versionable.
    * @param array $field_mapping
    *   (optional) The field mapping to use.
    */
-  public function __construct($entity_type_id, $bundle, $deserialization_target_class, $internal = FALSE, $is_locatable = TRUE, $is_mutable = TRUE, array $field_mapping = []) {
+  public function __construct($entity_type_id, $bundle, $deserialization_target_class, $internal = FALSE, $is_locatable = TRUE, $is_mutable = TRUE, $is_versionable = FALSE, array $field_mapping = []) {
     $this->entityTypeId = $entity_type_id;
     $this->bundle = $bundle;
     $this->deserializationTargetClass = $deserialization_target_class;
     $this->internal = $internal;
     $this->isLocatable = $is_locatable;
     $this->isMutable = $is_mutable;
+    $this->isVersionable = $is_versionable;
 
     $this->typeName = $this->bundle === '?'
       ? 'unknown'
@@ -307,6 +329,52 @@ class ResourceType {
     }));
     $this->fieldMapping = array_filter($field_mapping, 'is_string');
     $this->invertedFieldMapping = array_flip($this->fieldMapping);
+  }
+
+  /**
+   * Sets the relatable resource types.
+   *
+   * @param array $relatable_resource_types
+   *   The resource types with which this resource type may have a relationship.
+   *   The array should be a multi-dimensional array keyed by public field name
+   *   whose values are an array of resource types. There may be duplicate
+   *   across resource types across fields, but not within a field.
+   */
+  public function setRelatableResourceTypes(array $relatable_resource_types) {
+    $this->relatableResourceTypes = $relatable_resource_types;
+  }
+
+  /**
+   * Get all resource types with which this type may have a relationship.
+   *
+   * @return array
+   *   The relatable resource types, keyed by relationship field names.
+   *
+   * @see self::setRelatableResourceTypes()
+   */
+  public function getRelatableResourceTypes() {
+    if (!isset($this->relatableResourceTypes)) {
+      throw new \LogicException("setRelatableResourceTypes() must be called before getting relatable resource types.");
+    }
+    return $this->relatableResourceTypes;
+  }
+
+  /**
+   * Get all resource types with which the given field may have a relationship.
+   *
+   * @param string $field_name
+   *   The public field name.
+   *
+   * @return \Drupal\wotapi\ResourceType\ResourceType[]
+   *   The relatable WOT:API resource types.
+   *
+   * @see self::getRelatableResourceTypes()
+   */
+  public function getRelatableResourceTypesByField($field_name) {
+    $relatable_resource_types = $this->getRelatableResourceTypes();
+    return isset($relatable_resource_types[$field_name]) ?
+      $relatable_resource_types[$field_name] :
+      [];
   }
 
   /**

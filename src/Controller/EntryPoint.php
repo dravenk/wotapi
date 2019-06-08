@@ -8,14 +8,15 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\wotapi\WotApiResource\WotApiDocumentTopLevel;
 use Drupal\wotapi\WotApiResource\LinkCollection;
+use Drupal\wotapi\WotApiResource\NullIncludedData;
 use Drupal\wotapi\WotApiResource\Link;
 use Drupal\wotapi\WotApiResource\ResourceObjectData;
 use Drupal\wotapi\ResourceResponse;
 use Drupal\wotapi\ResourceType\ResourceType;
 use Drupal\wotapi\ResourceType\ResourceTypeRepositoryInterface;
-//use Drupal\user\Entity\User;
+use Drupal\user\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-//use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
  * Controller for the API entry point.
@@ -23,6 +24,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal WOT:API maintains no PHP API. The API is the HTTP API. This class
  *   may change at any time and could break any dependencies on it.
  *
+ * @see https://www.drupal.org/project/wotapi/issues/3032787
+ * @see wotapi.api.php
  */
 class EntryPoint extends ControllerBase {
 
@@ -76,10 +79,7 @@ class EntryPoint extends ControllerBase {
 
     // Only build URLs for exposed resources.
     $resources = array_filter($this->resourceTypeRepository->all(), function ($resource) {
-      if ($resource->getEntityTypeId() == "thing" || $resource->getEntityTypeId() == "property" ){
-        return !$resource->isInternal();
-      }
-      return false;
+      return !$resource->isInternal();
     });
 
     $self_link = new Link(new CacheableMetadata(), Url::fromRoute('wotapi.resource_list'), ['self']);
@@ -94,9 +94,30 @@ class EntryPoint extends ControllerBase {
       return $carry;
     }, new LinkCollection(['self' => $self_link]));
 
-    $response = new ResourceResponse(new WotApiDocumentTopLevel(new ResourceObjectData([]), $urls));
-//    $response = new ResourceResponse($urls);
- //    return $response;
+    $meta = [];
+    if ($this->user->isAuthenticated()) {
+      $current_user_uuid = User::load($this->user->id())->uuid();
+      $meta['links']['me'] = ['meta' => ['id' => $current_user_uuid]];
+      $cacheability->addCacheContexts(['user']);
+      try {
+        $me_url = Url::fromRoute(
+          'wotapi.user--user.individual',
+          ['entity' => $current_user_uuid]
+        )
+          ->setAbsolute()
+          ->toString(TRUE);
+        $meta['links']['me']['href'] = $me_url->getGeneratedUrl();
+        // The cacheability of the `me` URL is the cacheability of that URL
+        // itself and the currently authenticated user.
+        $cacheability = $cacheability->merge($me_url);
+      }
+      catch (RouteNotFoundException $e) {
+        // Do not add the link if the route is disabled or marked as internal.
+      }
+    }
+
+    $response = new ResourceResponse(new WotApiDocumentTopLevel(new ResourceObjectData([]), new NullIncludedData(), $urls, $meta));
     return $response->addCacheableDependency($cacheability);
   }
+
 }

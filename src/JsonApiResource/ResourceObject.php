@@ -11,9 +11,9 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\TypedData\TypedDataInternalPropertiesHelper;
 use Drupal\Core\Url;
-//use Drupal\wotapi\WotApiSpec;
+use Drupal\wotapi\WotApiSpec;
 use Drupal\wotapi\ResourceType\ResourceType;
-//use Drupal\wotapi\Revisions\VersionByRel;
+use Drupal\wotapi\Revisions\VersionByRel;
 use Drupal\wotapi\Routing\Routes;
 
 /**
@@ -68,17 +68,20 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
    *   The WOT:API resource type of the resource object.
    * @param string $id
    *   The resource object's ID.
+   * @param mixed|null $revision_id
+   *   The resource object's version identifier. NULL, if the resource object is
+   *   not versionable.
    * @param array $fields
    *   An array of the resource object's fields, keyed by public field name.
    * @param \Drupal\wotapi\WotApiResource\LinkCollection $links
    *   The links for the resource object.
    */
-  public function __construct(CacheableDependencyInterface $cacheability, ResourceType $resource_type, $id,array $fields, LinkCollection $links) {
-//    assert(is_null($revision_id) || $resource_type->isVersionable());
+  public function __construct(CacheableDependencyInterface $cacheability, ResourceType $resource_type, $id, $revision_id, array $fields, LinkCollection $links) {
+    assert(is_null($revision_id) || $resource_type->isVersionable());
     $this->setCacheability($cacheability);
     $this->resourceType = $resource_type;
     $this->resourceIdentifier = new ResourceIdentifier($resource_type, $id);
-//    $this->versionIdentifier = $revision_id ? 'id:' . $revision_id : NULL;
+    $this->versionIdentifier = $revision_id ? 'id:' . $revision_id : NULL;
     $this->fields = $fields;
     $this->links = $links->withContext($this);
   }
@@ -103,7 +106,7 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
       $entity,
       $resource_type,
       $entity->uuid(),
-//      $resource_type->isVersionable() && $entity instanceof RevisionableInterface ? $entity->getRevisionId() : NULL,
+      $resource_type->isVersionable() && $entity instanceof RevisionableInterface ? $entity->getRevisionId() : NULL,
       static::extractFieldsFromEntity($resource_type, $entity),
       static::buildLinksFromEntity($resource_type, $entity, $links ?: new LinkCollection([]))
     );
@@ -159,19 +162,19 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
     return $this->links;
   }
 
-//  /**
-//   * Gets a version identifier for the ResourceObject.
-//   *
-//   * @return string
-//   *   The version identifier of the resource object, if the resource type is
-//   *   versionable.
-//   */
-//  public function getVersionIdentifier() {
-//    if (!$this->resourceType->isVersionable()) {
-//      throw new \LogicException('Cannot get a version identifier for a non-versionable resource.');
-//    }
-//    return $this->versionIdentifier;
-//  }
+  /**
+   * Gets a version identifier for the ResourceObject.
+   *
+   * @return string
+   *   The version identifier of the resource object, if the resource type is
+   *   versionable.
+   */
+  public function getVersionIdentifier() {
+    if (!$this->resourceType->isVersionable()) {
+      throw new \LogicException('Cannot get a version identifier for a non-versionable resource.');
+    }
+    return $this->versionIdentifier;
+  }
 
   /**
    * Gets a Url for the ResourceObject.
