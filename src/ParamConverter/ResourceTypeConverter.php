@@ -7,7 +7,7 @@ use Drupal\wotapi\ResourceType\ResourceTypeRepositoryInterface;
 use Symfony\Component\Routing\Route;
 
 /**
- * Parameter converter for upcasting JSON:API resource type names to objects.
+ * Parameter converter for upcasting WOT:API resource type names to objects.
  *
  * @internal WOT:API maintains no PHP API since its API is the HTTP API. This
  *   class may change at any time and this will break any dependencies on it.
@@ -23,7 +23,7 @@ class ResourceTypeConverter implements ParamConverterInterface {
   const PARAM_TYPE_ID = 'wotapi_resource_type';
 
   /**
-   * The JSON:API resource type repository.
+   * The WOT:API resource type repository.
    *
    * @var \Drupal\wotapi\ResourceType\ResourceTypeRepositoryInterface
    */

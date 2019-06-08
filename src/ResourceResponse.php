@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
  * string or an object with a __toString() method, which is not a requirement
  * for data used here.
  *
- * @internal JSON:API maintains no PHP API since its API is the HTTP API. This
+ * @internal WOT:API maintains no PHP API since its API is the HTTP API. This
  *   class may change at any time and this will break any dependencies on it.
  *
  *

@@ -26,6 +26,5 @@ services:
       - '@wotapi.resource_type.repository'
       - '@renderer'
       - '@entity.repository'
-      - '@jsonapi.serializer'
       - '@datetime.time'
       - '@current_user'

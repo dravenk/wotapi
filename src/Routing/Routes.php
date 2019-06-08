@@ -31,7 +31,7 @@ class Routes implements ContainerInjectionInterface {
   const CONTROLLER_SERVICE_NAME = 'wotapi.entity_resource';
 
   /**
-   * The JSON:API resource type repository.
+   * The WOT:API resource type repository.
    *
    * @var \Drupal\wotapi\ResourceType\ResourceTypeRepositoryInterface
    */
@@ -69,11 +69,11 @@ class Routes implements ContainerInjectionInterface {
    * Instantiates a Routes object.
    *
    * @param \Drupal\wotapi\ResourceType\ResourceTypeRepositoryInterface $resource_type_repository
-   *   The JSON:API resource type repository.
+   *   The WOT:API resource type repository.
    * @param string[] $authentication_providers
    *   The authentication providers, keyed by ID.
    * @param string $wotapi_base_path
-   *   The JSON:API base path.
+   *   The WOT:API base path.
    */
   public function __construct(ResourceTypeRepositoryInterface $resource_type_repository, array $authentication_providers, $wotapi_base_path) {
     $this->resourceTypeRepository = $resource_type_repository;
@@ -100,35 +100,45 @@ class Routes implements ContainerInjectionInterface {
       $container->getParameter('wotapi.base_path')
     );
   }
+
   /**
    * {@inheritdoc}
    */
   public function routes() {
     $routes = new RouteCollection();
+//    $upload_routes = new RouteCollection();
 
     // WOT:API's routes: entry point + routes for every resource type.
     foreach ($this->resourceTypeRepository->all() as $resource_type) {
       $routes->addCollection(static::getRoutesForResourceType($resource_type, $this->wotApiBasePath));
+//      $upload_routes->addCollection(static::getFileUploadRoutesForResourceType($resource_type, $this->jsonApiBasePath));
     }
     $routes->add('wotapi.resource_list', static::getEntryPointRoute($this->wotApiBasePath));
+
+    // Require the WOT:API media type header on every route, except on file
+    // upload routes, where we require `application/octet-stream`.
+    $routes->addRequirements(['_content_type_format' => 'api_json']);
+//    $upload_routes->addRequirements(['_content_type_format' => 'bin']);
+
+//    $routes->addCollection($upload_routes);
 
     // Enable all available authentication providers.
     $routes->addOptions(['_auth' => $this->providerIds]);
 
-    // Flag every route as belonging to the JSON:API module.
+    // Flag every route as belonging to the WOT:API module.
     $routes->addDefaults([static::WOT_API_ROUTE_FLAG_KEY => TRUE]);
 
-    // All routes serve only the JSON:API media type.
+    // All routes serve only the WOT:API media type.
     $routes->addRequirements(['_format' => 'api_json']);
 
     return $routes;
   }
 
   /**
-   * Gets applicable resource routes for a JSON:API resource type.
+   * Gets applicable resource routes for a WOT:API resource type.
    *
    * @param \Drupal\wotapi\ResourceType\ResourceType $resource_type
-   *   The JSON:API resource type for which to get the routes.
+   *   The WOT:API resource type for which to get the routes.
    * @param string $path_prefix
    *   The root path prefix.
    *
@@ -182,7 +192,7 @@ class Routes implements ContainerInjectionInterface {
   }
 
   /**
-   * Get a unique route name for the JSON:API resource type and route type.
+   * Get a unique route name for the WOT:API resource type and route type.
    *
    * @param \Drupal\wotapi\ResourceType\ResourceType $resource_type
    *   The resource type for which the route collection should be created.
@@ -197,7 +207,7 @@ class Routes implements ContainerInjectionInterface {
   }
 
   /**
-   * Determines if the given request is for a JSON:API generated route.
+   * Determines if the given request is for a WOT:API generated route.
    *
    * @param array $defaults
    *   The request's route defaults.
