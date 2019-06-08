@@ -291,12 +291,12 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
     $resource_type = $resource_type_repository->get($target->getEntityTypeId(), $target->bundle());
     // Remove unwanted properties from the meta value, usually 'entity'
     // and 'target_id'.
-    $properties = TypedDataInternalPropertiesHelper::getNonInternalProperties($item);
-    $meta = array_diff_key($properties, array_flip([$property_name, $item->getDataDefinition()->getMainPropertyName()]));
-    if (!is_null($arity)) {
-      $meta[static::ARITY_KEY] = $arity;
-    }
-    return new static($resource_type, $target->uuid(), $meta);
+//    $properties = TypedDataInternalPropertiesHelper::getNonInternalProperties($item);
+//    $meta = array_diff_key($properties, array_flip([$property_name, $item->getDataDefinition()->getMainPropertyName()]));
+//    if (!is_null($arity)) {
+//      $meta[static::ARITY_KEY] = $arity;
+//    }
+    return new static($resource_type, $target->uuid(), []);
   }
 
   /**

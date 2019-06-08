@@ -884,28 +884,28 @@ class EntityResource {
     }
     return $response;
   }
-
-  /**
-   * Gets includes for the given response data.
-   *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
-   * @param \Drupal\wotapi\WotApiResource\ResourceObject|\Drupal\wotapi\WotApiResource\ResourceObjectData $data
-   *   The response data from which to resolve includes.
-   *
-   * @return \Drupal\wotapi\WotApiResource\Data
-   *   A Data object to be included or a NullData object if the request does not
-   *   specify any include paths.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   */
-  public function getIncludes(Request $request, $data) {
-    assert($data instanceof ResourceObject || $data instanceof ResourceObjectData);
-    return $request->query->has('include') && ($include_parameter = $request->query->get('include')) && !empty($include_parameter)
-      ? $this->includeResolver->resolve($data, $include_parameter)
-      : new NullIncludedData();
-  }
+//
+//  /**
+//   * Gets includes for the given response data.
+//   *
+//   * @param \Symfony\Component\HttpFoundation\Request $request
+//   *   The request object.
+//   * @param \Drupal\wotapi\WotApiResource\ResourceObject|\Drupal\wotapi\WotApiResource\ResourceObjectData $data
+//   *   The response data from which to resolve includes.
+//   *
+//   * @return \Drupal\wotapi\WotApiResource\Data
+//   *   A Data object to be included or a NullData object if the request does not
+//   *   specify any include paths.
+//   *
+//   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+//   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+//   */
+//  public function getIncludes(Request $request, $data) {
+//    assert($data instanceof ResourceObject || $data instanceof ResourceObjectData);
+//    return $request->query->has('include') && ($include_parameter = $request->query->get('include')) && !empty($include_parameter)
+//      ? $this->includeResolver->resolve($data, $include_parameter)
+//      : new NullIncludedData();
+//  }
 
   /**
    * Build a collection of the entities to respond with and access objects.
