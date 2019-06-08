@@ -2,7 +2,6 @@ name: WOT:API
 type: module
 description: Exposes entities as a WOT:API-specification-compliant web API.
 core: 8.x
-package: Web services
-configure: wotapi.settings
+package: WOTAPI
 dependencies:
   - drupal:serialization

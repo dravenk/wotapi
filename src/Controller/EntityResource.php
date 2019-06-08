@@ -987,7 +987,7 @@ class EntityResource {
     // It's helpful and safe to let the user know when they are not allowed to
     // update a field.
     $field_name = $received_field->getName();
-    throw new EntityAccessDeniedHttpException($original_field->getEntity(), $field_edit_access, '/data/attributes/' . $field_name, sprintf('The current user is not allowed to PATCH the selected field (%s).', $field_name));
+    throw new EntityAccessDeniedHttpException($original_field->getEntity(), $field_edit_access, '/attributes/' . $field_name, sprintf('The current user is not allowed to PATCH the selected field (%s).', $field_name));
   }
 
   /**

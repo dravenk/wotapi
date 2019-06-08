@@ -59,13 +59,28 @@ class ResourceObjectNormalizer extends NormalizerBase {
       $normalizer_values[$field_name] = $this->serializeField($field, $context, $format);
     }
     $relationship_field_names = array_keys($resource_type->getRelatableResourceTypes());
-    return CacheableNormalization::aggregate([
+//    return CacheableNormalization::aggregate([
+//      'type' => CacheableNormalization::permanent($resource_type->getTypeName()),
+//      'id' => CacheableNormalization::permanent($object->getId()),
+//      'attributes' => CacheableNormalization::aggregate(array_diff_key($normalizer_values, array_flip($relationship_field_names)))->omitIfEmpty(),
+//      'properties' => CacheableNormalization::aggregate(array_intersect_key($normalizer_values, array_flip($relationship_field_names)))->omitIfEmpty(),
+//      'links' => $this->serializer->normalize($object->getLinks(), $format, $context)->omitIfEmpty(),
+//    ])->withCacheableDependency($object);
+
+    $normalization = [
       'type' => CacheableNormalization::permanent($resource_type->getTypeName()),
       'id' => CacheableNormalization::permanent($object->getId()),
-      'attributes' => CacheableNormalization::aggregate(array_diff_key($normalizer_values, array_flip($relationship_field_names)))->omitIfEmpty(),
       'properties' => CacheableNormalization::aggregate(array_intersect_key($normalizer_values, array_flip($relationship_field_names)))->omitIfEmpty(),
       'links' => $this->serializer->normalize($object->getLinks(), $format, $context)->omitIfEmpty(),
-    ])->withCacheableDependency($object);
+    ];
+
+    $attr = array_diff_key($normalizer_values, array_flip($relationship_field_names));
+    foreach ($attr as $key => $value){
+      $normalization[$key] = $value;
+    };
+
+    $obj = CacheableNormalization::aggregate($normalization)->withCacheableDependency($object);
+    return $obj;
   }
 
   /**
