@@ -163,7 +163,7 @@ class Routes implements ContainerInjectionInterface {
     }
 
     // Individual routes like `/wotapi/node/article/{uuid}` or
-    // `/wotapi/node/article/{uuid}/relationships/uid`.
+    // `/wotapi/node/article/{uuid}/properties/uid`.
     $routes->addCollection(static::getIndividualRoutesForResourceType($resource_type));
 
     // Add the resource type as a parameter to every resource route.
@@ -219,25 +219,11 @@ class Routes implements ContainerInjectionInterface {
     // checked in the controller. So it's safe to allow anybody access.
     $individual_route->setRequirement('_access', 'TRUE');
     $routes->add(static::getRouteName($resource_type, 'individual'), $individual_route);
-//    if ($resource_type->isMutable()) {
-//      $individual_update_route = new Route($individual_route->getPath());
-//      $individual_update_route->addDefaults([RouteObjectInterface::CONTROLLER_NAME => static::CONTROLLER_SERVICE_NAME . ':patchIndividual']);
-//      $individual_update_route->setMethods(['PATCH']);
-//      $individual_update_route->setRequirement('_entity_access', "entity.update");
-//      $individual_update_route->setRequirement('_csrf_request_header_token', 'TRUE');
-//      $routes->add(static::getRouteName($resource_type, 'individual.patch'), $individual_update_route);
-//      $individual_remove_route = new Route($individual_route->getPath());
-//      $individual_remove_route->addDefaults([RouteObjectInterface::CONTROLLER_NAME => static::CONTROLLER_SERVICE_NAME . ':deleteIndividual']);
-//      $individual_remove_route->setMethods(['DELETE']);
-//      $individual_remove_route->setRequirement('_entity_access', "entity.delete");
-//      $individual_remove_route->setRequirement('_csrf_request_header_token', 'TRUE');
-//      $routes->add(static::getRouteName($resource_type, 'individual.delete'), $individual_remove_route);
-//    }
 
     foreach ($resource_type->getRelatableResourceTypes() as $relationship_field_name => $target_resource_types) {
-      // Read, update, add, or remove an individual resources relationships to
+      // Read, update, add, or remove an individual resources properties to
       // other resources.
-      $relationship_route = new Route("/{$path}/{entity}/relationships/{$relationship_field_name}");
+      $relationship_route = new Route("/{$path}/{entity}/properties/{$relationship_field_name}");
       $relationship_route->addDefaults(['_on_relationship' => TRUE]);
       $relationship_route->addDefaults(['related' => $relationship_field_name]);
       $relationship_route->setRequirement(RelationshipFieldAccess::ROUTE_REQUIREMENT_KEY, $relationship_field_name);

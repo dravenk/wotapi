@@ -124,7 +124,7 @@ class IncludeResolver {
           continue;
         }
         $field_list = $resource_object->getField($public_field_name);
-        // Config entities don't have real fields and can't have relationships.
+        // Config entities don't have real fields and can't have properties.
         if (!$field_list instanceof FieldItemListInterface) {
           continue;
         }

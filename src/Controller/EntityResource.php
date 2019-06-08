@@ -212,75 +212,6 @@ class EntityResource {
   }
 
   /**
-   * Creates an individual entity.
-   *
-   * @param \Drupal\wotapi\ResourceType\ResourceType $resource_type
-   *   The WOT:API resource type for the request to be served.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
-   *
-   * @return \Drupal\wotapi\ResourceResponse
-   *   The response.
-   *
-   * @throws \Symfony\Component\HttpKernel\Exception\ConflictHttpException
-   *   Thrown when the entity already exists.
-   * @throws \Drupal\wotapi\Exception\UnprocessableHttpEntityException
-   *   Thrown when the entity does not pass validation.
-   */
-  public function createIndividual(ResourceType $resource_type, Request $request) {
-    $parsed_entity = $this->deserialize($resource_type, $request, WotApiDocumentTopLevel::class);
-
-    if ($parsed_entity instanceof FieldableEntityInterface) {
-      // Only check 'edit' permissions for fields that were actually submitted
-      // by the user. Field access makes no distinction between 'create' and
-      // 'update', so the 'edit' operation is used here.
-      $document = Json::decode($request->getContent());
-      foreach (['attributes', 'relationships'] as $data_member_name) {
-        if (isset($document['data'][$data_member_name])) {
-          $valid_names = array_filter(array_map(function ($public_field_name) use ($resource_type) {
-            return $resource_type->getInternalName($public_field_name);
-          }, array_keys($document['data'][$data_member_name])), function ($internal_field_name) use ($resource_type) {
-            return $resource_type->hasField($internal_field_name);
-          });
-          foreach ($valid_names as $field_name) {
-            $field_access = $parsed_entity->get($field_name)->access('edit', NULL, TRUE);
-            if (!$field_access->isAllowed()) {
-              $public_field_name = $resource_type->getPublicName($field_name);
-              throw new EntityAccessDeniedHttpException(NULL, $field_access, "/data/$data_member_name/$public_field_name", sprintf('The current user is not allowed to POST the selected field (%s).', $public_field_name));
-            }
-          }
-        }
-      }
-    }
-
-    static::validate($parsed_entity);
-
-    // Return a 409 Conflict response in accordance with the WOT:API spec. See
-    // http://wotapi.org/format/#crud-creating-responses-409.
-    if ($this->entityExists($parsed_entity)) {
-      throw new ConflictHttpException('Conflict: Entity already exists.');
-    }
-
-    $parsed_entity->save();
-
-    // Build response object.
-    $resource_object = ResourceObject::createFromEntity($resource_type, $parsed_entity);
-    $primary_data = new ResourceObjectData([$resource_object], 1);
-    $response = $this->buildWrappedResponse($primary_data, $request, $this->getIncludes($request, $primary_data), 201);
-
-    // According to WOT:API specification, when a new entity was created
-    // we should send "Location" header to the frontend.
-    if ($resource_type->isLocatable()) {
-      $url = $resource_object->toUrl()->setAbsolute()->toString(TRUE);
-      $response->addCacheableDependency($url);
-      $response->headers->set('Location', $url->getGeneratedUrl());
-    }
-
-    // Return response object with updated headers info.
-    return $response;
-  }
-
-  /**
    * Gets the collection of entities.
    *
    * @param \Drupal\wotapi\ResourceType\ResourceType $resource_type
@@ -516,7 +447,7 @@ class EntityResource {
     $field_definition = $field_list->getFieldDefinition();
     $is_multiple = $field_definition->getFieldStorageDefinition()->isMultiple();
     if (!$is_multiple) {
-      throw new ConflictHttpException(sprintf('You can only POST to to-many relationships. %s is a to-one relationship.', $related));
+      throw new ConflictHttpException(sprintf('You can only POST to to-many properties. %s is a to-one relationship.', $related));
     }
 
     $original_resource_identifiers = ResourceIdentifier::toResourceIdentifiersWithArityRequired($field_list);
@@ -526,7 +457,7 @@ class EntityResource {
       [ResourceIdentifier::class, 'compare']
     );
 
-    // There are no relationships that need to be added so we can exit early.
+    // There are no properties that need to be added so we can exit early.
     if (empty($new_resource_identifiers)) {
       $status = static::relationshipResponseRequiresBody($resource_identifiers, $original_resource_identifiers) ? 200 : 204;
       return $this->getRelationship($resource_type, $entity, $related, $request, $status);
@@ -660,7 +591,7 @@ class EntityResource {
       ->getFieldStorageDefinition()
       ->isMultiple();
     if (!$is_multiple) {
-      throw new ConflictHttpException(sprintf('You can only DELETE from to-many relationships. %s is a to-one relationship.', $related));
+      throw new ConflictHttpException(sprintf('You can only DELETE from to-many properties. %s is a to-one relationship.', $related));
     }
 
     // Compute the list of current values and remove the ones in the payload.

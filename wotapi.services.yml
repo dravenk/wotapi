@@ -51,11 +51,11 @@ services:
     arguments: ['@entity_type.manager', '@entity_field.manager', '@plugin.manager.field.field_type']
     tags:
       - { name: wotapi_normalizer }
-  serializer.normalizer.config_entity.wotapi:
-    class: Drupal\wotapi\Normalizer\ConfigEntityDenormalizer
-    arguments: ['@entity_type.manager', '@entity_field.manager', '@plugin.manager.field.field_type']
-    tags:
-      - { name: wotapi_normalizer }
+#  serializer.normalizer.config_entity.wotapi:
+#    class: Drupal\wotapi\Normalizer\ConfigEntityDenormalizer
+#    arguments: ['@entity_type.manager', '@entity_field.manager', '@plugin.manager.field.field_type']
+#    tags:
+#      - { name: wotapi_normalizer }
   serializer.normalizer.wotapi_document_toplevel.wotapi:
     class: Drupal\wotapi\Normalizer\WotApiDocumentTopLevelNormalizer
     arguments: ['@entity_type.manager', '@wotapi.resource_type.repository']

@@ -347,7 +347,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
    *   The relatable WOT:API resource types, keyed by field name.
    */
   protected function calculateRelatableResourceTypes(ResourceType $resource_type, array $resource_types) {
-    // For now, only fieldable entity types may contain relationships.
+    // For now, only fieldable entity types may contain properties.
     $entity_type = $this->entityTypeManager->getDefinition($resource_type->getEntityTypeId());
     if ($entity_type->entityClassImplements(FieldableEntityInterface::class)) {
       $field_definitions = $this->entityFieldManager->getFieldDefinitions(

@@ -15,7 +15,7 @@ use Drupal\wotapi\ResourceType\ResourceType;
  * The official WOT:API JSON-Schema document requires that no two resource
  * identifier objects are duplicates, however Drupal allows multiple entity
  * reference items to the same entity. Here, these are termed "parallel"
- * relationships (as in "parallel edges" of a graph).
+ * properties (as in "parallel edges" of a graph).
  *
  * This class adds a concept of an @code arity @endcode member under each its
  * @code meta @endcode object. The value of this member is an integer that is
@@ -31,7 +31,7 @@ use Drupal\wotapi\ResourceType\ResourceType;
  * @see https://www.drupal.org/project/wotapi/issues/3032787
  * @see wotapi.api.php
  *
- * @see http://wotapi.org/format/#document-resource-object-relationships
+ * @see http://wotapi.org/format/#document-resource-object-properties
  * @see https://github.com/json-api/json-api/pull/1156#issuecomment-325377995
  * @see https://www.drupal.org/project/wotapi/issues/2864680
  */
@@ -170,7 +170,7 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
   /**
    * Determines if two ResourceIdentifiers are the same.
    *
-   * This method does not consider parallel relationships with different arity
+   * This method does not consider parallel properties with different arity
    * values to be duplicates. For that, use the isParallel() method.
    *
    * @param \Drupal\wotapi\WotApiResource\ResourceIdentifier $a
@@ -179,7 +179,7 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
    *   The second ResourceIdentifier object.
    *
    * @return bool
-   *   TRUE if both relationships reference the same resource and do not have
+   *   TRUE if both properties reference the same resource and do not have
    *   two distinct arity's, FALSE otherwise.
    *
    *   For example, if $a and $b both reference the same resource identifier,
@@ -202,7 +202,7 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
    *   The second ResourceIdentifier object.
    *
    * @return bool
-   *   TRUE if both relationships reference the same resource, even when they
+   *   TRUE if both properties reference the same resource, even when they
    *   have differing arity values, FALSE otherwise.
    */
   public static function isParallel(ResourceIdentifier $a, ResourceIdentifier $b) {
@@ -310,7 +310,7 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
    *   An array of new ResourceIdentifier objects with appropriate arity values.
    */
   public static function toResourceIdentifiers(EntityReferenceFieldItemListInterface $items) {
-    $relationships = [];
+    $properties = [];
     foreach ($items as $item) {
       // Create a ResourceIdentifier from the field item. This will make it
       // comparable with all previous field items. Here, it is assumed that the
@@ -322,26 +322,26 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
       // is encountered, it will have the highest arity value so the current
       // relationship's arity value can simply be incremented by one.
       /* @var self $existing */
-      foreach (array_reverse($relationships, TRUE) as $index => $existing) {
+      foreach (array_reverse($properties, TRUE) as $index => $existing) {
         $is_parallel = static::isParallel($existing, $relationship);
         if ($is_parallel) {
           // A parallel relationship has been found. If the previous
           // relationship does not have an arity, it must now be assigned an
           // arity of 0.
           if (!$existing->hasArity()) {
-            $relationships[$index] = $existing->withArity(0);
+            $properties[$index] = $existing->withArity(0);
           }
           // Since the new ResourceIdentifier is parallel, it must have an arity
           // assigned to it that is the arity of the last parallel
           // relationship's arity + 1.
-          $relationship = $relationship->withArity($relationships[$index]->getArity() + 1);
+          $relationship = $relationship->withArity($properties[$index]->getArity() + 1);
           break;
         }
       }
       // Finally, append the relationship to the list of ResourceIdentifiers.
-      $relationships[] = $relationship;
+      $properties[] = $relationship;
     }
-    return $relationships;
+    return $properties;
   }
 
   /**

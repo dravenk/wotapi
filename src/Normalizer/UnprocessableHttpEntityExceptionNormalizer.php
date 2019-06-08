@@ -63,11 +63,11 @@ class UnprocessableHttpEntityExceptionNormalizer extends HttpExceptionNormalizer
         $error['detail'] = $violation->getPropertyPath() . ': '
           . PlainTextOutput::renderFromHtml($violation->getMessage());
 
-        $pointer = '/data/attributes/'
+        $pointer = '/data/'
           . str_replace('.', '/', $violation->getPropertyPath());
         if ($cardinality == 1) {
           // Remove erroneous '/0/' index for single-value fields.
-          $pointer = str_replace("/data/attributes/$field_name/0/", "/data/attributes/$field_name/", $pointer);
+          $pointer = str_replace("/data/$field_name/0/", "/data/$field_name/", $pointer);
         }
         $error['source']['pointer'] = $pointer;
 

@@ -44,11 +44,11 @@ use Drupal\Core\Access\AccessResult;
  * This eliminates the need for another abstraction layer in order implement
  * certain features of the specification.
  *
- * @section relationships Relationships
- * The specification defines semantics for the "relationships" between
+ * @section properties Relationships
+ * The specification defines semantics for the "properties" between
  * resources. Since the WOT:API module defines every entity type + bundle as a
  * resource type and does not allow non-entity resources, it is able to use
- * entity references to automatically define and represent the relationships
+ * entity references to automatically define and represent the properties
  * between all resources.
  *
  * @section revisions Resource versioning
@@ -142,7 +142,7 @@ use Drupal\Core\Access\AccessResult;
  *   section.
  * - Custom field type normalization is not supported because the WOT:API
  *   specification requires specific representations for resources (entities),
- *   attributes on resources (non-entity reference fields) and relationships
+ *   attributes on resources (non-entity reference fields) and properties
  *   between those resources (entity reference fields). A field contains
  *   properties, and properties are of a certain data type. All non-internal
  *   properties on a field are normalized.

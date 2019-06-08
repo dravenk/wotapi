@@ -53,8 +53,8 @@ class EntityReferenceFieldNormalizer extends FieldNormalizer {
     }, static::getRelationshipLinks($context['resource_object'], $field->getName()));
     $data_normalization = $normalized_items->getNormalization();
     $normalization = [
-      // Empty 'to-one' relationships must be NULL.
-      // Empty 'to-many' relationships must be an empty array.
+      // Empty 'to-one' properties must be NULL.
+      // Empty 'to-many' properties must be an empty array.
       // @link http://wotapi.org/format/#document-resource-object-linkage
       'data' => $cardinality === 1 ? array_shift($data_normalization) : $data_normalization,
     ];

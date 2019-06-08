@@ -24,17 +24,6 @@
         "data": {
           "$ref": "#/definitions/data"
         },
-        "included": {
-          "description": "To reduce the number of HTTP requests, servers **MAY** allow responses that include related resources along with the requested primary resources. Such responses are called \"compound documents\".",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/resource"
-          },
-          "uniqueItems": true
-        },
-        "meta": {
-          "$ref": "#/definitions/meta"
-        },
         "links": {
           "description": "Link members related to the primary data.",
           "allOf": [
@@ -138,8 +127,8 @@
         "attributes": {
           "$ref": "#/definitions/attributes"
         },
-        "relationships": {
-          "$ref": "#/definitions/relationships"
+        "properties": {
+          "$ref": "#/definitions/properties"
         },
         "links": {
           "$ref": "#/definitions/links"
@@ -151,7 +140,7 @@
       "additionalProperties": false
     },
     "relationshipLinks": {
-      "description": "A resource object **MAY** contain references to other resource objects (\"relationships\"). Relationships may be to-one or to-many. Relationships can be specified by including a member in a resource's links object.",
+      "description": "A resource object **MAY** contain references to other resource objects (\"properties\"). Relationships may be to-one or to-many. Relationships can be specified by including a member in a resource's links object.",
       "type": "object",
       "properties": {
         "self": {
@@ -197,19 +186,17 @@
       ]
     },
 
-    "attributes": {
-      "description": "Members of the attributes object (\"attributes\") represent information about the resource object in which it's defined.",
-      "type": "object",
-      "patternProperties": {
-        "^(?!relationships$|links$|id$|type$)\\w[-\\w_]*$": {
-          "description": "Attributes may contain any valid JSON value."
-        }
-      },
-      "additionalProperties": false
-    },
+    "attributes": {},
 
-    "relationships": {
-      "description": "Members of the relationships object (\"relationships\") represent references from the resource object in which it's defined to other resource objects.",
+    "patternProperties": {
+      "^(?!properties$|links$|id$|type$)\\w[-\\w_]*$": {
+        "description": "Attributes may contain any valid JSON value."
+      }
+    },
+    "additionalProperties": false,
+
+    "properties": {
+      "description": "Members of the properties object (\"properties\") represent references from the resource object in which it's defined to other resource objects.",
       "type": "object",
       "patternProperties": {
         "^(?!id$|type$)\\w[-\\w_]*$": {
@@ -254,7 +241,7 @@
       ]
     },
     "relationshipToMany": {
-      "description": "An array of objects each containing \"type\" and \"id\" members for to-many relationships.",
+      "description": "An array of objects each containing \"type\" and \"id\" members for to-many properties.",
       "type": "array",
       "items": {
         "$ref": "#/definitions/linkage"

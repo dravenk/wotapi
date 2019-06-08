@@ -89,20 +89,20 @@ class WotApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorma
       $normalized[$uuid_key] = $data['data']['id'];
     }
 
-    if (!empty($data['data']['relationships'])) {
+    if (!empty($data['data']['properties'])) {
       // Turn all single object relationship data fields into an array of
       // objects.
-      $relationships = array_map(function ($relationship) {
+      $properties = array_map(function ($relationship) {
         if (isset($relationship['data']['type']) && isset($relationship['data']['id'])) {
           return ['data' => [$relationship['data']]];
         }
         else {
           return $relationship;
         }
-      }, $data['data']['relationships']);
+      }, $data['data']['properties']);
 
       // Get an array of ids for every relationship.
-      $relationships = array_map(function ($relationship) {
+      $properties = array_map(function ($relationship) {
         if (empty($relationship['data'])) {
           return [];
         }
@@ -124,7 +124,7 @@ class WotApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorma
         catch (PluginNotFoundException $e) {
           throw new BadRequestHttpException("Invalid type specified for related resource: '" . $relationship['data'][0]['type'] . "'");
         }
-        // In order to maintain the order ($delta) of the relationships, we need
+        // In order to maintain the order ($delta) of the properties, we need
         // to load the entities and create a mapping between id and uuid.
         $uuid_key = $this->entityTypeManager
           ->getDefinition($entity_type_id)->getKey('uuid');
@@ -156,10 +156,10 @@ class WotApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorma
         }
 
         return array_filter($canonical_ids);
-      }, $relationships);
+      }, $properties);
 
       // Add the relationship ids.
-      $normalized = array_merge($normalized, $relationships);
+      $normalized = array_merge($normalized, $properties);
     }
     // Override deserialization target class with the one in the ResourceType.
     $class = $context['resource_type']->getDeserializationTargetClass();
@@ -326,9 +326,9 @@ class WotApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorma
    * Performs minimal validation of the document.
    */
   protected static function validateRequestBody(array $document, ResourceType $resource_type) {
-    // Ensure that the relationships key was not placed in the top level.
-    if (isset($document['relationships']) && !empty($document['relationships'])) {
-      throw new BadRequestHttpException("Found \"relationships\" within the document's top level. The \"relationships\" key must be within resource object.");
+    // Ensure that the properties key was not placed in the top level.
+    if (isset($document['properties']) && !empty($document['properties'])) {
+      throw new BadRequestHttpException("Found \"properties\" within the document's top level. The \"properties\" key must be within resource object.");
     }
     // Ensure that the resource object contains the "type" key.
     if (!isset($document['data']['type'])) {

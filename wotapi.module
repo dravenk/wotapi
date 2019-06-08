@@ -90,7 +90,7 @@ function wotapi_help($route_name, RouteMatchInterface $route_match) {
       ]) . '</p>';
       $output .= '<dl>';
       $output .= '<dt>' . t('General') . '</dt>';
-      $output .= '<dd>' . t('WOT:API is a particular implementation of REST that provides conventions for resource relationships, collections, filters, pagination, and sorting. These conventions help developers build clients faster and encourages reuse of code.') . '</dd>';
+      $output .= '<dd>' . t('WOT:API is a particular implementation of REST that provides conventions for resource properties, collections, filters, pagination, and sorting. These conventions help developers build clients faster and encourages reuse of code.') . '</dd>';
       $output .= '<dd>' . t('The <a href=":wotapi-docs">WOT:API</a> and <a href=":rest-docs">RESTful Web Services</a> modules serve similar purposes. <a href=":comparison">Read the comparison of the RESTFul Web Services and WOT:API modules</a> to determine the best choice for your site.', [
         ':wotapi-docs' => 'https://www.drupal.org/docs/8/modules/json-api',
         ':rest-docs' => 'https://www.drupal.org/docs/8/core/modules/rest',

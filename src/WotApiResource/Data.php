@@ -51,7 +51,7 @@ abstract class Data implements \IteratorAggregate, \Countable {
    *   The resources or resource identifiers for the collection.
    * @param int $cardinality
    *   The number of resources that this collection may contain. Related
-   *   resource collections may handle both to-one or to-many relationships. A
+   *   resource collections may handle both to-one or to-many properties. A
    *   to-one relationship should have a cardinality of 1. Use -1 for unlimited
    *   cardinality.
    */

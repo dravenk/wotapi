@@ -63,7 +63,7 @@ class ResourceObjectNormalizer extends NormalizerBase {
       'type' => CacheableNormalization::permanent($resource_type->getTypeName()),
       'id' => CacheableNormalization::permanent($object->getId()),
       'attributes' => CacheableNormalization::aggregate(array_diff_key($normalizer_values, array_flip($relationship_field_names)))->omitIfEmpty(),
-      'relationships' => CacheableNormalization::aggregate(array_intersect_key($normalizer_values, array_flip($relationship_field_names)))->omitIfEmpty(),
+      'properties' => CacheableNormalization::aggregate(array_intersect_key($normalizer_values, array_flip($relationship_field_names)))->omitIfEmpty(),
       'links' => $this->serializer->normalize($object->getLinks(), $format, $context)->omitIfEmpty(),
     ])->withCacheableDependency($object);
   }

@@ -100,7 +100,7 @@ class ResourceIdentifierNormalizer extends NormalizerBase implements Denormalize
       return new ResourceIdentifier($value['type'], $value['id'], isset($value['meta']) ? $value['meta'] : []);
     }, $data['data']);
     if (!ResourceIdentifier::areResourceIdentifiersUnique($resource_identifiers)) {
-      throw new BadRequestHttpException('Duplicate relationships are not permitted. Use `meta.arity` to distinguish resource identifiers with matching `type` and `id` values.');
+      throw new BadRequestHttpException('Duplicate properties are not permitted. Use `meta.arity` to distinguish resource identifiers with matching `type` and `id` values.');
     }
     return $resource_identifiers;
   }
@@ -130,7 +130,7 @@ class ResourceIdentifierNormalizer extends NormalizerBase implements Denormalize
       }
     }
     else {
-      // For to-one relationships you can have a NULL value.
+      // For to-one properties you can have a NULL value.
       if (is_null($data['data'])) {
         return ['data' => []];
       }

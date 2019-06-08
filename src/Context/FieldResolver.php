@@ -596,7 +596,7 @@ class FieldResolver {
    *   TRUE if any one of the given resource types is traversable.
    *
    * @todo This class shouldn't be aware of entity types and their definitions.
-   * Whether a resource can have relationships to other resources is information
+   * Whether a resource can have properties to other resources is information
    * we ought to be able to discover on the ResourceType. However, we cannot
    * reliably determine this information with existing APIs. Entities may be
    * backed by various storages that are unable to perform queries across
