@@ -72,102 +72,103 @@ class WotApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorma
   /**
    * {@inheritdoc}
    */
-  public function denormalize($data, $class, $format = NULL, array $context = []) {
-    $resource_type = $context['resource_type'];
-
-    // Validate a few common errors in document formatting.
-    static::validateRequestBody($data, $resource_type);
-
-    $normalized = [];
-
-    if (!empty($data['data']['attributes'])) {
-      $normalized = $data['data']['attributes'];
-    }
-
-    if (!empty($data['data']['id'])) {
-      $uuid_key = $this->entityTypeManager->getDefinition($resource_type->getEntityTypeId())->getKey('uuid');
-      $normalized[$uuid_key] = $data['data']['id'];
-    }
-
-    if (!empty($data['data']['properties'])) {
-      // Turn all single object relationship data fields into an array of
-      // objects.
-      $properties = array_map(function ($relationship) {
-        if (isset($relationship['data']['type']) && isset($relationship['data']['id'])) {
-          return ['data' => [$relationship['data']]];
-        }
-        else {
-          return $relationship;
-        }
-      }, $data['data']['properties']);
-
-      // Get an array of ids for every relationship.
-      $properties = array_map(function ($relationship) {
-        if (empty($relationship['data'])) {
-          return [];
-        }
-        if (empty($relationship['data'][0]['id'])) {
-          throw new BadRequestHttpException("No ID specified for related resource");
-        }
-        $id_list = array_column($relationship['data'], 'id');
-        if (empty($relationship['data'][0]['type'])) {
-          throw new BadRequestHttpException("No type specified for related resource");
-        }
-        if (!$resource_type = $this->resourceTypeRepository->getByTypeName($relationship['data'][0]['type'])) {
-          throw new BadRequestHttpException("Invalid type specified for related resource: '" . $relationship['data'][0]['type'] . "'");
-        }
-
-        $entity_type_id = $resource_type->getEntityTypeId();
-        try {
-          $entity_storage = $this->entityTypeManager->getStorage($entity_type_id);
-        }
-        catch (PluginNotFoundException $e) {
-          throw new BadRequestHttpException("Invalid type specified for related resource: '" . $relationship['data'][0]['type'] . "'");
-        }
-        // In order to maintain the order ($delta) of the properties, we need
-        // to load the entities and create a mapping between id and uuid.
-        $uuid_key = $this->entityTypeManager
-          ->getDefinition($entity_type_id)->getKey('uuid');
-        $related_entities = array_values($entity_storage->loadByProperties([$uuid_key => $id_list]));
-        $map = [];
-        foreach ($related_entities as $related_entity) {
-          $map[$related_entity->uuid()] = $related_entity->id();
-        }
-
-        // $id_list has the correct order of uuids. We stitch this together with
-        // $map which contains loaded entities, and then bring in the correct
-        // meta values from the relationship, whose deltas match with $id_list.
-        $canonical_ids = [];
-        foreach ($id_list as $delta => $uuid) {
-          if (!isset($map[$uuid])) {
-            // @see \Drupal\wotapi\Normalizer\EntityReferenceFieldNormalizer::normalize()
-            if ($uuid === 'virtual') {
-              continue;
-            }
-            throw new NotFoundHttpException(sprintf('The resource identified by `%s:%s` (given as a relationship item) could not be found.', $relationship['data'][$delta]['type'], $uuid));
-          }
-          $reference_item = [
-            'target_id' => $map[$uuid],
-          ];
-          if (isset($relationship['data'][$delta]['meta'])) {
-            $reference_item += $relationship['data'][$delta]['meta'];
-          }
-          $canonical_ids[] = $reference_item;
-        }
-
-        return array_filter($canonical_ids);
-      }, $properties);
-
-      // Add the relationship ids.
-      $normalized = array_merge($normalized, $properties);
-    }
-    // Override deserialization target class with the one in the ResourceType.
-    $class = $context['resource_type']->getDeserializationTargetClass();
-
-    return $this
-      ->serializer
-      ->denormalize($normalized, $class, $format, $context);
-  }
+  public function denormalize($data, $class, $format = NULL, array $context = []){}
+//  public function denormalize($data, $class, $format = NULL, array $context = []) {
+//    $resource_type = $context['resource_type'];
+//
+//    // Validate a few common errors in document formatting.
+//    static::validateRequestBody($data, $resource_type);
+//
+//    $normalized = [];
+//
+//    if (!empty($data['data']['attributes'])) {
+//      $normalized = $data['data']['attributes'];
+//    }
+//
+//    if (!empty($data['data']['id'])) {
+//      $uuid_key = $this->entityTypeManager->getDefinition($resource_type->getEntityTypeId())->getKey('uuid');
+//      $normalized[$uuid_key] = $data['data']['id'];
+//    }
+//
+//    if (!empty($data['data']['properties'])) {
+//      // Turn all single object relationship data fields into an array of
+//      // objects.
+//      $properties = array_map(function ($relationship) {
+//        if (isset($relationship['data']['type']) && isset($relationship['data']['id'])) {
+//          return ['data' => [$relationship['data']]];
+//        }
+//        else {
+//          return $relationship;
+//        }
+//      }, $data['data']['properties']);
+//
+//      // Get an array of ids for every relationship.
+//      $properties = array_map(function ($relationship) {
+//        if (empty($relationship['data'])) {
+//          return [];
+//        }
+//        if (empty($relationship['data'][0]['id'])) {
+//          throw new BadRequestHttpException("No ID specified for related resource");
+//        }
+//        $id_list = array_column($relationship['data'], 'id');
+//        if (empty($relationship['data'][0]['type'])) {
+//          throw new BadRequestHttpException("No type specified for related resource");
+//        }
+//        if (!$resource_type = $this->resourceTypeRepository->getByTypeName($relationship['data'][0]['type'])) {
+//          throw new BadRequestHttpException("Invalid type specified for related resource: '" . $relationship['data'][0]['type'] . "'");
+//        }
+//
+//        $entity_type_id = $resource_type->getEntityTypeId();
+//        try {
+//          $entity_storage = $this->entityTypeManager->getStorage($entity_type_id);
+//        }
+//        catch (PluginNotFoundException $e) {
+//          throw new BadRequestHttpException("Invalid type specified for related resource: '" . $relationship['data'][0]['type'] . "'");
+//        }
+//        // In order to maintain the order ($delta) of the properties, we need
+//        // to load the entities and create a mapping between id and uuid.
+//        $uuid_key = $this->entityTypeManager
+//          ->getDefinition($entity_type_id)->getKey('uuid');
+//        $related_entities = array_values($entity_storage->loadByProperties([$uuid_key => $id_list]));
+//        $map = [];
+//        foreach ($related_entities as $related_entity) {
+//          $map[$related_entity->uuid()] = $related_entity->id();
+//        }
+//
+//        // $id_list has the correct order of uuids. We stitch this together with
+//        // $map which contains loaded entities, and then bring in the correct
+//        // meta values from the relationship, whose deltas match with $id_list.
+//        $canonical_ids = [];
+//        foreach ($id_list as $delta => $uuid) {
+//          if (!isset($map[$uuid])) {
+//            // @see \Drupal\wotapi\Normalizer\EntityReferenceFieldNormalizer::normalize()
+//            if ($uuid === 'virtual') {
+//              continue;
+//            }
+//            throw new NotFoundHttpException(sprintf('The resource identified by `%s:%s` (given as a relationship item) could not be found.', $relationship['data'][$delta]['type'], $uuid));
+//          }
+//          $reference_item = [
+//            'target_id' => $map[$uuid],
+//          ];
+//          if (isset($relationship['data'][$delta]['meta'])) {
+//            $reference_item += $relationship['data'][$delta]['meta'];
+//          }
+//          $canonical_ids[] = $reference_item;
+//        }
+//
+//        return array_filter($canonical_ids);
+//      }, $properties);
+//
+//      // Add the relationship ids.
+//      $normalized = array_merge($normalized, $properties);
+//    }
+//    // Override deserialization target class with the one in the ResourceType.
+//    $class = $context['resource_type']->getDeserializationTargetClass();
+//
+//    return $this
+//      ->serializer
+//      ->denormalize($normalized, $class, $format, $context);
+//  }
 
   /**
    * {@inheritdoc}
@@ -175,41 +176,19 @@ class WotApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorma
   public function normalize($object, $format = NULL, array $context = []) {
     assert($object instanceof WotApiDocumentTopLevel);
     $data = $object->getData();
-//    $document['wotapi'] = CacheableNormalization::permanent([
-//      'version' => WotApiSpec::SUPPORTED_SPECIFICATION_VERSION,
-//      'meta' => [
-//        'links' => [
-//          'self' => [
-//            'href' => WotApiSpec::SUPPORTED_SPECIFICATION_PERMALINK,
-//          ],
-//        ],
-//      ],
-//    ]);
-    if ($data instanceof ErrorCollection) {
-      $document['errors'] = $this->normalizeErrorDocument($object, $format, $context);
-    }
-    else {
+
+    $doc = [];
+    foreach ($data as $key => $value) {
       // Add data.
       // @todo: remove this if-else and just call $this->serializer->normalize($data...) in https://www.drupal.org/project/wotapi/issues/3036285.
       if ($data instanceof EntityReferenceFieldItemListInterface) {
-        $document['data'] = $this->normalizeEntityReferenceFieldItemList($object, $format, $context);
+        $doc[$key] = $this->normalizeEntityReferenceFieldItemList($object, $format, $context);
       }
       else {
-        $document['data'] = $this->serializer->normalize($data, $format, $context);
+        $doc[$key] = $this->serializer->normalize($value, $format, $context);
       }
-      // Add includes.
-      $document['included'] = $this->serializer->normalize($object->getIncludes(), $format, $context)->omitIfEmpty();
-      // Add omissions and metadata.
-      $normalized_omissions = $this->normalizeOmissionsLinks($object->getOmissions(), $format, $context);
-      $meta = !$normalized_omissions instanceof CacheableOmission
-        ? array_merge($object->getMeta(), ['omitted' => $normalized_omissions->getNormalization()])
-        : $object->getMeta();
-      $document['meta'] = (new CacheableNormalization($normalized_omissions, $meta))->omitIfEmpty();
     }
-    // Add document links.
-    $document['links'] = $this->serializer->normalize($object->getLinks(), $format, $context)->omitIfEmpty();
-    // Every WOT:API document contains absolute URLs.
-    return CacheableNormalization::aggregate($document)->withCacheableDependency((new CacheableMetadata())->addCacheContexts(['url.site']));
+    return CacheableNormalization::aggregate($doc)->withCacheableDependency((new CacheableMetadata())->addCacheContexts(['url.site']));
   }
 
   /**

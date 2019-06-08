@@ -207,7 +207,7 @@ class EntityResource {
       throw $resource_object;
     }
     $primary_data = new ResourceObjectData([$resource_object], 1);
-    $response = $this->buildWrappedResponse($primary_data, $request, $this->getIncludes($request, $primary_data));
+    $response = $this->buildWrappedResponse($primary_data, $request, new NullIncludedData());
     return $response;
   }
 
@@ -286,7 +286,7 @@ class EntityResource {
       $primary_data->setTotalCount($total_results);
     }
 
-    $response = $this->respondWithCollection($primary_data, $this->getIncludes($request, $primary_data), $request, $resource_type, $params[OffsetPage::KEY_NAME]);
+    $response = $this->respondWithCollection($primary_data, new NullIncludedData(), $request, $resource_type, $params[OffsetPage::KEY_NAME]);
 
     $response->addCacheableDependency($query_cacheability);
     $response->addCacheableDependency($count_query_cacheability);
@@ -370,7 +370,7 @@ class EntityResource {
       $collection_data[] = $this->entityAccessChecker->getAccessCheckedResourceObject($referenced_entity);
     }
     $primary_data = new ResourceObjectData($collection_data, $field_list->getFieldDefinition()->getFieldStorageDefinition()->getCardinality());
-    $response = $this->buildWrappedResponse($primary_data, $request, $this->getIncludes($request, $primary_data));
+    $response = $this->buildWrappedResponse($primary_data, $request, new NullIncludedData());
 
     // $response does not contain the entity list cache tag. We add the
     // cacheable metadata for the finite list of entities in the relationship.
@@ -403,7 +403,7 @@ class EntityResource {
     // service, so we don't need to call ::getAccessCheckedResourceObject().
     $resource_object = ResourceObject::createFromEntity($resource_type, $entity);
     $relationship_object_urls = EntityReferenceFieldNormalizer::getRelationshipLinks($resource_object, $related);
-    $response = $this->buildWrappedResponse($field_list, $request, $this->getIncludes($request, $resource_object), $response_code, [], array_reduce(array_keys($relationship_object_urls), function (LinkCollection $links, $key) use ($relationship_object_urls) {
+    $response = $this->buildWrappedResponse($field_list, $request, new NullIncludedData(), $response_code, [], array_reduce(array_keys($relationship_object_urls), function (LinkCollection $links, $key) use ($relationship_object_urls) {
       return $links->withLink($key, new Link(new CacheableMetadata(), $relationship_object_urls[$key], [$key]));
     }, new LinkCollection([])));
     // Add the host entity as a cacheable dependency.
@@ -886,43 +886,6 @@ class EntityResource {
   }
 
   /**
-   * Takes a field from the origin entity and puts it to the destination entity.
-   *
-   * @param \Drupal\wotapi\ResourceType\ResourceType $resource_type
-   *   The WOT:API resource type of the entity to be updated.
-   * @param \Drupal\Core\Entity\EntityInterface $origin
-   *   The entity that contains the field values.
-   * @param \Drupal\Core\Entity\EntityInterface $destination
-   *   The entity that needs to be updated.
-   * @param string $field_name
-   *   The name of the field to extract and update.
-   *
-   * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
-   *   Thrown when the serialized and destination entities are of different
-   *   types.
-   */
-  protected function updateEntityField(ResourceType $resource_type, EntityInterface $origin, EntityInterface $destination, $field_name) {
-    // The update is different for configuration entities and content entities.
-    if ($origin instanceof ContentEntityInterface && $destination instanceof ContentEntityInterface) {
-      // First scenario: both are content entities.
-      $field_name = $resource_type->getInternalName($field_name);
-      $destination_field_list = $destination->get($field_name);
-
-      $origin_field_list = $origin->get($field_name);
-      if ($this->checkPatchFieldAccess($destination_field_list, $origin_field_list)) {
-        $destination->set($field_name, $origin_field_list->getValue());
-      }
-    }
-    elseif ($origin instanceof ConfigEntityInterface && $destination instanceof ConfigEntityInterface) {
-      // Second scenario: both are config entities.
-      $destination->set($field_name, $origin->get($field_name));
-    }
-    else {
-      throw new BadRequestHttpException('The serialized entity and the destination entity are of different types.');
-    }
-  }
-
-  /**
    * Gets includes for the given response data.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
@@ -942,52 +905,6 @@ class EntityResource {
     return $request->query->has('include') && ($include_parameter = $request->query->get('include')) && !empty($include_parameter)
       ? $this->includeResolver->resolve($data, $include_parameter)
       : new NullIncludedData();
-  }
-
-  /**
-   * Checks whether the given field should be PATCHed.
-   *
-   * @param \Drupal\Core\Field\FieldItemListInterface $original_field
-   *   The original (stored) value for the field.
-   * @param \Drupal\Core\Field\FieldItemListInterface $received_field
-   *   The received value for the field.
-   *
-   * @return bool
-   *   Whether the field should be PATCHed or not.
-   *
-   * @throws \Drupal\wotapi\Exception\EntityAccessDeniedHttpException
-   *   Thrown when the user sending the request is not allowed to update the
-   *   field. Only thrown when the user could not abuse this information to
-   *   determine the stored value.
-   *
-   * @internal
-   *
-   * @see \Drupal\rest\Plugin\rest\resource\EntityResource::checkPatchFieldAccess()
-   */
-  protected function checkPatchFieldAccess(FieldItemListInterface $original_field, FieldItemListInterface $received_field) {
-    // If the user is allowed to edit the field, it is always safe to set the
-    // received value. We may be setting an unchanged value, but that is ok.
-    $field_edit_access = $original_field->access('edit', NULL, TRUE);
-    if ($field_edit_access->isAllowed()) {
-      return TRUE;
-    }
-
-    // The user might not have access to edit the field, but still needs to
-    // submit the current field value as part of the PATCH request. For
-    // example, the entity keys required by denormalizers. Therefore, if the
-    // received value equals the stored value, return FALSE without throwing an
-    // exception. But only for fields that the user has access to view, because
-    // the user has no legitimate way of knowing the current value of fields
-    // that they are not allowed to view, and we must not make the presence or
-    // absence of a 403 response a way to find that out.
-    if ($original_field->access('view') && $original_field->equals($received_field)) {
-      return FALSE;
-    }
-
-    // It's helpful and safe to let the user know when they are not allowed to
-    // update a field.
-    $field_name = $received_field->getName();
-    throw new EntityAccessDeniedHttpException($original_field->getEntity(), $field_edit_access, '/attributes/' . $field_name, sprintf('The current user is not allowed to PATCH the selected field (%s).', $field_name));
   }
 
   /**
