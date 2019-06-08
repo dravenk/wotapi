@@ -1,10 +1,2 @@
 route_callbacks:
   - '\Drupal\wotapi\Routing\Routes::routes'
-
-wotapi.settings:
-  path: '/admin/config/services/wotapi'
-  defaults:
-    _form: 'Drupal\wotapi\Form\WotApiSettingsForm'
-    _title: 'WOT:API'
-  requirements:
-    _permission: 'administer site configuration'

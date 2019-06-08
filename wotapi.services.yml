@@ -165,13 +165,6 @@ services:
       - '@wotapi.serializer'
       - '@datetime.time'
       - '@current_user'
-  wotapi.file_upload:
-    class: Drupal\wotapi\Controller\FileUpload
-    arguments:
-      - '@current_user'
-      - '@entity_field.manager'
-      - '@wotapi.file.uploader.field'
-      - '@http_kernel'
 
   # Event subscribers.
   wotapi.custom_query_parameter_names_validator.subscriber:
@@ -223,9 +216,3 @@ services:
   serializer.normalizer.htt_exception.wotapi:
     alias: serializer.normalizer.http_exception.wotapi
     deprecated: The "%service_id%" service is deprecated. You should use the 'serializer.normalizer.http_exception.wotapi' service instead.
-
-  # @todo Remove once https://www.drupal.org/project/drupal/issues/2940383 lands.
-  wotapi.file.uploader.field:
-    class: Drupal\wotapi\Controller\TemporaryJsonapiFileFieldUploader
-    public: false
-    arguments: ['@logger.channel.file', '@file_system', '@file.mime_type.guesser', '@token', '@lock', '@config.factory']

@@ -175,16 +175,16 @@ class WotApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorma
   public function normalize($object, $format = NULL, array $context = []) {
     assert($object instanceof WotApiDocumentTopLevel);
     $data = $object->getData();
-    $document['wotapi'] = CacheableNormalization::permanent([
-      'version' => WotApiSpec::SUPPORTED_SPECIFICATION_VERSION,
-      'meta' => [
-        'links' => [
-          'self' => [
-            'href' => WotApiSpec::SUPPORTED_SPECIFICATION_PERMALINK,
-          ],
-        ],
-      ],
-    ]);
+//    $document['wotapi'] = CacheableNormalization::permanent([
+//      'version' => WotApiSpec::SUPPORTED_SPECIFICATION_VERSION,
+//      'meta' => [
+//        'links' => [
+//          'self' => [
+//            'href' => WotApiSpec::SUPPORTED_SPECIFICATION_PERMALINK,
+//          ],
+//        ],
+//      ],
+//    ]);
     if ($data instanceof ErrorCollection) {
       $document['errors'] = $this->normalizeErrorDocument($object, $format, $context);
     }

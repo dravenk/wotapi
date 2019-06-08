@@ -66,7 +66,7 @@ class Routes implements ContainerInjectionInterface {
    *
    * @var string
    */
-  protected $jsonApiBasePath;
+  protected $wotApiBasePath;
 
   /**
    * Instantiates a Routes object.
@@ -90,7 +90,7 @@ class Routes implements ContainerInjectionInterface {
       substr($wotapi_base_path, -1) !== '/',
       sprintf('The provided base path should not contain a trailing slash "/". Given: "%s".', $wotapi_base_path)
     );
-    $this->jsonApiBasePath = $wotapi_base_path;
+    $this->wotApiBasePath = $wotapi_base_path;
   }
 
   /**
@@ -109,21 +109,16 @@ class Routes implements ContainerInjectionInterface {
    */
   public function routes() {
     $routes = new RouteCollection();
-    $upload_routes = new RouteCollection();
 
     // WOT:API's routes: entry point + routes for every resource type.
     foreach ($this->resourceTypeRepository->all() as $resource_type) {
-      $routes->addCollection(static::getRoutesForResourceType($resource_type, $this->jsonApiBasePath));
-      $upload_routes->addCollection(static::getFileUploadRoutesForResourceType($resource_type, $this->jsonApiBasePath));
+      $routes->addCollection(static::getRoutesForResourceType($resource_type, $this->wotApiBasePath));
     }
-    $routes->add('wotapi.resource_list', static::getEntryPointRoute($this->jsonApiBasePath));
+    $routes->add('wotapi.resource_list', static::getEntryPointRoute($this->wotApiBasePath));
 
     // Require the WOT:API media type header on every route, except on file
     // upload routes, where we require `application/octet-stream`.
     $routes->addRequirements(['_content_type_format' => 'api_json']);
-    $upload_routes->addRequirements(['_content_type_format' => 'bin']);
-
-    $routes->addCollection($upload_routes);
 
     // Enable all available authentication providers.
     $routes->addOptions(['_auth' => $this->providerIds]);
@@ -167,17 +162,6 @@ class Routes implements ContainerInjectionInterface {
       $routes->add(static::getRouteName($resource_type, 'collection'), $collection_route);
     }
 
-    // Creation route.
-    if ($resource_type->isMutable()) {
-      $collection_create_route = new Route("/{$resource_type->getPath()}");
-      $collection_create_route->addDefaults([RouteObjectInterface::CONTROLLER_NAME => static::CONTROLLER_SERVICE_NAME . ':createIndividual']);
-      $collection_create_route->setMethods(['POST']);
-      $create_requirement = sprintf("%s:%s", $resource_type->getEntityTypeId(), $resource_type->getBundle());
-      $collection_create_route->setRequirement('_entity_create_access', $create_requirement);
-      $collection_create_route->setRequirement('_csrf_request_header_token', 'TRUE');
-      $routes->add(static::getRouteName($resource_type, 'collection.post'), $collection_create_route);
-    }
-
     // Individual routes like `/wotapi/node/article/{uuid}` or
     // `/wotapi/node/article/{uuid}/relationships/uid`.
     $routes->addCollection(static::getIndividualRoutesForResourceType($resource_type));
@@ -189,66 +173,6 @@ class Routes implements ContainerInjectionInterface {
     }
 
     // Resource routes all have the same base path.
-    $routes->addPrefix($path_prefix);
-
-    return $routes;
-  }
-
-  /**
-   * Gets the file upload route collection for the given resource type.
-   *
-   * @param \Drupal\wotapi\ResourceType\ResourceType $resource_type
-   *   The resource type for which the route collection should be created.
-   * @param string $path_prefix
-   *   The root path prefix.
-   *
-   * @return \Symfony\Component\Routing\RouteCollection
-   *   The route collection.
-   */
-  protected static function getFileUploadRoutesForResourceType(ResourceType $resource_type, $path_prefix) {
-    $routes = new RouteCollection();
-
-    // Internal resources have no routes; individual routes require locations.
-    if ($resource_type->isInternal() || !$resource_type->isLocatable()) {
-      return $routes;
-    }
-
-    // File upload routes are only necessary for resource types that have file
-    // fields.
-    $has_file_field = array_reduce($resource_type->getRelatableResourceTypes(), function ($carry, array $target_resource_types) {
-      return $carry || static::hasNonInternalFileTargetResourceTypes($target_resource_types);
-    }, FALSE);
-    if (!$has_file_field) {
-      return $routes;
-    }
-
-    if ($resource_type->isMutable()) {
-      $path = $resource_type->getPath();
-      $entity_type_id = $resource_type->getEntityTypeId();
-
-      $new_resource_file_upload_route = new Route("/{$path}/{file_field_name}");
-      $new_resource_file_upload_route->addDefaults([RouteObjectInterface::CONTROLLER_NAME => 'wotapi.file_upload:handleFileUploadForNewResource']);
-      $new_resource_file_upload_route->setMethods(['POST']);
-      $new_resource_file_upload_route->setRequirement('_csrf_request_header_token', 'TRUE');
-      $routes->add(static::getFileUploadRouteName($resource_type, 'new_resource'), $new_resource_file_upload_route);
-
-      $existing_resource_file_upload_route = new Route("/{$path}/{entity}/{file_field_name}");
-      $existing_resource_file_upload_route->addDefaults([RouteObjectInterface::CONTROLLER_NAME => 'wotapi.file_upload:handleFileUploadForExistingResource']);
-      $existing_resource_file_upload_route->setMethods(['POST']);
-      $existing_resource_file_upload_route->setRequirement('_csrf_request_header_token', 'TRUE');
-      $routes->add(static::getFileUploadRouteName($resource_type, 'existing_resource'), $existing_resource_file_upload_route);
-
-      // Add entity parameter conversion to every route.
-      $routes->addOptions(['parameters' => ['entity' => ['type' => 'entity:' . $entity_type_id]]]);
-
-      // Add the resource type as a parameter to every resource route.
-      foreach ($routes as $route) {
-        static::addRouteParameter($route, static::RESOURCE_TYPE_KEY, ['type' => ResourceTypeConverter::PARAM_TYPE_ID]);
-        $route->addDefaults([static::RESOURCE_TYPE_KEY => $resource_type->getTypeName()]);
-      }
-    }
-
-    // File upload routes all have the same base path.
     $routes->addPrefix($path_prefix);
 
     return $routes;
@@ -295,20 +219,20 @@ class Routes implements ContainerInjectionInterface {
     // checked in the controller. So it's safe to allow anybody access.
     $individual_route->setRequirement('_access', 'TRUE');
     $routes->add(static::getRouteName($resource_type, 'individual'), $individual_route);
-    if ($resource_type->isMutable()) {
-      $individual_update_route = new Route($individual_route->getPath());
-      $individual_update_route->addDefaults([RouteObjectInterface::CONTROLLER_NAME => static::CONTROLLER_SERVICE_NAME . ':patchIndividual']);
-      $individual_update_route->setMethods(['PATCH']);
-      $individual_update_route->setRequirement('_entity_access', "entity.update");
-      $individual_update_route->setRequirement('_csrf_request_header_token', 'TRUE');
-      $routes->add(static::getRouteName($resource_type, 'individual.patch'), $individual_update_route);
-      $individual_remove_route = new Route($individual_route->getPath());
-      $individual_remove_route->addDefaults([RouteObjectInterface::CONTROLLER_NAME => static::CONTROLLER_SERVICE_NAME . ':deleteIndividual']);
-      $individual_remove_route->setMethods(['DELETE']);
-      $individual_remove_route->setRequirement('_entity_access', "entity.delete");
-      $individual_remove_route->setRequirement('_csrf_request_header_token', 'TRUE');
-      $routes->add(static::getRouteName($resource_type, 'individual.delete'), $individual_remove_route);
-    }
+//    if ($resource_type->isMutable()) {
+//      $individual_update_route = new Route($individual_route->getPath());
+//      $individual_update_route->addDefaults([RouteObjectInterface::CONTROLLER_NAME => static::CONTROLLER_SERVICE_NAME . ':patchIndividual']);
+//      $individual_update_route->setMethods(['PATCH']);
+//      $individual_update_route->setRequirement('_entity_access', "entity.update");
+//      $individual_update_route->setRequirement('_csrf_request_header_token', 'TRUE');
+//      $routes->add(static::getRouteName($resource_type, 'individual.patch'), $individual_update_route);
+//      $individual_remove_route = new Route($individual_route->getPath());
+//      $individual_remove_route->addDefaults([RouteObjectInterface::CONTROLLER_NAME => static::CONTROLLER_SERVICE_NAME . ':deleteIndividual']);
+//      $individual_remove_route->setMethods(['DELETE']);
+//      $individual_remove_route->setRequirement('_entity_access', "entity.delete");
+//      $individual_remove_route->setRequirement('_csrf_request_header_token', 'TRUE');
+//      $routes->add(static::getRouteName($resource_type, 'individual.delete'), $individual_remove_route);
+//    }
 
     foreach ($resource_type->getRelatableResourceTypes() as $relationship_field_name => $target_resource_types) {
       // Read, update, add, or remove an individual resources relationships to
@@ -403,21 +327,6 @@ class Routes implements ContainerInjectionInterface {
    */
   public static function getRouteName(ResourceType $resource_type, $route_type) {
     return sprintf('wotapi.%s.%s', $resource_type->getTypeName(), $route_type);
-  }
-
-  /**
-   * Get a unique route name for the file upload resource type and route type.
-   *
-   * @param \Drupal\wotapi\ResourceType\ResourceType $resource_type
-   *   The resource type for which the route collection should be created.
-   * @param string $route_type
-   *   The route type. E.g. 'individual' or 'collection'.
-   *
-   * @return string
-   *   The generated route name.
-   */
-  protected static function getFileUploadRouteName(ResourceType $resource_type, $route_type) {
-    return sprintf('wotapi.%s.%s.%s', $resource_type->getTypeName(), 'file_upload', $route_type);
   }
 
   /**

@@ -17,7 +17,7 @@ use Drupal\wotapi\DependencyInjection\Compiler\RegisterSerializationClassesCompi
  * @see https://www.drupal.org/project/wotapi/issues/3032787
  * @see wotapi.api.php
  */
-class JsonapiServiceProvider implements ServiceModifierInterface, ServiceProviderInterface {
+class WotapiServiceProvider implements ServiceModifierInterface, ServiceProviderInterface {
 
   /**
    * {@inheritdoc}
