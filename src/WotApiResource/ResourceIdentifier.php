@@ -6,7 +6,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\TypedData\DataReferenceDefinitionInterface;
-use Drupal\Core\TypedData\TypedDataInternalPropertiesHelper;
 use Drupal\wotapi\ResourceType\ResourceType;
 
 /**

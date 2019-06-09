@@ -71,7 +71,7 @@ class ResourceObjectNormalizer extends NormalizerBase {
       'type' => CacheableNormalization::permanent($resource_type->getTypeName()),
       'id' => CacheableNormalization::permanent($object->getId()),
 //      'properties' => CacheableNormalization::aggregate(array_intersect_key($normalizer_values, array_flip($relationship_field_names)))->omitIfEmpty(),
-      'links' => $this->serializer->normalize($object->getLinks(), $format, $context)->omitIfEmpty(),
+//      'links' => $this->serializer->normalize($object->getLinks(), $format, $context)->omitIfEmpty(),
     ];
 
     $attributes = array_diff_key($normalizer_values, array_flip($relationship_field_names));
@@ -79,11 +79,21 @@ class ResourceObjectNormalizer extends NormalizerBase {
       $normalization[$key] = $value;
     };
 
+    $links = [];
     // @Todo ugly code.
     $relationship_norma = array_intersect_key($normalizer_values, array_flip($relationship_field_names));
     foreach ($relationship_norma as $key => $value){
+      foreach ($value->getNormalization() as $k => $v){
+        if ($k == 'links' && count($v) == 1){
+          $link['rel'] = $key;
+          $link['href'] = $v[0]['href'];
+          array_push($links,$link);
+        }
+      }
       $normalization[$key] = $value;
     };
+    $normalization['links'] = CacheableNormalization::permanent($links);
+
     unset($normalization['properties']);
     $properties_normalization = array_intersect_key($normalizer_values, array_flip(['properties']));
     $property_values =[];

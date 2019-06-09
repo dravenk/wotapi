@@ -833,10 +833,10 @@ class EntityResource {
   protected function buildWrappedResponse($data, Request $request, IncludedData $includes, $response_code = 200, array $headers = [], LinkCollection $links = NULL, array $meta = []) {
     assert($data instanceof Data || $data instanceof FieldItemListInterface);
     $links = ($links ?: new LinkCollection([]));
-    if (!$links->hasLinkWithKey('self')) {
-      $self_link = new Link(new CacheableMetadata(), self::getRequestLink($request), ['self']);
-      $links = $links->withLink('self', $self_link);
-    }
+//    if (!$links->hasLinkWithKey('self')) {
+//      $self_link = new Link(new CacheableMetadata(), self::getRequestLink($request), ['self']);
+//      $links = $links->withLink('self', $self_link);
+//    }
     $response = new ResourceResponse(new WotApiDocumentTopLevel($data, $includes, $links, $meta), $response_code, $headers);
     $cacheability = (new CacheableMetadata())->addCacheContexts([
       // Make sure that different sparse fieldsets are cached differently.
