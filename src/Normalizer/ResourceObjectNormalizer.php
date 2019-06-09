@@ -70,14 +70,39 @@ class ResourceObjectNormalizer extends NormalizerBase {
     $normalization = [
       'type' => CacheableNormalization::permanent($resource_type->getTypeName()),
       'id' => CacheableNormalization::permanent($object->getId()),
-      'properties' => CacheableNormalization::aggregate(array_intersect_key($normalizer_values, array_flip($relationship_field_names)))->omitIfEmpty(),
+//      'properties' => CacheableNormalization::aggregate(array_intersect_key($normalizer_values, array_flip($relationship_field_names)))->omitIfEmpty(),
       'links' => $this->serializer->normalize($object->getLinks(), $format, $context)->omitIfEmpty(),
     ];
 
-    $attr = array_diff_key($normalizer_values, array_flip($relationship_field_names));
-    foreach ($attr as $key => $value){
+    $attributes = array_diff_key($normalizer_values, array_flip($relationship_field_names));
+    foreach ($attributes as $key => $value){
       $normalization[$key] = $value;
     };
+
+    // @Todo ugly code.
+    $relationship_norma = array_intersect_key($normalizer_values, array_flip($relationship_field_names));
+    foreach ($relationship_norma as $key => $value){
+      $normalization[$key] = $value;
+    };
+    unset($normalization['properties']);
+    $properties_normalization = array_intersect_key($normalizer_values, array_flip(['properties']));
+    $property_values =[];
+    foreach ($properties_normalization as $key => $value){
+      foreach ($value->getNormalization() as $k => $v){
+        if (is_int($k)){
+          $property_values[$v['id']]= $v;
+        } else{
+          // $k = links => $v = {"href"="/"}
+          $property_values[$k] = $v;
+        }
+      }
+      $property_norm = CacheableNormalization::permanent($property_values);
+      $normalization[$key] = $property_norm;
+    };
+
+//    foreach ($properties_normalization as $key => $value){
+//      $normalization[$key] = $value;
+//    };
 
     $obj = CacheableNormalization::aggregate($normalization)->withCacheableDependency($object);
     return $obj;

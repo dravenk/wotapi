@@ -52,12 +52,22 @@ class PropertiesFieldNormalizer extends FieldNormalizer {
       return ['href' => $href->getGeneratedUrl()];
     }, static::getPropertiesLinks($context['resource_object'], $field->getName()));
     $data_normalization = $normalized_items->getNormalization();
-    $normalization = [
-      // Empty 'to-one' properties must be NULL.
-      // Empty 'to-many' properties must be an empty array.
-      // @link http://wotapi.org/format/#document-resource-object-linkage
-      'data' => $cardinality === 1 ? array_shift($data_normalization) : $data_normalization,
-    ];
+//    $normalization = [
+//      // Empty 'to-one' properties must be NULL.
+//      // Empty 'to-many' properties must be an empty array.
+//      // @link http://wotapi.org/format/#document-resource-object-linkage
+//      'data' => $cardinality === 1 ? array_shift($data_normalization) : $data_normalization,
+//    ];
+
+    $normalization = [];
+    if ($cardinality === 1 ){
+      $normalization = array_shift($data_normalization);
+    } else{
+      foreach ($data_normalization as $key => $value) {
+        $normalization[$key] = $value;
+      }
+    }
+
     if (!empty($links)) {
       $normalization['links'] = $links;
     }

@@ -84,14 +84,19 @@ class WotApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorma
     $doc = [];
     foreach ($data as $key => $value) {
       // Add data.
-      // @todo: remove this if-else and just call $this->serializer->normalize($data...) in https://www.drupal.org/project/wotapi/issues/3036285.
-      if ($data instanceof EntityReferenceFieldItemListInterface) {
-        $doc[$key] = $this->normalizeEntityReferenceFieldItemList($object, $format, $context);
-      }
-      else {
-        $doc[$key] = $this->serializer->normalize($value, $format, $context);
-      }
+      // @todo: remove this if-else and just call $this->serializer->normalize($data...) in https://www.drupal.org/project/jsonapi/issues/3036285.
+//      if ($data instanceof EntityReferenceFieldItemListInterface) {
+//        $doc[$key] = $this->normalizeEntityReferenceFieldItemList($object, $format, $context);
+//      }
+//      else {
+//        $doc[$key] = $this->serializer->normalize($value, $format, $context);
+//      }
+      $doc[$key] = $this->serializer->normalize($value, $format, $context);
     }
+    if (count($doc) == 1){
+      return CacheableNormalization::permanent($doc[0]->getNormalization())->withCacheableDependency((new CacheableMetadata())->addCacheContexts(['url.site']));
+    }
+
     return CacheableNormalization::aggregate($doc)->withCacheableDependency((new CacheableMetadata())->addCacheContexts(['url.site']));
   }
 
