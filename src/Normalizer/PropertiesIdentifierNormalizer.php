@@ -3,11 +3,10 @@
 namespace Drupal\wotapi\Normalizer;
 
 use Drupal\Core\Entity\EntityFieldManagerInterface;
-use Drupal\wotapi\Controller\EntityResource;
 use Drupal\wotapi\WotApiResource\ResourceIdentifier;
 use Drupal\wotapi\Normalizer\Value\CacheableNormalization;
-use Drupal\wotapi\WotApiResource\ResourceObject;
-use Drupal\wotapi\WotApiResource\ResourceObjectData;
+use Drupal\wotapi\ResourceType\ResourceType;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 /**
@@ -22,7 +21,7 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
  * @see https://www.drupal.org/project/wotapi/issues/3032787
  * @see wotapi.api.php
  */
-class ResourceIdentifierNormalizer extends NormalizerBase implements DenormalizerInterface {
+class PropertiesIdentifierNormalizer extends NormalizerBase implements DenormalizerInterface {
 
   /**
    * {@inheritdoc}

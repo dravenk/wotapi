@@ -127,6 +127,18 @@ class ResourceType {
   }
 
   /**
+   * Gets the fields.
+   *
+   * @return string
+   *   The entity type ID.
+   *
+   * @see \Drupal\Core\Entity\EntityInterface::getEntityTypeId
+   */
+  public function getFields() {
+    return $this->fields;
+  }
+
+  /**
    * Gets the bundle.
    *
    * @return string

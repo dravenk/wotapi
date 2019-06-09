@@ -4,6 +4,8 @@ namespace Drupal\wotapi\Normalizer;
 
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Url;
+use Drupal\wotapi\Routing\Routes;
 use Drupal\wotapi\WotApiResource\ResourceObject;
 use Drupal\wotapi\Normalizer\Value\CacheableNormalization;
 use Drupal\wotapi\Normalizer\Value\CacheableOmission;
@@ -79,23 +81,73 @@ class ResourceObjectNormalizer extends NormalizerBase {
       $normalization[$key] = $value;
     };
 
-    $links = [];
     // @Todo ugly code.
-    $relationship_norma = array_intersect_key($normalizer_values, array_flip($relationship_field_names));
-    foreach ($relationship_norma as $key => $value){
+//    unset($normalization['properties']);
+//    $properties_normalization = array_intersect_key($normalizer_values, array_flip(['properties']));
+//    $normalization = $this->setNormalizeProperties($normalization, $properties_normalization,[]);
+//
+//    $relationship_normalization = array_intersect_key($normalizer_values,  array_diff_key(array_flip($relationship_field_names),array_flip(['properties'])));
+//    $normalization =  $this->setReferenceFieldsNormalize($normalization,$relationship_normalization,$context);
+
+    $relationship_normalization = array_intersect_key($normalizer_values, array_flip($relationship_field_names));
+    $normalization =  $this->setReferenceFieldsNormalize($normalization,$relationship_normalization,$context);
+
+    $obj = CacheableNormalization::aggregate($normalization)->withCacheableDependency($object);
+    return $obj;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setReferenceFieldsNormalize($normalization ,$relationship_normalization, $context =[]){
+    $links = [];
+
+    $object = $context['resource_object'];
+    $link['rel'] = $object->getResourceType()->getTypeName();
+    $self_links = $object->getLinks();
+    foreach ($self_links as $k => $v){
+      $href = $v[0];
+      $link['href'] = $href->getHref();
+    }
+    array_push($links, $link);
+
+    foreach ($relationship_normalization as $key => $value){
+
+      $property_values =[];
+
       foreach ($value->getNormalization() as $k => $v){
+
         if ($k == 'links' && count($v) == 1){
           $link['rel'] = $key;
           $link['href'] = $v[0]['href'];
           array_push($links,$link);
         }
+        if (is_int($k)){
+          $property_values[$v['id']]= $v;
+        } else{
+          // $k = links => $v = {"href"="/"}
+          $property_values[$k] = $v;
+        }
       }
-      $normalization[$key] = $value;
-    };
-    $normalization['links'] = CacheableNormalization::permanent($links);
 
-    unset($normalization['properties']);
-    $properties_normalization = array_intersect_key($normalizer_values, array_flip(['properties']));
+      if (count($value->getNormalization())>0) {
+        $normalization[$key] = CacheableNormalization::permanent($property_values);
+      } else{
+        $normalization[$key] = $value;
+      }
+    };
+
+    if (count($links)>0){
+     $normalization['links'] = CacheableNormalization::permanent($links);
+    }
+
+    return $normalization;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setNormalizeProperties($normalization, $properties_normalization, $context = []) {
     $property_values =[];
     foreach ($properties_normalization as $key => $value){
       foreach ($value->getNormalization() as $k => $v){
@@ -106,16 +158,9 @@ class ResourceObjectNormalizer extends NormalizerBase {
           $property_values[$k] = $v;
         }
       }
-      $property_norm = CacheableNormalization::permanent($property_values);
-      $normalization[$key] = $property_norm;
+      $normalization[$key] = CacheableNormalization::permanent($property_values);
     };
-
-//    foreach ($properties_normalization as $key => $value){
-//      $normalization[$key] = $value;
-//    };
-
-    $obj = CacheableNormalization::aggregate($normalization)->withCacheableDependency($object);
-    return $obj;
+    return $normalization;
   }
 
   /**

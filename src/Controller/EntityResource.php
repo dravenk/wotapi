@@ -708,13 +708,13 @@ class EntityResource {
     // Ensure that access checking is performed on the query.
     $query->accessCheck(TRUE);
 
-    // Compute and apply an entity query condition from the filter parameter.
-    if (isset($params[Filter::KEY_NAME]) && $filter = $params[Filter::KEY_NAME]) {
-      $query->condition($filter->queryCondition($query));
-      TemporaryQueryGuard::setFieldManager($this->fieldManager);
-      TemporaryQueryGuard::setModuleHandler(\Drupal::moduleHandler());
-      TemporaryQueryGuard::applyAccessControls($filter, $query, $query_cacheability);
-    }
+//    // Compute and apply an entity query condition from the filter parameter.
+//    if (isset($params[Filter::KEY_NAME]) && $filter = $params[Filter::KEY_NAME]) {
+//      $query->condition($filter->queryCondition($query));
+//      TemporaryQueryGuard::setFieldManager($this->fieldManager);
+//      TemporaryQueryGuard::setModuleHandler(\Drupal::moduleHandler());
+//      TemporaryQueryGuard::applyAccessControls($filter, $query, $query_cacheability);
+//    }
 
     // Apply any sorts to the entity query.
     if (isset($params[Sort::KEY_NAME]) && $sort = $params[Sort::KEY_NAME]) {

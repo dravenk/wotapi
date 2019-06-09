@@ -254,9 +254,11 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
 //          $links = $links->withLink(VersionByRel::WORKING_COPY, new Link(new CacheableMetadata(), $working_copy_url, [VersionByRel::WORKING_COPY]));
 //        }
 //      }
-      if (!$links->hasLinkWithKey('self')) {
-        $links = $links->withLink('self', new Link(new CacheableMetadata(), $self_url, ['self']));
-      }
+//      if (!$links->hasLinkWithKey('self')) {
+//        $links = $links->withLink('self', new Link(new CacheableMetadata(), $self_url, ['self']));
+//      }
+      $links = $links->withLink('self', new Link(new CacheableMetadata(), $self_url, ['self']));
+
     }
     return $links;
   }
