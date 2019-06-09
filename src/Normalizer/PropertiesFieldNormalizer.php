@@ -50,7 +50,7 @@ class PropertiesFieldNormalizer extends FieldNormalizer {
       $href = $link->setAbsolute()->toString(TRUE);
       $link_cacheability->addCacheableDependency($href);
       return ['href' => $href->getGeneratedUrl()];
-    }, static::getRelationshipLinks($context['resource_object'], $field->getName()));
+    }, static::getPropertiesLinks($context['resource_object'], $field->getName()));
     $data_normalization = $normalized_items->getNormalization();
     $normalization = [
       // Empty 'to-one' properties must be NULL.
@@ -75,27 +75,30 @@ class PropertiesFieldNormalizer extends FieldNormalizer {
    * @return array
    *   The relationship's links.
    */
-  public static function getRelationshipLinks(ResourceObject $relationship_context, $relationship_field_name) {
+  public static function getPropertiesLinks(ResourceObject $relationship_context, $relationship_field_name) {
     $resource_type = $relationship_context->getResourceType();
     if ($resource_type->isInternal() || !$resource_type->isLocatable()) {
       return [];
     }
     $public_field_name = $resource_type->getPublicName($relationship_field_name);
-    $relationship_route_name = Routes::getRouteName($resource_type, "$public_field_name.relationship.get");
-    $links = [
-      'self' => Url::fromRoute($relationship_route_name, ['entity' => $relationship_context->getId()]),
-    ];
+//    $relationship_route_name = Routes::getRouteName($resource_type, "$public_field_name.relationship.get");
+
+    $links = [];
+//    $links['self'] = Url::fromRoute($relationship_route_name, ['entity' => $relationship_context->getId()]);
+
     if (static::hasNonInternalResourceType($resource_type->getRelatableResourceTypesByField($public_field_name))) {
       $related_route_name = Routes::getRouteName($resource_type, "$public_field_name.related");
-      $links['related'] = Url::fromRoute($related_route_name, ['entity' => $relationship_context->getId()]);
+//      $links['related'] = Url::fromRoute($related_route_name, ['entity' => $relationship_context->getId()]);
+      array_push($links, Url::fromRoute($related_route_name, ['entity' => $relationship_context->getId()]));
     }
-    if ($resource_type->isVersionable()) {
-      $version_query_parameter = [WotApiSpec::VERSION_QUERY_PARAMETER => $relationship_context->getVersionIdentifier()];
-      $links['self']->setOption('query', $version_query_parameter);
-      if (isset($links['related'])) {
-        $links['related']->setOption('query', $version_query_parameter);
-      }
-    }
+//    if ($resource_type->isVersionable()) {
+//      $version_query_parameter = [WotApiSpec::VERSION_QUERY_PARAMETER => $relationship_context->getVersionIdentifier()];
+//      $links['self']->setOption('query', $version_query_parameter);
+//      if (isset($links['related'])) {
+//        $links['related']->setOption('query', $version_query_parameter);
+//      }
+//    }
+
     return $links;
   }
 

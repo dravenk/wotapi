@@ -32,6 +32,7 @@ use Drupal\wotapi\Access\TemporaryQueryGuard;
 use Drupal\wotapi\Exception\EntityAccessDeniedHttpException;
 use Drupal\wotapi\Exception\UnprocessableHttpEntityException;
 use Drupal\wotapi\IncludeResolver;
+use Drupal\wotapi\Normalizer\PropertiesFieldNormalizer;
 use Drupal\wotapi\WotApiResource\IncludedData;
 use Drupal\wotapi\WotApiResource\LinkCollection;
 use Drupal\wotapi\WotApiResource\NullIncludedData;
@@ -39,7 +40,7 @@ use Drupal\wotapi\WotApiResource\ResourceIdentifier;
 use Drupal\wotapi\WotApiResource\Link;
 use Drupal\wotapi\WotApiResource\ResourceObject;
 use Drupal\wotapi\WotApiResource\ResourceObjectData;
-use Drupal\wotapi\Normalizer\EntityReferenceFieldNormalizer;
+//use Drupal\wotapi\Normalizer\EntityReferenceFieldNormalizer;
 use Drupal\wotapi\Query\Filter;
 use Drupal\wotapi\Query\Sort;
 use Drupal\wotapi\Query\OffsetPage;
@@ -396,13 +397,15 @@ class EntityResource {
    * @return \Drupal\wotapi\ResourceResponse
    *   The response.
    */
-  public function getRelationship(ResourceType $resource_type, FieldableEntityInterface $entity, $related, Request $request, $response_code = 200) {
+  public function getProperties(ResourceType $resource_type, FieldableEntityInterface $entity, $related, Request $request, $response_code = 200) {
     /* @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
     $field_list = $entity->get($resource_type->getInternalName($related));
     // Access will have already been checked by the RelationshipFieldAccess
     // service, so we don't need to call ::getAccessCheckedResourceObject().
     $resource_object = ResourceObject::createFromEntity($resource_type, $entity);
-    $relationship_object_urls = EntityReferenceFieldNormalizer::getRelationshipLinks($resource_object, $related);
+//    $relationship_object_urls = EntityReferenceFieldNormalizer::getRelationshipLinks($resource_object, $related);
+    $relationship_object_urls = PropertiesFieldNormalizer::getPropertiesLinks($resource_object, $related);
+
     $response = $this->buildWrappedResponse($field_list, $request, new NullIncludedData(), $response_code, [], array_reduce(array_keys($relationship_object_urls), function (LinkCollection $links, $key) use ($relationship_object_urls) {
       return $links->withLink($key, new Link(new CacheableMetadata(), $relationship_object_urls[$key], [$key]));
     }, new LinkCollection([])));

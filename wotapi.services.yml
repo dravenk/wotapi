@@ -65,8 +65,13 @@ services:
     class: Drupal\wotapi\Normalizer\LinkCollectionNormalizer
     tags:
       - { name: wotapi_normalizer }
-  serializer.normalizer.entity_reference_field.wotapi:
-    class: Drupal\wotapi\Normalizer\EntityReferenceFieldNormalizer
+#  serializer.normalizer.entity_reference_field.wotapi:
+#    class: Drupal\wotapi\Normalizer\EntityReferenceFieldNormalizer
+#    tags:
+#      # This must have a higher priority than the 'serializer.normalizer.field.wotapi' to take effect.
+#      - { name: wotapi_normalizer, priority: 1 }
+  serializer.normalizer.propertytes_field.wotapi:
+    class: Drupal\wotapi\Normalizer\PropertiesFieldNormalizer
     tags:
       # This must have a higher priority than the 'serializer.normalizer.field.wotapi' to take effect.
       - { name: wotapi_normalizer, priority: 1 }

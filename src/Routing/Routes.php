@@ -238,7 +238,7 @@ class Routes implements ContainerInjectionInterface {
 //        'DELETE' => 'removeFromRelationshipData',
 //      ];
       $relationship_route_methods =  ['GET'];
-      $relationship_controller_methods = ['GET' => 'getRelationship'];
+      $relationship_controller_methods = ['GET' => 'getProperties'];
       foreach ($relationship_route_methods as $method) {
         $method_specific_relationship_route = clone $relationship_route;
         $method_specific_relationship_route->addDefaults([RouteObjectInterface::CONTROLLER_NAME => static::CONTROLLER_SERVICE_NAME . ":{$relationship_controller_methods[$method]}"]);
