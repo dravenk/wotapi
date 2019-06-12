@@ -1,0 +1,5 @@
+name: WOT:API-Thing
+type: module
+description: Define Thing Entity Type and its associated functionalities.
+core: 8.x
+package: WOTAPI

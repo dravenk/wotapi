@@ -1,0 +1,58 @@
+<?php
+
+namespace Drupal\wotapi_thing\Entity;
+
+use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
+
+/**
+ * Defines the Thing type entity.
+ *
+ * @ConfigEntityType(
+ *   id = "wotapi_thing_type",
+ *   label = @Translation("Thing type"),
+ *   handlers = {
+ *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
+ *     "list_builder" = "Drupal\wotapi_thing\ThingTypeListBuilder",
+ *     "form" = {
+ *       "add" = "Drupal\wotapi_thing\Form\ThingTypeForm",
+ *       "edit" = "Drupal\wotapi_thing\Form\ThingTypeForm",
+ *       "delete" = "Drupal\wotapi_thing\Form\ThingTypeDeleteForm"
+ *     },
+ *     "route_provider" = {
+ *       "default" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
+ *     },
+ *   },
+ *   config_prefix = "wotapi_thing_type",
+ *   admin_permission = "administer site configuration",
+ *   bundle_of = "wotapi_thing",
+ *   entity_keys = {
+ *     "id" = "id",
+ *     "label" = "label",
+ *     "uuid" = "uuid"
+ *   },
+ *   links = {
+ *     "canonical" = "/admin/structure/wotapi_thing_type/{wotapi_thing_type}",
+ *     "add-form" = "/admin/structure/wotapi_thing_type/add",
+ *     "edit-form" = "/admin/structure/wotapi_thing_type/{wotapi_thing_type}/edit",
+ *     "delete-form" = "/admin/structure/wotapi_thing_type/{wotapi_thing_type}/delete",
+ *     "collection" = "/admin/structure/wotapi_thing_type"
+ *   }
+ * )
+ */
+class ThingType extends ConfigEntityBundleBase implements ThingTypeInterface {
+
+  /**
+   * The Thing type ID.
+   *
+   * @var string
+   */
+  protected $id;
+
+  /**
+   * The Thing type label.
+   *
+   * @var string
+   */
+  protected $label;
+
+}

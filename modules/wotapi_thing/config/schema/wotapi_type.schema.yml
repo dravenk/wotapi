@@ -1,0 +1,12 @@
+wotapi_thing.wotapi_thing_type.*:
+  type: config_entity
+  label: 'Thing type config'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    uuid:
+      type: string
