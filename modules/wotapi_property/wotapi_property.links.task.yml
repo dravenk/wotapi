@@ -1,0 +1,17 @@
+# Thing routing definition
+
+entity.wotapi_property.canonical:
+  route_name: entity.wotapi_property.canonical
+  base_route: entity.wotapi_property.canonical
+  title: 'View'
+
+entity.wotapi_property.edit_form:
+  route_name: entity.wotapi_property.edit_form
+  base_route: entity.wotapi_property.canonical
+  title: 'Edit'
+
+entity.wotapi_property.delete_form:
+  route_name:  entity.wotapi_property.delete_form
+  base_route:  entity.wotapi_property.canonical
+  title: Delete
+  weight: 10

@@ -1,0 +1,24 @@
+# Thing menu entry
+wotapi_property.admin.structure:
+  title: 'Property'
+  description: 'Manage Property entities, types and configurations'
+  route_name:  wotapi_property.admin
+  parent: system.admin_structure
+
+# Thing menu items definition
+entity.wotapi_property.collection:
+  title: 'Property list'
+  route_name: entity.wotapi_property.collection
+  description: 'List Property entities'
+  parent: wotapi_property.admin.structure
+  weight: 100
+
+
+# Thing type menu items definition
+entity.wotapi_property_type.collection:
+  title: 'Property type'
+  route_name: entity.wotapi_property_type.collection
+  description: 'List Property type (bundles)'
+  parent: wotapi_property.admin.structure
+  weight: 99
+

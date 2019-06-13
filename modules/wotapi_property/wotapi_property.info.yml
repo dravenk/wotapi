@@ -1,0 +1,5 @@
+name: WOT:API-Property
+type: module
+description: Define Property Entity Type and its associated functionalities.
+core: 8.x
+package: WOTAPI
