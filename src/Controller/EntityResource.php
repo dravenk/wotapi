@@ -206,7 +206,7 @@ class EntityResource {
       throw $resource_object;
     }
     $primary_data = new ResourceObjectData([$resource_object], 1);
-    $response = $this->buildWrappedResponse($primary_data, $request, new NullIncludedData());
+    $response = $this->buildWrappedResponse($primary_data, $request);
     return $response;
   }
 
@@ -350,7 +350,7 @@ class EntityResource {
       $collection_data[] = $this->entityAccessChecker->getAccessCheckedResourceObject($referenced_entity);
     }
     $primary_data = new ResourceObjectData($collection_data, $field_list->getFieldDefinition()->getFieldStorageDefinition()->getCardinality());
-    $response = $this->buildWrappedResponse($primary_data, $request, new NullIncludedData());
+    $response = $this->buildWrappedResponse($primary_data, $request);
 
     // $response does not contain the entity list cache tag. We add the
     // cacheable metadata for the finite list of entities in the relationship.
@@ -385,7 +385,7 @@ class EntityResource {
 //    $relationship_object_urls = EntityReferenceFieldNormalizer::getRelationshipLinks($resource_object, $related);
     $relationship_object_urls = PropertiesFieldNormalizer::getPropertiesLinks($resource_object, $related);
 
-    $response = $this->buildWrappedResponse($field_list, $request, new NullIncludedData(), $response_code, [], array_reduce(array_keys($relationship_object_urls), function (LinkCollection $links, $key) use ($relationship_object_urls) {
+    $response = $this->buildWrappedResponse($field_list, $request, $response_code, [], array_reduce(array_keys($relationship_object_urls), function (LinkCollection $links, $key) use ($relationship_object_urls) {
       return $links->withLink($key, new Link(new CacheableMetadata(), $relationship_object_urls[$key], [$key]));
     }, new LinkCollection([])));
     // Add the host entity as a cacheable dependency.
@@ -695,15 +695,15 @@ class EntityResource {
 //      TemporaryQueryGuard::applyAccessControls($filter, $query, $query_cacheability);
 //    }
 
-    // Apply any sorts to the entity query.
-    if (isset($params[Sort::KEY_NAME]) && $sort = $params[Sort::KEY_NAME]) {
-      foreach ($sort->fields() as $field) {
-        $path = $this->fieldResolver->resolveInternalEntityQueryPath($resource_type->getEntityTypeId(), $resource_type->getBundle(), $field[Sort::PATH_KEY]);
-        $direction = isset($field[Sort::DIRECTION_KEY]) ? $field[Sort::DIRECTION_KEY] : 'ASC';
-        $langcode = isset($field[Sort::LANGUAGE_KEY]) ? $field[Sort::LANGUAGE_KEY] : NULL;
-        $query->sort($path, $direction, $langcode);
-      }
-    }
+//    // Apply any sorts to the entity query.
+//    if (isset($params[Sort::KEY_NAME]) && $sort = $params[Sort::KEY_NAME]) {
+//      foreach ($sort->fields() as $field) {
+//        $path = $this->fieldResolver->resolveInternalEntityQueryPath($resource_type->getEntityTypeId(), $resource_type->getBundle(), $field[Sort::PATH_KEY]);
+//        $direction = isset($field[Sort::DIRECTION_KEY]) ? $field[Sort::DIRECTION_KEY] : 'ASC';
+//        $langcode = isset($field[Sort::LANGUAGE_KEY]) ? $field[Sort::LANGUAGE_KEY] : NULL;
+//        $query->sort($path, $direction, $langcode);
+//      }
+//    }
 
     // Apply any pagination options to the query.
     if (isset($params[OffsetPage::KEY_NAME])) {
