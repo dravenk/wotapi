@@ -40,12 +40,6 @@ class WotApiDocumentTopLevel {
    */
   protected $links;
 
-  /**
-   * The includes to normalize.
-   *
-   * @var \Drupal\wotapi\WotApiResource\IncludedData
-   */
-  protected $includes;
 
   /**
    * Resource objects that will be omitted from the response for access reasons.
@@ -60,24 +54,19 @@ class WotApiDocumentTopLevel {
    * @param \Drupal\wotapi\WotApiResource\ResourceIdentifierInterface|\Drupal\wotapi\WotApiResource\Data|\Drupal\wotapi\WotApiResource\ErrorCollection|\Drupal\Core\Field\EntityReferenceFieldItemListInterface $data
    *   The data to normalize. It can be either a ResourceObject, or a stand-in
    *   for one, or a collection of the same.
-   * @param \Drupal\wotapi\WotApiResource\IncludedData $includes
-   *   A WOT:API Data object containing resources to be included in the
-   *   response document or NULL if there should not be includes.
    * @param \Drupal\wotapi\WotApiResource\LinkCollection $links
    *   A collection of links to resources related to the top-level document.
    * @param array $meta
    *   (optional) The metadata to normalize.
    */
-  public function __construct($data, IncludedData $includes, LinkCollection $links, array $meta = []) {
+  public function __construct($data,LinkCollection $links, array $meta = []) {
     assert($data instanceof ResourceIdentifierInterface || $data instanceof Data || $data instanceof ErrorCollection || $data instanceof EntityReferenceFieldItemListInterface);
-    assert(!$data instanceof ErrorCollection || $includes instanceof NullIncludedData);
     $this->data = $data instanceof ResourceObjectData ? $data->getAccessible() : $data;
-    $this->includes = $includes->getAccessible();
     $this->links = $links->withContext($this);
     $this->meta = $meta;
     $this->omissions = $data instanceof ResourceObjectData
-      ? OmittedData::merge($data->getOmissions(), $includes->getOmissions())
-      : $includes->getOmissions();
+      ? $data->getOmissions()
+      : null;
   }
 
   /**
@@ -108,16 +97,6 @@ class WotApiDocumentTopLevel {
    */
   public function getMeta() {
     return $this->meta;
-  }
-
-  /**
-   * Gets a WOT:API Data object of resources to be included in the response.
-   *
-   * @return \Drupal\wotapi\WotApiResource\IncludedData
-   *   The includes.
-   */
-  public function getIncludes() {
-    return $this->includes;
   }
 
   /**

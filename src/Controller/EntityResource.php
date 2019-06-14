@@ -25,13 +25,14 @@ use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
+use Drupal\jsonapi\Revisions\ResourceVersionRouteEnhancer;
 use Drupal\wotapi\Access\EntityAccessChecker;
 use Drupal\wotapi\Context\FieldResolver;
 use Drupal\wotapi\Entity\EntityValidationTrait;
 use Drupal\wotapi\Access\TemporaryQueryGuard;
 use Drupal\wotapi\Exception\EntityAccessDeniedHttpException;
 use Drupal\wotapi\Exception\UnprocessableHttpEntityException;
-use Drupal\wotapi\IncludeResolver;
+//use Drupal\wotapi\IncludeResolver;
 use Drupal\wotapi\Normalizer\PropertiesFieldNormalizer;
 use Drupal\wotapi\WotApiResource\IncludedData;
 use Drupal\wotapi\WotApiResource\LinkCollection;
@@ -49,7 +50,7 @@ use Drupal\wotapi\WotApiResource\WotApiDocumentTopLevel;
 use Drupal\wotapi\ResourceResponse;
 use Drupal\wotapi\ResourceType\ResourceType;
 use Drupal\wotapi\ResourceType\ResourceTypeRepositoryInterface;
-use Drupal\wotapi\Revisions\ResourceVersionRouteEnhancer;
+//use Drupal\wotapi\Revisions\ResourceVersionRouteEnhancer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Drupal\Core\Http\Exception\CacheableBadRequestHttpException;
@@ -106,12 +107,12 @@ class EntityResource {
    */
   protected $entityRepository;
 
-  /**
-   * The include resolver.
-   *
-   * @var \Drupal\wotapi\IncludeResolver
-   */
-  protected $includeResolver;
+//  /**
+//   * The include resolver.
+//   *
+//   * @var \Drupal\wotapi\IncludeResolver
+//   */
+//  protected $includeResolver;
 
   /**
    * The WOT:API entity access checker.
@@ -161,8 +162,6 @@ class EntityResource {
    *   The renderer.
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository.
-   * @param \Drupal\wotapi\IncludeResolver $include_resolver
-   *   The include resolver.
    * @param \Drupal\wotapi\Access\EntityAccessChecker $entity_access_checker
    *   The WOT:API entity access checker.
    * @param \Drupal\wotapi\Context\FieldResolver $field_resolver
@@ -174,13 +173,12 @@ class EntityResource {
    * @param \Drupal\Core\Session\AccountInterface $user
    *   The current user account.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $field_manager, ResourceTypeRepositoryInterface $resource_type_repository, RendererInterface $renderer, EntityRepositoryInterface $entity_repository, IncludeResolver $include_resolver, EntityAccessChecker $entity_access_checker, FieldResolver $field_resolver, SerializerInterface $serializer, TimeInterface $time, AccountInterface $user) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $field_manager, ResourceTypeRepositoryInterface $resource_type_repository, RendererInterface $renderer, EntityRepositoryInterface $entity_repository, EntityAccessChecker $entity_access_checker, FieldResolver $field_resolver, SerializerInterface $serializer, TimeInterface $time, AccountInterface $user) {
     $this->entityTypeManager = $entity_type_manager;
     $this->fieldManager = $field_manager;
     $this->resourceTypeRepository = $resource_type_repository;
     $this->renderer = $renderer;
     $this->entityRepository = $entity_repository;
-    $this->includeResolver = $include_resolver;
     $this->entityAccessChecker = $entity_access_checker;
     $this->fieldResolver = $field_resolver;
     $this->serializer = $serializer;
@@ -235,9 +233,9 @@ class EntityResource {
     $query = $this->getCollectionQuery($resource_type, $params, $query_cacheability);
 
     // If the request is for the latest revision, toggle it on entity query.
-    if ($request->get(ResourceVersionRouteEnhancer::WORKING_COPIES_REQUESTED, FALSE)) {
-      $query->latestRevision();
-    }
+//    if ($request->get(ResourceVersionRouteEnhancer::WORKING_COPIES_REQUESTED, FALSE)) {
+//      $query->latestRevision();
+//    }
 
     try {
       $results = $this->executeQueryInRenderContext(
@@ -271,36 +269,17 @@ class EntityResource {
     }
     // Each item of the collection data contains an array with 'entity' and
     // 'access' elements.
-    $collection_data = $this->loadEntitiesWithAccess($storage, $results, $request->get(ResourceVersionRouteEnhancer::WORKING_COPIES_REQUESTED, FALSE));
+    $collection_data = $this->loadEntitiesWithAccess($storage, $results, $request->get('working_copies_requested', FALSE));
     $primary_data = new ResourceObjectData($collection_data);
     $primary_data->setHasNextPage($has_next_page);
 
     // Calculate all the results and pass into a WOT:API Data object.
     $count_query_cacheability = new CacheableMetadata();
-    if ($resource_type->includeCount()) {
-      $count_query = $this->getCollectionCountQuery($resource_type, $params, $count_query_cacheability);
-      $total_results = $this->executeQueryInRenderContext(
-        $count_query,
-        $count_query_cacheability
-      );
-
-      $primary_data->setTotalCount($total_results);
-    }
 
     $response = $this->respondWithCollection($primary_data, new NullIncludedData(), $request, $resource_type, $params[OffsetPage::KEY_NAME]);
 
     $response->addCacheableDependency($query_cacheability);
     $response->addCacheableDependency($count_query_cacheability);
-    $response->addCacheableDependency((new CacheableMetadata())
-      ->addCacheContexts([
-        'url.query_args:filter',
-        'url.query_args:sort',
-        'url.query_args:page',
-      ]));
-
-    if ($resource_type->isVersionable()) {
-      $response->addCacheableDependency((new CacheableMetadata())->addCacheContexts([ResourceVersionRouteEnhancer::CACHE_CONTEXT]));
-    }
 
     return $response;
   }
@@ -830,19 +809,19 @@ class EntityResource {
    * @return \Drupal\wotapi\ResourceResponse
    *   The response.
    */
-  protected function buildWrappedResponse($data, Request $request, IncludedData $includes, $response_code = 200, array $headers = [], LinkCollection $links = NULL, array $meta = []) {
+  protected function buildWrappedResponse($data, Request $request, $response_code = 200, array $headers = [], LinkCollection $links = NULL, array $meta = []) {
     assert($data instanceof Data || $data instanceof FieldItemListInterface);
     $links = ($links ?: new LinkCollection([]));
 //    if (!$links->hasLinkWithKey('self')) {
 //      $self_link = new Link(new CacheableMetadata(), self::getRequestLink($request), ['self']);
 //      $links = $links->withLink('self', $self_link);
 //    }
-    $response = new ResourceResponse(new WotApiDocumentTopLevel($data, $includes, $links, $meta), $response_code, $headers);
+    $response = new ResourceResponse(new WotApiDocumentTopLevel($data, $links, $meta), $response_code, $headers);
     $cacheability = (new CacheableMetadata())->addCacheContexts([
-      // Make sure that different sparse fieldsets are cached differently.
-      'url.query_args:fields',
-      // Make sure that different sets of includes are cached differently.
-      'url.query_args:include',
+//      // Make sure that different sparse fieldsets are cached differently.
+//      'url.query_args:fields',
+//      // Make sure that different sets of includes are cached differently.
+//      'url.query_args:include',
     ]);
     $response->addCacheableDependency($cacheability);
     return $response;
@@ -871,11 +850,8 @@ class EntityResource {
       'has_next_page' => $primary_data->hasNextPage(),
     ];
     $meta = [];
-    if ($resource_type->includeCount()) {
-      $link_context['total_count'] = $meta['count'] = $primary_data->getTotalCount();
-    }
     $collection_links = self::getPagerLinks($request, $page_param, $link_context);
-    $response = $this->buildWrappedResponse($primary_data, $request, $includes, 200, [], $collection_links, $meta);
+    $response = $this->buildWrappedResponse($primary_data, $request,200, [], $collection_links, $meta);
 
     // When a new change to any entity in the resource happens, we cannot ensure
     // the validity of this cached list. Add the list tag to deal with that.

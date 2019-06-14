@@ -117,7 +117,7 @@ class EntryPoint extends ControllerBase {
 //      }
 //    }
 
-    $response = new ResourceResponse(new WotApiDocumentTopLevel(new ResourceObjectData([]), new NullIncludedData(), $urls, $meta));
+    $response = new ResourceResponse(new WotApiDocumentTopLevel(new ResourceObjectData([]),  $urls, $meta));
     return $response->addCacheableDependency($cacheability);
   }
 

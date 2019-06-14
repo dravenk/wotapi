@@ -2,7 +2,6 @@
 
 namespace Drupal\wotapi\Normalizer;
 
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\wotapi\Normalizer\Value\CacheableNormalization;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -44,34 +43,7 @@ class FieldNormalizer extends NormalizerBase implements DenormalizerInterface {
   /**
    * {@inheritdoc}
    */
-  public function denormalize($data, $class, $format = NULL, array $context = []) {
-    $field_definition = $context['field_definition'];
-    assert($field_definition instanceof FieldDefinitionInterface);
-
-    // If $data contains items (recognizable by numerical array keys, which
-    // Drupal's Field API calls "deltas"), then it already is itemized; it's not
-    // using the simplified JSON structure that WOT:API generates.
-    $is_already_itemized = is_array($data) && array_reduce(array_keys($data), function ($carry, $index) {
-      return $carry && is_numeric($index);
-    }, TRUE);
-
-    $itemized_data = $is_already_itemized
-      ? $data
-      : [0 => $data];
-
-    // Single-cardinality fields don't need itemization.
-    $field_item_class = $field_definition->getItemDefinition()->getClass();
-    if (count($itemized_data) === 1 && $field_definition->getFieldStorageDefinition()->getCardinality() === 1) {
-      return $this->serializer->denormalize($itemized_data[0], $field_item_class, $format, $context);
-    }
-
-    $data_internal = [];
-    foreach ($itemized_data as $delta => $field_item_value) {
-      $data_internal[$delta] = $this->serializer->denormalize($field_item_value, $field_item_class, $format, $context);
-    }
-
-    return $data_internal;
-  }
+  public function denormalize($data, $class, $format = NULL, array $context = []) {}
 
   /**
    * Helper function to normalize field items.

@@ -89,11 +89,11 @@ services:
   wotapi.field_resolver:
     class: Drupal\wotapi\Context\FieldResolver
     arguments: ['@entity_type.manager', '@entity_field.manager', '@entity_type.bundle.info', '@wotapi.resource_type.repository', '@module_handler']
-  wotapi.include_resolver:
-    class: Drupal\wotapi\IncludeResolver
-    arguments:
-      - '@entity_type.manager'
-      - '@wotapi.entity_access_checker'
+#  wotapi.include_resolver:
+#    class: Drupal\wotapi\IncludeResolver
+#    arguments:
+#      - '@entity_type.manager'
+#      - '@wotapi.entity_access_checker'
   paramconverter.wotapi.entity_uuid:
     parent: paramconverter.entity
     class: Drupal\wotapi\ParamConverter\EntityUuidConverter
@@ -164,7 +164,6 @@ services:
       - '@wotapi.resource_type.repository'
       - '@renderer'
       - '@entity.repository'
-      - '@wotapi.include_resolver'
       - '@wotapi.entity_access_checker'
       - '@wotapi.field_resolver'
       - '@wotapi.serializer'
@@ -190,11 +189,11 @@ services:
       - { name: event_subscriber, priority: 1000 }
 
   # Revision management.
-  wotapi.version_negotiator:
-    class: Drupal\wotapi\Revisions\VersionNegotiator
-    public: false
-    tags:
-      - { name: service_collector, tag: wotapi_version_negotiator, call: addVersionNegotiator }
+#  wotapi.version_negotiator:
+#    class: Drupal\wotapi\Revisions\VersionNegotiator
+#    public: false
+#    tags:
+#      - { name: service_collector, tag: wotapi_version_negotiator, call: addVersionNegotiator }
   wotapi.version_negotiator.default:
     arguments: ['@entity_type.manager']
     public: false
@@ -209,13 +208,13 @@ services:
     parent: wotapi.version_negotiator.default
     tags:
       - { name: wotapi_version_negotiator, negotiator_name: 'rel' }
-  wotapi.resource_version.route_enhancer:
-    class: Drupal\wotapi\Revisions\ResourceVersionRouteEnhancer
-    public: false
-    arguments:
-      - '@wotapi.version_negotiator'
-    tags:
-      - { name: route_enhancer }
+#  wotapi.resource_version.route_enhancer:
+#    class: Drupal\wotapi\Revisions\ResourceVersionRouteEnhancer
+#    public: false
+#    arguments:
+#      - '@wotapi.version_negotiator'
+#    tags:
+#      - { name: route_enhancer }
 
   # Deprecated services.
   serializer.normalizer.htt_exception.wotapi:

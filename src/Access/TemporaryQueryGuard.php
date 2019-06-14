@@ -592,22 +592,22 @@ class TemporaryQueryGuard {
     return array_unique($fields);
   }
 
-  /**
-   * Copied from \Drupal\wotapi\IncludeResolver.
-   *
-   * @see \Drupal\wotapi\IncludeResolver::buildTree()
-   */
-  protected static function buildTree(array $paths) {
-    $merged = [];
-    foreach ($paths as $parts) {
-      // This complex expression is needed to handle the string, "0", which
-      // would be evaluated as FALSE.
-      if (!is_null(($field_name = array_shift($parts)))) {
-        $previous = isset($merged[$field_name]) ? $merged[$field_name] : [];
-        $merged[$field_name] = array_merge($previous, [$parts]);
-      }
-    }
-    return !empty($merged) ? array_map([static::class, __FUNCTION__], $merged) : $merged;
-  }
+//  /**
+//   * Copied from \Drupal\wotapi\IncludeResolver.
+//   *
+//   * @see \Drupal\wotapi\IncludeResolver::buildTree()
+//   */
+//  protected static function buildTree(array $paths) {
+//    $merged = [];
+//    foreach ($paths as $parts) {
+//      // This complex expression is needed to handle the string, "0", which
+//      // would be evaluated as FALSE.
+//      if (!is_null(($field_name = array_shift($parts)))) {
+//        $previous = isset($merged[$field_name]) ? $merged[$field_name] : [];
+//        $merged[$field_name] = array_merge($previous, [$parts]);
+//      }
+//    }
+//    return !empty($merged) ? array_map([static::class, __FUNCTION__], $merged) : $merged;
+//  }
 
 }
