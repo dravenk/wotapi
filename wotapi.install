@@ -62,13 +62,3 @@ function wotapi_requirements($phase) {
   }
   return $requirements;
 }
-
-/**
- * Enable BC: default the new read-only mode to "off" on existing sites.
- */
-function wotapi_update_8701() {
-  $config_factory = \Drupal::configFactory();
-  $wotapi_settings = $config_factory->getEditable('wotapi.settings');
-  $wotapi_settings->set('read_only', FALSE)
-    ->save(TRUE);
-}

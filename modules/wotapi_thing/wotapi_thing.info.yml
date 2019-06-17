@@ -3,3 +3,5 @@ type: module
 description: Define Thing Entity Type and its associated functionalities.
 core: 8.x
 package: WOTAPI
+dependencies:
+  - wotapi_property

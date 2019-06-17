@@ -86,8 +86,7 @@ class EntryPoint extends ControllerBase {
 
     $urls = array_reduce($resources, function (LinkCollection $carry, ResourceType $resource_type) {
       if ($resource_type->isLocatable() || $resource_type->isMutable()) {
-        $route_suffix = $resource_type->isLocatable() ? 'collection' : 'collection.post';
-        $url = Url::fromRoute(sprintf('wotapi.%s.%s', $resource_type->getTypeName(), $route_suffix))->setAbsolute();
+        $url = Url::fromRoute(sprintf('wotapi.%s.%s', $resource_type->getTypeName(), 'collection'))->setAbsolute();
         // @todo: implement an extension relation type to signal that this is a primary collection resource.
         $link_relation_types = [];
         return $carry->withLink($resource_type->getTypeName(), new Link(new CacheableMetadata(), $url, $link_relation_types));

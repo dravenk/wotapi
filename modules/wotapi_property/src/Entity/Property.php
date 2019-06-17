@@ -40,6 +40,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *     "id" = "id",
  *     "bundle" = "type",
  *     "uuid" = "uuid",
+ *     "label" = "title",
  *   },
  *   links = {
  *     "canonical" = "/admin/structure/wotapi_property/{wotapi_property}",
@@ -153,10 +154,6 @@ class Property extends ContentEntityBase implements PropertyInterface {
    */
   public function preSave(EntityStorageInterface $storage) {
     parent::postSave($storage);
-
-    if ($this->isNew()) {
-      $this->isNew = TRUE;
-    }
   }
 
   /**
