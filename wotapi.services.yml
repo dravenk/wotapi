@@ -38,10 +38,10 @@ services:
     arguments: ['@entity_field.manager']
     tags:
       - { name: wotapi_normalizer }
-  serializer.normalizer.data.wotapi:
-    class: Drupal\wotapi\Normalizer\DataNormalizer
-    tags:
-      - { name: wotapi_normalizer }
+#  serializer.normalizer.data.wotapi:
+#    class: Drupal\wotapi\Normalizer\DataNormalizer
+#    tags:
+#      - { name: wotapi_normalizer }
   serializer.normalizer.resource_object.wotapi:
     class: Drupal\wotapi\Normalizer\ResourceObjectNormalizer
     tags:
@@ -194,20 +194,20 @@ services:
 #    public: false
 #    tags:
 #      - { name: service_collector, tag: wotapi_version_negotiator, call: addVersionNegotiator }
-  wotapi.version_negotiator.default:
-    arguments: ['@entity_type.manager']
-    public: false
-    abstract: true
-  wotapi.version_negotiator.id:
-    class: Drupal\wotapi\Revisions\VersionById
-    parent: wotapi.version_negotiator.default
-    tags:
-      - { name: wotapi_version_negotiator, negotiator_name: 'id' }
-  wotapi.version_negotiator.rel:
-    class: Drupal\wotapi\Revisions\VersionByRel
-    parent: wotapi.version_negotiator.default
-    tags:
-      - { name: wotapi_version_negotiator, negotiator_name: 'rel' }
+#  wotapi.version_negotiator.default:
+#    arguments: ['@entity_type.manager']
+#    public: false
+#    abstract: true
+#  wotapi.version_negotiator.id:
+#    class: Drupal\wotapi\Revisions\VersionById
+#    parent: wotapi.version_negotiator.default
+#    tags:
+#      - { name: wotapi_version_negotiator, negotiator_name: 'id' }
+#  wotapi.version_negotiator.rel:
+#    class: Drupal\wotapi\Revisions\VersionByRel
+#    parent: wotapi.version_negotiator.default
+#    tags:
+#      - { name: wotapi_version_negotiator, negotiator_name: 'rel' }
 #  wotapi.resource_version.route_enhancer:
 #    class: Drupal\wotapi\Revisions\ResourceVersionRouteEnhancer
 #    public: false

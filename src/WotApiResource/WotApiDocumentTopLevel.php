@@ -10,11 +10,6 @@ use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
  * @internal WOT:API maintains no PHP API. The API is the HTTP API. This class
  *   may change at any time and could break any dependencies on it.
  *
- * @see https://www.drupal.org/project/wotapi/issues/3032787
- * @see wotapi.api.php
- *
- * @see http://wotapi.org/format/#document-top-level
- *
  * @todo Add support for the missing optional 'wotapi' member or document why not.
  */
 class WotApiDocumentTopLevel {

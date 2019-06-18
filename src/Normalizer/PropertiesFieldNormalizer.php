@@ -8,7 +8,6 @@ use Drupal\Core\Url;
 use Drupal\wotapi\WotApiResource\ResourceIdentifier;
 use Drupal\wotapi\WotApiResource\ResourceIdentifierInterface;
 use Drupal\wotapi\WotApiResource\ResourceObject;
-use Drupal\wotapi\WotApiSpec;
 use Drupal\wotapi\Normalizer\Value\CacheableNormalization;
 use Drupal\wotapi\Routing\Routes;
 
@@ -59,14 +58,7 @@ class PropertiesFieldNormalizer extends FieldNormalizer {
 //      'data' => $cardinality === 1 ? array_shift($data_normalization) : $data_normalization,
 //    ];
 
-    $normalization = [];
-    if ($cardinality === 1 ){
-      $normalization = array_shift($data_normalization);
-    } else{
-      foreach ($data_normalization as $key => $value) {
-        $normalization[$key] = $value;
-      }
-    }
+    $normalization = $cardinality === 1 ? array_shift($data_normalization) : $data_normalization;
 
     if (!empty($links)) {
       $normalization['links'] = $links;

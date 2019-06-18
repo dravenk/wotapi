@@ -70,10 +70,10 @@ class ResourceObjectNormalizer extends NormalizerBase {
 //    ])->withCacheableDependency($object);
 
     $normalization = [
-      'type' => CacheableNormalization::permanent($resource_type->getTypeName()),
+      "@context" => CacheableNormalization::permanent("https://iot.mozilla.org/schemas/"),
+      //TODO
+//      'type' => CacheableNormalization::permanent($resource_type->getTypeName()),
       'id' => CacheableNormalization::permanent($object->getId()),
-//      'properties' => CacheableNormalization::aggregate(array_intersect_key($normalizer_values, array_flip($relationship_field_names)))->omitIfEmpty(),
-//      'links' => $this->serializer->normalize($object->getLinks(), $format, $context)->omitIfEmpty(),
     ];
 
     $attributes = array_diff_key($normalizer_values, array_flip($relationship_field_names));
@@ -82,13 +82,6 @@ class ResourceObjectNormalizer extends NormalizerBase {
     };
 
     // @Todo ugly code.
-//    unset($normalization['properties']);
-//    $properties_normalization = array_intersect_key($normalizer_values, array_flip(['properties']));
-//    $normalization = $this->setNormalizeProperties($normalization, $properties_normalization,[]);
-//
-//    $relationship_normalization = array_intersect_key($normalizer_values,  array_diff_key(array_flip($relationship_field_names),array_flip(['properties'])));
-//    $normalization =  $this->setReferenceFieldsNormalize($normalization,$relationship_normalization,$context);
-
     $relationship_normalization = array_intersect_key($normalizer_values, array_flip($relationship_field_names));
     $normalization =  $this->setReferenceFieldsNormalize($normalization,$relationship_normalization,$context);
 
@@ -144,24 +137,6 @@ class ResourceObjectNormalizer extends NormalizerBase {
     return $normalization;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function setNormalizeProperties($normalization, $properties_normalization, $context = []) {
-    $property_values =[];
-    foreach ($properties_normalization as $key => $value){
-      foreach ($value->getNormalization() as $k => $v){
-        if (is_int($k)){
-          $property_values[$v['id']]= $v;
-        } else{
-          // $k = links => $v = {"href"="/"}
-          $property_values[$k] = $v;
-        }
-      }
-      $normalization[$key] = CacheableNormalization::permanent($property_values);
-    };
-    return $normalization;
-  }
 
   /**
    * Serializes a given field.

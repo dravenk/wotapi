@@ -87,50 +87,7 @@ class FieldItemNormalizer extends NormalizerBase implements DenormalizerInterfac
   /**
    * {@inheritdoc}
    */
-  public function denormalize($data, $class, $format = NULL, array $context = []) {
-    $item_definition = $context['field_definition']->getItemDefinition();
-    assert($item_definition instanceof FieldItemDataDefinitionInterface);
-
-    $field_item = $this->getFieldItemInstance($context['resource_type'], $item_definition);
-    $this->checkForSerializedStrings($data, $class, $field_item);
-
-    $property_definitions = $item_definition->getPropertyDefinitions();
-
-    $serialized_property_names = $this->getCustomSerializedPropertyNames($field_item);
-    $denormalize_property = function ($property_name, $property_value, $property_value_class, $format, $context) use ($serialized_property_names) {
-      if ($this->serializer->supportsDenormalization($property_value, $property_value_class, $format, $context)) {
-        return $this->serializer->denormalize($property_value, $property_value_class, $format, $context);
-      }
-      else {
-        if (in_array($property_name, $serialized_property_names, TRUE)) {
-          $property_value = serialize($property_value);
-        }
-        return $property_value;
-      }
-    };
-    // Because e.g. the 'bundle' entity key field requires field values to not
-    // be expanded to an array of all properties, we special-case single-value
-    // properties.
-    if (!is_array($data)) {
-      $property_value = $data;
-      $property_name = $item_definition->getMainPropertyName();
-      $property_value_class = $property_definitions[$property_name]->getClass();
-      return $denormalize_property($property_name, $property_value, $property_value_class, $format, $context);
-    }
-
-    $data_internal = [];
-    if (!empty($property_definitions)) {
-      foreach ($data as $property_name => $property_value) {
-        $property_value_class = $property_definitions[$property_name]->getClass();
-        $data_internal[$property_name] = $denormalize_property($property_name, $property_value, $property_value_class, $format, $context);
-      }
-    }
-    else {
-      $data_internal = $data;
-    }
-
-    return $data_internal;
-  }
+  public function denormalize($data, $class, $format = NULL, array $context = []) {}
 
   /**
    * Gets a field item instance for use with SerializedColumnNormalizerTrait.

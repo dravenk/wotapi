@@ -2,24 +2,14 @@
 
 namespace Drupal\wotapi\Normalizer;
 
-use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Component\Utility\Crypt;
-use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
-use Drupal\wotapi\WotApiResource\ErrorCollection;
-use Drupal\wotapi\WotApiResource\OmittedData;
 use Drupal\wotapi\WotApiResource\ResourceObject;
-use Drupal\wotapi\WotApiSpec;
-use Drupal\wotapi\Normalizer\Value\CacheableOmission;
 use Drupal\wotapi\WotApiResource\WotApiDocumentTopLevel;
 use Drupal\wotapi\Normalizer\Value\CacheableNormalization;
-use Drupal\wotapi\ResourceType\ResourceType;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Drupal\wotapi\ResourceType\ResourceTypeRepositoryInterface;
