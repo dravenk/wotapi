@@ -8,15 +8,12 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\wotapi\WotApiResource\WotApiDocumentTopLevel;
 use Drupal\wotapi\WotApiResource\LinkCollection;
-use Drupal\wotapi\WotApiResource\NullIncludedData;
 use Drupal\wotapi\WotApiResource\Link;
 use Drupal\wotapi\WotApiResource\ResourceObjectData;
 use Drupal\wotapi\ResourceResponse;
 use Drupal\wotapi\ResourceType\ResourceType;
 use Drupal\wotapi\ResourceType\ResourceTypeRepositoryInterface;
-use Drupal\user\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
  * Controller for the API entry point.
@@ -82,8 +79,6 @@ class EntryPoint extends ControllerBase {
       return !$resource->isInternal();
     });
 
-    $self_link = new Link(new CacheableMetadata(), Url::fromRoute('wotapi.resource_list'), ['self']);
-
     $urls = array_reduce($resources, function (LinkCollection $carry, ResourceType $resource_type) {
       if ($resource_type->isLocatable() || $resource_type->isMutable()) {
         $url = Url::fromRoute(sprintf('wotapi.%s.%s', $resource_type->getTypeName(), 'collection'))->setAbsolute();
@@ -92,31 +87,9 @@ class EntryPoint extends ControllerBase {
         return $carry->withLink($resource_type->getTypeName(), new Link(new CacheableMetadata(), $url, $link_relation_types));
       }
       return $carry;
-    }, new LinkCollection(['self' => $self_link]));
+    }, new LinkCollection([]));
 
-    $meta = [];
-//    if ($this->user->isAuthenticated()) {
-//      $current_user_uuid = User::load($this->user->id())->uuid();
-//      $meta['links']['me'] = ['meta' => ['id' => $current_user_uuid]];
-//      $cacheability->addCacheContexts(['user']);
-//      try {
-//        $me_url = Url::fromRoute(
-//          'wotapi.user--user.individual',
-//          ['entity' => $current_user_uuid]
-//        )
-//          ->setAbsolute()
-//          ->toString(TRUE);
-//        $meta['links']['me']['href'] = $me_url->getGeneratedUrl();
-//        // The cacheability of the `me` URL is the cacheability of that URL
-//        // itself and the currently authenticated user.
-//        $cacheability = $cacheability->merge($me_url);
-//      }
-//      catch (RouteNotFoundException $e) {
-//        // Do not add the link if the route is disabled or marked as internal.
-//      }
-//    }
-
-    $response = new ResourceResponse(new WotApiDocumentTopLevel(new ResourceObjectData([]),  $urls, $meta));
+    $response = new ResourceResponse(new WotApiDocumentTopLevel(new ResourceObjectData([]),  $urls));
     return $response->addCacheableDependency($cacheability);
   }
 

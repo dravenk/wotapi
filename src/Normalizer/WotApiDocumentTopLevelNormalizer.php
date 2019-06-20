@@ -141,7 +141,7 @@ class WotApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorma
     $normalized_relationship = $this->serializer->normalize($data, $format, $context);
     assert($normalized_relationship instanceof CacheableNormalization);
     unset($context['resource_object']);
-    return new CacheableNormalization($normalized_relationship, $normalized_relationship->getNormalization()['data']);
+    return new CacheableNormalization($normalized_relationship, $normalized_relationship->getNormalization()[]);
   }
 
   /**

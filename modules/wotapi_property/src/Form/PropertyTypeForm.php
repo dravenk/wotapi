@@ -79,7 +79,6 @@ class PropertyTypeForm extends EntityForm {
       '#maxlength' => 255,
       '#default_value' => $wotapi_property_type->getUnit(),
       '#description' => $this->t("A unit ([SI] unit)."),
-//      '#required' => TRUE,
     ];
 
 /*    // readOnly field for the property.

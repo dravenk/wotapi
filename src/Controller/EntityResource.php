@@ -481,7 +481,7 @@ class EntityResource {
   protected function buildWrappedResponse($data, Request $request, $response_code = 200, array $headers = [], LinkCollection $links = NULL, array $meta = []) {
     assert($data instanceof Data || $data instanceof FieldItemListInterface);
     $links = ($links ? $links: new LinkCollection([]));
-    $response = new ResourceResponse(new WotApiDocumentTopLevel($data, $links, $meta), $response_code, $headers);
+    $response = new ResourceResponse(new WotApiDocumentTopLevel($data, $links), $response_code, $headers);
     return $response;
   }
 

@@ -146,29 +146,29 @@ class Thing extends ContentEntityBase implements ThingInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-    // Owner property of the thing.
-    $fields['properties'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Property'))
-      ->setDescription(t('The Property.'))
-      ->setSetting('target_type', 'wotapi_property')
-      ->setSetting('handler', 'default')
-      ->setDisplayOptions('view', [
-        'label' => 'above',
-        'type' => 'wotapi_property',
-        'weight' => -3,
-      ])
-      ->setDisplayOptions('form', [
-        'type' => 'entity_reference_autocomplete',
-        'settings' => [
-          'match_operator' => 'CONTAINS',
-          'size' => 60,
-          'placeholder' => '',
-        ],
-        'weight' => -3,
-      ])
-      ->setCardinality(BaseFieldDefinition::CARDINALITY_UNLIMITED)
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayConfigurable('view', TRUE);
+//    // Owner property of the thing.
+//    $fields['properties'] = BaseFieldDefinition::create('entity_reference')
+//      ->setLabel(t('Property'))
+//      ->setDescription(t('The Property.'))
+//      ->setSetting('target_type', 'wotapi_property')
+//      ->setSetting('handler', 'default')
+//      ->setDisplayOptions('view', [
+//        'label' => 'above',
+//        'type' => 'wotapi_property',
+//        'weight' => -3,
+//      ])
+//      ->setDisplayOptions('form', [
+//        'type' => 'entity_reference_autocomplete',
+//        'settings' => [
+//          'match_operator' => 'CONTAINS',
+//          'size' => 60,
+//          'placeholder' => '',
+//        ],
+//        'weight' => -3,
+//      ])
+//      ->setCardinality(BaseFieldDefinition::CARDINALITY_UNLIMITED)
+//      ->setDisplayConfigurable('form', TRUE)
+//      ->setDisplayConfigurable('view', TRUE);
 
     return $fields;
   }

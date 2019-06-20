@@ -22,13 +22,6 @@ class WotApiDocumentTopLevel {
   protected $data;
 
   /**
-   * The metadata to normalize.
-   *
-   * @var array
-   */
-  protected $meta;
-
-  /**
    * The links.
    *
    * @var \Drupal\wotapi\WotApiResource\LinkCollection
@@ -51,14 +44,11 @@ class WotApiDocumentTopLevel {
    *   for one, or a collection of the same.
    * @param \Drupal\wotapi\WotApiResource\LinkCollection $links
    *   A collection of links to resources related to the top-level document.
-   * @param array $meta
-   *   (optional) The metadata to normalize.
    */
-  public function __construct($data,LinkCollection $links, array $meta = []) {
+  public function __construct($data,LinkCollection $links) {
     assert($data instanceof ResourceIdentifierInterface || $data instanceof Data || $data instanceof ErrorCollection || $data instanceof EntityReferenceFieldItemListInterface);
     $this->data = $data instanceof ResourceObjectData ? $data->getAccessible() : $data;
     $this->links = $links->withContext($this);
-    $this->meta = $meta;
     $this->omissions = $data instanceof ResourceObjectData
       ? $data->getOmissions()
       : null;
@@ -82,16 +72,6 @@ class WotApiDocumentTopLevel {
    */
   public function getLinks() {
     return $this->links;
-  }
-
-  /**
-   * Gets the metadata.
-   *
-   * @return array
-   *   The metadata.
-   */
-  public function getMeta() {
-    return $this->meta;
   }
 
   /**
