@@ -10,3 +10,21 @@ wotapi_property.wotapi_property_type.*:
       label: 'Label'
     uuid:
       type: string
+    title:
+      type: text
+      label: 'Title'
+    description:
+      type: text
+      label: 'Description'
+    at_type:
+      type: text
+      label: 'at_type'
+    type:
+      type: text
+      label: 'type'
+    unit:
+      type: text
+      label: 'unit'
+    read_only:
+      type: boolean
+      label: 'read_only'

@@ -17,8 +17,8 @@ class PropertyListBuilder extends EntityListBuilder {
    */
   public function buildHeader() {
     $header['id'] = $this->t('Property ID');
-    $header['title'] = $this->t('Property Name');
-    $header['description'] = $this->t('Description');
+//    $header['title'] = $this->t('Property Name');
+//    $header['description'] = $this->t('Description');
 
     return $header + parent::buildHeader();
   }
@@ -29,8 +29,8 @@ class PropertyListBuilder extends EntityListBuilder {
   public function buildRow(EntityInterface $entity) {
     /* @var $entity \Drupal\wotapi_property\Entity\Property */
     $row['id'] = $entity->id();
-    $row['title'] = $entity->getTitle();
-    $row['description'] = $entity->getDescription();
+//    $row['title'] = $entity->getTitle();
+//    $row['description'] = $entity->getDescription();
 
     return $row + parent::buildRow($entity);
   }

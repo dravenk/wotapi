@@ -17,7 +17,7 @@ class PropertyTypeForm extends EntityForm {
    */
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
-
+    /** @var \Drupal\wotapi_property\Entity\PropertyTypeInterface $wotapi_property_type */
     $wotapi_property_type = $this->entity;
     $form['label'] = [
       '#type' => 'textfield',
@@ -36,6 +36,60 @@ class PropertyTypeForm extends EntityForm {
       ],
       '#disabled' => !$wotapi_property_type->isNew(),
     ];
+
+    $form['title'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Title'),
+      '#maxlength' => 255,
+      '#default_value' => $wotapi_property_type->getTitle(),
+      '#description' => $this->t("A title (A string providing a human friendly name)"),
+      '#required' => TRUE,
+    ];
+
+    $form['description'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Description'),
+      '#maxlength' => 255,
+      '#default_value' => $wotapi_property_type->getDescription(),
+      '#description' => $this->t("The description member is a human friendly string which describes the device and its functions."),
+      '#required' => TRUE,
+    ];
+
+    $form['at_type'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('@type'),
+      '#maxlength' => 255,
+      '#default_value' => $wotapi_property_type->getAtType(),
+      '#description' => $this->t("A semantic @type (a string identifying a type from the linked @context)"),
+      '#required' => TRUE,
+    ];
+
+    $form['type'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Type'),
+      '#maxlength' => 255,
+      '#default_value' => $wotapi_property_type->getType(),
+      '#description' => $this->t("A primitive type (one of null, boolean, object, array, number, integer or string as per [json-schema])."),
+      '#required' => TRUE,
+    ];
+
+    $form['unit'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Unit'),
+      '#maxlength' => 255,
+      '#default_value' => $wotapi_property_type->getUnit(),
+      '#description' => $this->t("A unit ([SI] unit)."),
+//      '#required' => TRUE,
+    ];
+
+/*    // readOnly field for the property.
+    $form['read_only'] = [
+      '#type' => 'boolean',
+      '#title' => $this->t('readOnly'),
+      '#maxlength' => 255,
+      '#default_value' => false,
+//      '#required' => TRUE,
+    ];*/
 
     /* You will need additional form elements for your custom properties. */
 
