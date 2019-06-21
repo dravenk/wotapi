@@ -12,13 +12,9 @@ use Symfony\Component\Serializer\Serializer as SymfonySerializer;
  * Backwards compatibility is in no way guaranteed and will almost certainly be
  * broken in the future.
  *
- * @link https://www.drupal.org/project/wotapi/issues/2923779#comment-12407443
- *
  * @internal WOT:API maintains no PHP API since its API is the HTTP API. This
  *   class may change at any time and this will break any dependencies on it.
  *
- * @see https://www.drupal.org/project/wotapi/issues/3032787
- * @see wotapi.api.php
  */
 final class Serializer extends SymfonySerializer {
 

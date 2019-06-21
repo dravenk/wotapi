@@ -10,3 +10,6 @@ wotapi_thing.wotapi_thing_type.*:
       label: 'Label'
     uuid:
       type: string
+    at_type:
+      type: array
+      label: 'at_type'

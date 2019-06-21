@@ -18,12 +18,8 @@ use Symfony\Component\Routing\Route;
  * @internal WOT:API maintains no PHP API since its API is the HTTP API. This
  *   class may change at any time and this will break any dependencies on it.
  *
- * @see https://www.drupal.org/project/wotapi/issues/3032787
- * @see wotapi.api.php
- *
  * @see \Drupal\Core\ParamConverter\EntityConverter
  *
- * @todo Remove when https://www.drupal.org/node/2353611 lands.
  */
 class EntityUuidConverter extends EntityConverter {
 

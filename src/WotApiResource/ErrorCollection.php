@@ -11,13 +11,10 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
  * @internal WOT:API maintains no PHP API. The API is the HTTP API. This class
  *   may change at any time and could break any dependencies on it.
  *
- * @see https://www.drupal.org/project/wotapi/issues/3032787
- * @see wotapi.api.php
- *
  * (The spec says the top-level `data` and `errors` members MUST NOT coexist.)
- * @see http://wotapi.org/format/#document-top-level
+ * @see http://jsonapi.org/format/#document-top-level
  *
- * @see http://wotapi.org/format/#error-objects
+ * @see http://jsonapi.org/format/#error-objects
  */
 class ErrorCollection implements \IteratorAggregate {
 

@@ -27,12 +27,6 @@ use Drupal\wotapi\ResourceType\ResourceType;
  * @internal WOT:API maintains no PHP API. The API is the HTTP API. This class
  *   may change at any time and could break any dependencies on it.
  *
- * @see https://www.drupal.org/project/wotapi/issues/3032787
- * @see wotapi.api.php
- *
- * @see http://wotapi.org/format/#document-resource-object-properties
- * @see https://github.com/json-api/json-api/pull/1156#issuecomment-325377995
- * @see https://www.drupal.org/project/wotapi/issues/2864680
  */
 class ResourceIdentifier implements ResourceIdentifierInterface {
 

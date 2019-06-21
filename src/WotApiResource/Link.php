@@ -14,9 +14,6 @@ use Drupal\Core\Url;
  * @internal WOT:API maintains no PHP API. The API is the HTTP API. This class
  *   may change at any time and could break any dependencies on it.
  *
- * @see https://www.drupal.org/project/wotapi/issues/3032787
- * @see wotapi.api.php
- *
  * @see https://tools.ietf.org/html/rfc8288
  */
 final class Link implements CacheableDependencyInterface {

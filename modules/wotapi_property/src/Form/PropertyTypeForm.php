@@ -61,7 +61,6 @@ class PropertyTypeForm extends EntityForm {
       '#maxlength' => 255,
       '#default_value' => $wotapi_property_type->getAtType(),
       '#description' => $this->t("A semantic @type (a string identifying a type from the linked @context)"),
-      '#required' => TRUE,
     ];
 
     $form['type'] = [

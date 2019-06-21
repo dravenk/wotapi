@@ -26,8 +26,6 @@ use Drupal\wotapi\Routing\Routes;
  * @internal WOT:API maintains no PHP API. The API is the HTTP API. This class
  *   may change at any time and could break any dependencies on it.
  *
- * @see https://www.drupal.org/project/wotapi/issues/3032787
- * @see wotapi.api.php
  */
 class ResourceObject implements CacheableDependencyInterface, ResourceIdentifierInterface {
 

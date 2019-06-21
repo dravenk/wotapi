@@ -16,8 +16,6 @@ use Drupal\wotapi\Normalizer\Value\CacheableOmission;
  * @internal WOT:API maintains no PHP API since its API is the HTTP API. This
  *   class may change at any time and this will break any dependencies on it.
  *
- * @see https://www.drupal.org/project/wotapi/issues/3032787
- * @see wotapi.api.php
  */
 class ResourceObjectNormalizer extends NormalizerBase {
 
@@ -74,6 +72,7 @@ class ResourceObjectNormalizer extends NormalizerBase {
       //TODO
 //      'type' => CacheableNormalization::permanent($resource_type->getTypeName()),
       'id' => CacheableNormalization::permanent($object->getId()),
+      'properties' => CacheableNormalization::aggregate(array_intersect_key($normalizer_values, array_flip($relationship_field_names)))->omitIfEmpty(),
     ];
 
     $attributes = array_diff_key($normalizer_values, array_flip($relationship_field_names));
@@ -106,7 +105,7 @@ class ResourceObjectNormalizer extends NormalizerBase {
 
     foreach ($relationship_normalization as $key => $value){
 
-      $property_values =[];
+//      $property_values =[];
 
       foreach ($value->getNormalization() as $k => $v){
 
@@ -115,19 +114,19 @@ class ResourceObjectNormalizer extends NormalizerBase {
           $link['href'] = $v[0]['href'];
           array_push($links,$link);
         }
-        if (is_int($k)){
-          $property_values[$v['id']]= $v;
-        } else{
-          // $k = links => $v = {"href"="/"}
-          $property_values[$k] = $v;
-        }
+//        if (is_int($k)){
+//          $property_values[$v['id']]= $v;
+//        } else{
+//          // $k = links => $v = {"href"="/"}
+//          $property_values[$k] = $v;
+//        }
       }
 
-      if (count($value->getNormalization())>0) {
-        $normalization[$key] = CacheableNormalization::permanent($property_values);
-      } else{
-        $normalization[$key] = $value;
-      }
+//      if (count($value->getNormalization())>0) {
+//        $normalization[$key] = CacheableNormalization::permanent($property_values);
+//      } else{
+//        $normalization[$key] = $value;
+//      }
     };
 
     if (count($links)>0){

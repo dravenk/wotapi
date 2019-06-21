@@ -16,8 +16,6 @@ use Symfony\Component\HttpKernel\KernelEvents;
  * @internal WOT:API maintains no PHP API. The API is the HTTP API. This class
  *   may change at any time and could break any dependencies on it.
  *
- * @see https://www.drupal.org/project/wotapi/issues/3032787
- * @see wotapi.api.php
  */
 class WotApiRequestValidator implements EventSubscriberInterface {
 
@@ -33,7 +31,7 @@ class WotApiRequestValidator implements EventSubscriberInterface {
       return;
     }
 
-    $this->validateQueryParams($request);
+//    $this->validateQueryParams($request);
   }
 
   /**
@@ -45,7 +43,7 @@ class WotApiRequestValidator implements EventSubscriberInterface {
    * @return \Drupal\wotapi\ResourceResponse|null
    *   A WOT:API resource response.
    *
-   * @see http://wotapi.org/format/#query-parameters
+   * @see http://jsonapi.org/format/#query-parameters
    */
   protected function validateQueryParams(Request $request) {
     $invalid_query_params = [];
@@ -76,7 +74,7 @@ class WotApiRequestValidator implements EventSubscriberInterface {
 
     $message = sprintf('The following query parameters violate the WOT:API spec: \'%s\'.', implode("', '", $invalid_query_params));
     $exception = new CacheableBadRequestHttpException((new CacheableMetadata())->addCacheContexts(['url.query_args']), $message);
-    $exception->setHeaders(['Link' => 'http://wotapi.org/format/#query-parameters']);
+    $exception->setHeaders(['Link' => 'http://jsonapi.org/format/#query-parameters']);
     throw $exception;
   }
 
