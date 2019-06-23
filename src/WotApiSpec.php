@@ -12,18 +12,6 @@ namespace Drupal\wotapi;
 class WotApiSpec {
 
   /**
-   * The minimum supported specification version.
-   *
-   * @see http://wotapi.org/format/#document-wotapi-object
-   */
-  const SUPPORTED_SPECIFICATION_VERSION = '1.0';
-
-  /**
-   * The URI of the supported specification document.
-   */
-  const SUPPORTED_SPECIFICATION_PERMALINK = 'http://wotapi.org/format/1.0/';
-
-  /**
    * Member name: globally allowed characters.
    *
    * U+0080 and above (non-ASCII Unicode characters) are allowed, but are not
@@ -31,7 +19,7 @@ class WotApiSpec {
    *
    * A character class, for use in regular expressions.
    *
-   * @see http://wotapi.org/format/#document-member-names-allowed-characters
+   * @see http://jsonapi.org/format/#document-member-names-allowed-characters
    * @see http://php.net/manual/en/regexp.reference.character-classes.php
    */
   const MEMBER_NAME_GLOBALLY_ALLOWED_CHARACTER_CLASS = '[a-zA-Z0-9\x{80}-\x{10FFFF}]';
@@ -44,7 +32,7 @@ class WotApiSpec {
    *
    * A character class, for use in regular expressions.
    *
-   * @see http://wotapi.org/format/#document-member-names-allowed-characters
+   * @see http://jsonapi.org/format/#document-member-names-allowed-characters
    * @see http://php.net/manual/en/regexp.reference.character-classes.php
    */
   const MEMBER_NAME_INNER_ALLOWED_CHARACTERS = "[a-zA-Z0-9\x{80}-\x{10FFFF}\-_ ]";
@@ -64,7 +52,7 @@ class WotApiSpec {
    *   Whether the given member name is in compliance with the WOT:API
    *   specification.
    *
-   * @see http://wotapi.org/format/#document-member-names
+   * @see http://jsonapi.org/format/#document-member-names
    */
   public static function isValidMemberName($member_name) {
     // @todo When D8 requires PHP >=5.6, move to a MEMBER_NAME_REGEXP constant.
@@ -134,7 +122,7 @@ class WotApiSpec {
    *   Whether the given query parameter is in compliane with the WOT:API
    *   specification.
    *
-   * @see http://wotapi.org/format/#query-parameters
+   * @see http://jsonapi.org/format/#query-parameters
    */
   public static function isValidCustomQueryParameter($custom_query_parameter_name) {
     return static::isValidMemberName($custom_query_parameter_name) && preg_match('/[^a-z]/u', $custom_query_parameter_name) === 1;

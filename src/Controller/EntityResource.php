@@ -461,9 +461,6 @@ class EntityResource {
    *   The data to wrap.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
-   * @param \Drupal\wotapi\WotApiResource\IncludedData $includes
-   *   The resources to be included in the document. Use NullData if
-   *   there should be no included resources in the document.
    * @param int $response_code
    *   The response code.
    * @param array $headers
@@ -476,7 +473,7 @@ class EntityResource {
    * @return \Drupal\wotapi\ResourceResponse
    *   The response.
    */
-  protected function buildWrappedResponse($data, Request $request, $response_code = 200, array $headers = [], LinkCollection $links = NULL, array $meta = []) {
+  protected function buildWrappedResponse($data, Request $request, $response_code = 200, array $headers = [], LinkCollection $links = NULL) {
     assert($data instanceof Data || $data instanceof FieldItemListInterface);
     $links = ($links ? $links: new LinkCollection([]));
     $response = new ResourceResponse(new WotApiDocumentTopLevel($data, $links), $response_code, $headers);
@@ -488,8 +485,6 @@ class EntityResource {
    *
    * @param \Drupal\wotapi\WotApiResource\ResourceObjectData $primary_data
    *   The collection of entities.
-   * @param \Drupal\wotapi\WotApiResource\IncludedData|\Drupal\wotapi\WotApiResource\NullIncludedData $includes
-   *   The resources to be included in the document.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
    * @param \Drupal\wotapi\ResourceType\ResourceType $resource_type
@@ -501,13 +496,11 @@ class EntityResource {
    *   The response.
    */
   protected function respondWithCollection(ResourceObjectData $primary_data, Request $request, ResourceType $resource_type, OffsetPage $page_param) {
-//    assert(Inspector::assertAllObjects([$includes], IncludedData::class, NullIncludedData::class));
     $link_context = [
       'has_next_page' => $primary_data->hasNextPage(),
     ];
-    $meta = [];
     $collection_links = self::getPagerLinks($request, $page_param, $link_context);
-    $response = $this->buildWrappedResponse($primary_data, $request,200, [], $collection_links, $meta);
+    $response = $this->buildWrappedResponse($primary_data, $request,200, [], $collection_links);
 
     // When a new change to any entity in the resource happens, we cannot ensure
     // the validity of this cached list. Add the list tag to deal with that.

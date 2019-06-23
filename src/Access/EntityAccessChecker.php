@@ -236,7 +236,7 @@ class EntityAccessChecker {
    *
    * @todo: remove when a generic revision access API exists in Drupal core, and
    * also remove the injected "node" and "media" services.
-   * @see https://www.drupal.org/project/wotapi/issues/2992833#comment-12818386
+   * @see https://www.drupal.org/project/jsonapi/issues/2992833#comment-12818386
    */
   protected function checkRevisionViewAccess(EntityInterface $entity, AccountInterface $account) {
     assert($entity instanceof RevisionableInterface);

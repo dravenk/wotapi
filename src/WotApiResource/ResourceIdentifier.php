@@ -54,28 +54,17 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
   protected $id;
 
   /**
-   * The relationship's metadata.
-   *
-   * @var array
-   */
-  protected $meta;
-
-  /**
    * ResourceIdentifier constructor.
    *
    * @param \Drupal\wotapi\ResourceType\ResourceType|string $resource_type
    *   The WOT:API resource type or a WOT:API resource type name.
    * @param string $id
    *   The resource ID.
-   * @param array $meta
-   *   Any metadata for the ResourceIdentifier.
    */
-  public function __construct($resource_type, $id, array $meta = []) {
+  public function __construct($resource_type, $id) {
     assert(is_string($resource_type) || $resource_type instanceof ResourceType);
-    assert(!isset($meta[static::ARITY_KEY]) || is_int($meta[static::ARITY_KEY]) && $meta[static::ARITY_KEY] >= 0);
     $this->resourceTypeName = is_string($resource_type) ? $resource_type : $resource_type->getTypeName();
     $this->id = $id;
-    $this->meta = $meta;
     if (!is_string($resource_type)) {
       $this->resourceType = $resource_type;
     }
@@ -120,7 +109,7 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
    *   TRUE if the ResourceIdentifier has an arity, FALSE otherwise.
    */
   public function hasArity() {
-    return isset($this->meta[static::ARITY_KEY]);
+    return isset($this[static::ARITY_KEY]);
   }
 
   /**
@@ -133,7 +122,7 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
    */
   public function getArity() {
     assert($this->hasArity());
-    return $this->meta[static::ARITY_KEY];
+    return $this[static::ARITY_KEY];
   }
 
   /**
@@ -147,17 +136,7 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
    *   the same.
    */
   public function withArity($arity) {
-    return new static($this->getResourceType(), $this->getId(), [static::ARITY_KEY => $arity] + $this->getMeta());
-  }
-
-  /**
-   * Gets the resource identifier objects metadata.
-   *
-   * @return array
-   *   The metadata.
-   */
-  public function getMeta() {
-    return $this->meta;
+    return new static($this->getResourceType(), $this->getId());
   }
 
   /**
@@ -282,14 +261,7 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
     /* @var \Drupal\wotapi\ResourceType\ResourceTypeRepositoryInterface $resource_type_repository */
     $resource_type_repository = \Drupal::service('wotapi.resource_type.repository');
     $resource_type = $resource_type_repository->get($target->getEntityTypeId(), $target->bundle());
-    // Remove unwanted properties from the meta value, usually 'entity'
-    // and 'target_id'.
-//    $properties = TypedDataInternalPropertiesHelper::getNonInternalProperties($item);
-//    $meta = array_diff_key($properties, array_flip([$property_name, $item->getDataDefinition()->getMainPropertyName()]));
-//    if (!is_null($arity)) {
-//      $meta[static::ARITY_KEY] = $arity;
-//    }
-    return new static($resource_type, $target->uuid(), []);
+    return new static($resource_type, $target->uuid());
   }
 
   /**
@@ -410,18 +382,7 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
     $resource_type = $resource_type_repository->get($host_entity->getEntityTypeId(), $host_entity->bundle());
     assert($resource_type instanceof ResourceType);
     $relatable_resource_types = $resource_type->getRelatableResourceTypesByField($field->getName());
-    $get_metadata = function ($type) {
-      return [
-        'links' => [
-          'help' => [
-            'href' => "https://www.drupal.org/docs/8/modules/json-api/core-concepts#$type",
-            'meta' => [
-              'about' => "Usage and meaning of the '$type' resource identifier.",
-            ],
-          ],
-        ],
-      ];
-    };
+
     $resource_type = reset($relatable_resource_types);
     // A non-empty entity reference field that refers to a non-existent entity
     // is not a data integrity problem. For example, Term entities' "parent"
@@ -432,7 +393,7 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
       if (count($relatable_resource_types) !== 1) {
         throw new \RuntimeException('Relationships to virtual resources are possible only if a single resource type is relatable.');
       }
-      return new static($resource_type, 'virtual', $get_metadata('virtual'));
+      return new static($resource_type, 'virtual');
     }
     else {
       // In case of a dangling reference, it is impossible to determine which
@@ -444,7 +405,7 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
       $resource_type = count($relatable_resource_types) > 1
         ? new ResourceType('?', '?', '')
         : reset($relatable_resource_types);
-      return new static($resource_type, 'missing', $get_metadata('missing'));
+      return new static($resource_type, 'missing');
     }
   }
 

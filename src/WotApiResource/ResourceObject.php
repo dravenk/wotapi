@@ -8,12 +8,9 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\TypedData\TypedDataInternalPropertiesHelper;
 use Drupal\Core\Url;
-use Drupal\wotapi\WotApiSpec;
 use Drupal\wotapi\ResourceType\ResourceType;
-use Drupal\wotapi\Revisions\VersionByRel;
 use Drupal\wotapi\Routing\Routes;
 
 /**
@@ -31,13 +28,6 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
 
   use CacheableDependencyTrait;
   use ResourceIdentifierTrait;
-
-  /**
-   * The resource object's version identifier.
-   *
-   * @var string|null
-   */
-  protected $versionIdentifier;
 
   /**
    * The object's fields.
@@ -66,20 +56,15 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
    *   The WOT:API resource type of the resource object.
    * @param string $id
    *   The resource object's ID.
-   * @param mixed|null $revision_id
-   *   The resource object's version identifier. NULL, if the resource object is
-   *   not versionable.
    * @param array $fields
    *   An array of the resource object's fields, keyed by public field name.
    * @param \Drupal\wotapi\WotApiResource\LinkCollection $links
    *   The links for the resource object.
    */
-  public function __construct(CacheableDependencyInterface $cacheability, ResourceType $resource_type, $id, $revision_id, array $fields, LinkCollection $links) {
-    assert(is_null($revision_id) || $resource_type->isVersionable());
+  public function __construct(CacheableDependencyInterface $cacheability, ResourceType $resource_type, $id, array $fields, LinkCollection $links) {
     $this->setCacheability($cacheability);
     $this->resourceType = $resource_type;
     $this->resourceIdentifier = new ResourceIdentifier($resource_type, $id);
-    $this->versionIdentifier = $revision_id ? 'id:' . $revision_id : NULL;
     $this->fields = $fields;
     $this->links = $links->withContext($this);
   }
@@ -104,7 +89,6 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
       $entity,
       $resource_type,
       $entity->uuid(),
-      $resource_type->isVersionable() && $entity instanceof RevisionableInterface ? $entity->getRevisionId() : NULL,
       static::extractFieldsFromEntity($resource_type, $entity),
       static::buildLinksFromEntity($resource_type, $entity, $links ?: new LinkCollection([]))
     );
@@ -158,20 +142,6 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
    */
   public function getLinks() {
     return $this->links;
-  }
-
-  /**
-   * Gets a version identifier for the ResourceObject.
-   *
-   * @return string
-   *   The version identifier of the resource object, if the resource type is
-   *   versionable.
-   */
-  public function getVersionIdentifier() {
-    if (!$this->resourceType->isVersionable()) {
-      throw new \LogicException('Cannot get a version identifier for a non-versionable resource.');
-    }
-    return $this->versionIdentifier;
   }
 
   /**
@@ -233,28 +203,6 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
   protected static function buildLinksFromEntity(ResourceType $resource_type, EntityInterface $entity, LinkCollection $links) {
     if ($resource_type->isLocatable() && !$resource_type->isInternal()) {
       $self_url = Url::fromRoute(Routes::getRouteName($resource_type, 'individual'), ['entity' => $entity->uuid()]);
-//      if ($resource_type->isVersionable()) {
-//        assert($entity instanceof RevisionableInterface);
-//        if (!$links->hasLinkWithKey('self')) {
-//          // If the resource is versionable, the `self` link should be the exact
-//          // link for the represented version. This helps a client track
-//          // revision changes and to disambiguate resource objects with the same
-//          // `type` and `id` in a `version-history` collection.
-//          $self_with_version_url = $self_url->setOption('query', [WotApiSpec::VERSION_QUERY_PARAMETER => 'id:' . $entity->getRevisionId()]);
-//          $links = $links->withLink('self', new Link(new CacheableMetadata(), $self_with_version_url, ['self']));
-//        }
-//        if (!$entity->isDefaultRevision()) {
-//          $latest_version_url = $self_url->setOption('query', [WotApiSpec::VERSION_QUERY_PARAMETER => 'rel:' . VersionByRel::LATEST_VERSION]);
-//          $links = $links->withLink(VersionByRel::LATEST_VERSION, new Link(new CacheableMetadata(), $latest_version_url, [VersionByRel::LATEST_VERSION]));
-//        }
-//        if (!$entity->isLatestRevision()) {
-//          $working_copy_url = $self_url->setOption('query', [WotApiSpec::VERSION_QUERY_PARAMETER => 'rel:' . VersionByRel::WORKING_COPY]);
-//          $links = $links->withLink(VersionByRel::WORKING_COPY, new Link(new CacheableMetadata(), $working_copy_url, [VersionByRel::WORKING_COPY]));
-//        }
-//      }
-//      if (!$links->hasLinkWithKey('self')) {
-//        $links = $links->withLink('self', new Link(new CacheableMetadata(), $self_url, ['self']));
-//      }
       $links = $links->withLink('self', new Link(new CacheableMetadata(), $self_url, ['self']));
 
     }

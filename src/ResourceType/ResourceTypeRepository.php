@@ -131,7 +131,6 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
       $entity_type->isInternal(),
       static::isLocatableResourceType($entity_type, $bundle),
       static::isMutableResourceType($entity_type, $bundle),
-      static::isVersionableResourceType($entity_type),
       static::getFieldMapping($raw_fields, $entity_type, $bundle)
     );
   }

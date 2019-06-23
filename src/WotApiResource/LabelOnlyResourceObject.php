@@ -3,7 +3,6 @@
 namespace Drupal\wotapi\WotApiResource;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\wotapi\ResourceType\ResourceType;
 
 /**
@@ -30,7 +29,6 @@ final class LabelOnlyResourceObject extends ResourceObject {
       $entity,
       $resource_type,
       $entity->uuid(),
-      $resource_type->isVersionable() && $entity instanceof RevisionableInterface ? $entity->getRevisionId() : NULL,
       static::extractFieldsFromEntity($resource_type, $entity),
       static::buildLinksFromEntity($resource_type, $entity, $links ?: new LinkCollection([]))
     );

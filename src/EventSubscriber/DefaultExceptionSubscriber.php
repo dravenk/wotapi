@@ -5,7 +5,6 @@ namespace Drupal\wotapi\EventSubscriber;
 use Drupal\wotapi\WotApiResource\ErrorCollection;
 use Drupal\wotapi\WotApiResource\WotApiDocumentTopLevel;
 use Drupal\wotapi\WotApiResource\LinkCollection;
-use Drupal\wotapi\WotApiResource\NullIncludedData;
 use Drupal\wotapi\ResourceResponse;
 use Drupal\wotapi\Routing\Routes;
 use Drupal\serialization\EventSubscriber\DefaultExceptionSubscriber as SerializationDefaultExceptionSubscriber;
