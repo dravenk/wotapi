@@ -27,9 +27,6 @@ use Drupal\wotapi\WotApiResource\ResourceIdentifier;
 use Drupal\wotapi\WotApiResource\Link;
 use Drupal\wotapi\WotApiResource\ResourceObject;
 use Drupal\wotapi\WotApiResource\ResourceObjectData;
-use Drupal\wotapi\Query\Filter;
-use Drupal\wotapi\Query\Sort;
-use Drupal\wotapi\Query\OffsetPage;
 use Drupal\wotapi\WotApiResource\Data;
 use Drupal\wotapi\WotApiResource\WotApiDocumentTopLevel;
 use Drupal\wotapi\ResourceResponse;
@@ -207,9 +204,9 @@ class EntityResource {
     // Instantiate the query for the filtering.
     $entity_type_id = $resource_type->getEntityTypeId();
 
-    $params = $this->getWotApiParams($request, $resource_type);
+//    $params = $this->getWotApiParams($request, $resource_type);
     $query_cacheability = new CacheableMetadata();
-    $query = $this->getCollectionQuery($resource_type, $params, $query_cacheability);
+    $query = $this->getCollectionQuery($resource_type, $query_cacheability);
 
     try {
       $results = $this->executeQueryInRenderContext(
@@ -225,7 +222,7 @@ class EntityResource {
       if (strpos($e->getMessage(), 'Getting the base fields is not supported for entity type') === 0) {
         preg_match('/entity type (.*)\./', $e->getMessage(), $matches);
         $config_entity_type_id = $matches[1];
-        $cacheability = (new CacheableMetadata())->addCacheContexts(['url.path', 'url.query_args:filter']);
+        $cacheability = (new CacheableMetadata())->addCacheContexts(['url.path']);
         throw new CacheableBadRequestHttpException($cacheability, sprintf("Filtering on config entities is not supported by Drupal's entity API. You tried to filter on a %s config entity.", $config_entity_type_id));
       }
       else {
@@ -250,7 +247,7 @@ class EntityResource {
     // Calculate all the results and pass into a WOT:API Data object.
     $count_query_cacheability = new CacheableMetadata();
 
-    $response = $this->respondWithCollection($primary_data, $request, $resource_type, $params[OffsetPage::KEY_NAME]);
+    $response = $this->respondWithCollection($primary_data, $request, $resource_type);
 
     $response->addCacheableDependency($query_cacheability);
     $response->addCacheableDependency($count_query_cacheability);
@@ -372,15 +369,13 @@ class EntityResource {
    *
    * @param \Drupal\wotapi\ResourceType\ResourceType $resource_type
    *   The base WOT:API resource type for the query.
-   * @param array $params
-   *   The parameters for the query.
    * @param \Drupal\Core\Cache\CacheableMetadata $query_cacheability
    *   Collects cacheability for the query.
    *
    * @return \Drupal\Core\Entity\Query\QueryInterface
    *   A new query.
    */
-  protected function getCollectionQuery(ResourceType $resource_type, array $params, CacheableMetadata $query_cacheability) {
+  protected function getCollectionQuery(ResourceType $resource_type,CacheableMetadata $query_cacheability) {
     $entity_type = $this->entityTypeManager->getDefinition($resource_type->getEntityTypeId());
     $entity_storage = $this->entityTypeManager->getStorage($resource_type->getEntityTypeId());
 
@@ -389,16 +384,7 @@ class EntityResource {
     // Ensure that access checking is performed on the query.
     $query->accessCheck(TRUE);
 
-    // Apply any pagination options to the query.
-    if (isset($params[OffsetPage::KEY_NAME])) {
-      $pagination = $params[OffsetPage::KEY_NAME];
-    }
-    else {
-      $pagination = new OffsetPage(OffsetPage::DEFAULT_OFFSET, OffsetPage::SIZE_MAX);
-    }
-    // Add one extra element to the page to see if there are more pages needed.
-    $query->range($pagination->getOffset(), $pagination->getSize() + 1);
-    $query->addMetaData('pager_size', (int) $pagination->getSize());
+    $query->addMetaData('pager_size', (int) 50);
 
     // Limit this query to the bundle type for this resource.
     $bundle = $resource_type->getBundle();
@@ -409,24 +395,6 @@ class EntityResource {
     }
 
     return $query;
-  }
-
-  /**
-   * Gets a basic query for a collection count.
-   *
-   * @param \Drupal\wotapi\ResourceType\ResourceType $resource_type
-   *   The base WOT:API resource type for the query.
-   * @param array $params
-   *   The parameters for the query.
-   * @param \Drupal\Core\Cache\CacheableMetadata $query_cacheability
-   *   Collects cacheability for the query.
-   *
-   * @return \Drupal\Core\Entity\Query\QueryInterface
-   *   A new query.
-   */
-  protected function getCollectionCountQuery(ResourceType $resource_type, array $params, CacheableMetadata $query_cacheability) {
-    // Reset the range to get all the available results.
-    return $this->getCollectionQuery($resource_type, $params, $query_cacheability)->range()->count();
   }
 
   /**
@@ -489,17 +457,13 @@ class EntityResource {
    *   The request object.
    * @param \Drupal\wotapi\ResourceType\ResourceType $resource_type
    *   The base WOT:API resource type for the request to be served.
-   * @param \Drupal\wotapi\Query\OffsetPage $page_param
-   *   The pagination parameter for the requested collection.
    *
    * @return \Drupal\wotapi\ResourceResponse
    *   The response.
    */
-  protected function respondWithCollection(ResourceObjectData $primary_data, Request $request, ResourceType $resource_type, OffsetPage $page_param) {
-    $link_context = [
-      'has_next_page' => $primary_data->hasNextPage(),
-    ];
-    $collection_links = self::getPagerLinks($request, $page_param, $link_context);
+  protected function respondWithCollection(ResourceObjectData $primary_data, Request $request, ResourceType $resource_type ) {
+
+    $collection_links = new LinkCollection([]);
     $response = $this->buildWrappedResponse($primary_data, $request,200, [], $collection_links);
 
     // When a new change to any entity in the resource happens, we cannot ensure
@@ -559,33 +523,6 @@ class EntityResource {
   }
 
   /**
-   * Extracts WOT:API query parameters from the request.
-   *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
-   * @param \Drupal\wotapi\ResourceType\ResourceType $resource_type
-   *   The WOT:API resource type.
-   *
-   * @return array
-   *   An array of WOT:API parameters like `sort` and `filter`.
-   */
-  protected function getWotApiParams(Request $request, ResourceType $resource_type) {
-    if ($request->query->has('filter')) {
-      $params[Filter::KEY_NAME] = Filter::createFromQueryParameter($request->query->get('filter'), $resource_type, $this->fieldResolver);
-    }
-    if ($request->query->has('sort')) {
-      $params[Sort::KEY_NAME] = Sort::createFromQueryParameter($request->query->get('sort'));
-    }
-    if ($request->query->has('page')) {
-      $params[OffsetPage::KEY_NAME] = OffsetPage::createFromQueryParameter($request->query->get('page'));
-    }
-    else {
-      $params[OffsetPage::KEY_NAME] = OffsetPage::createFromQueryParameter(['page' => ['offset' => OffsetPage::DEFAULT_OFFSET, 'limit' => OffsetPage::SIZE_MAX]]);
-    }
-    return $params;
-  }
-
-  /**
    * Get the full URL for a given request object.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
@@ -611,8 +548,6 @@ class EntityResource {
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
-   * @param \Drupal\wotapi\Query\OffsetPage $page_param
-   *   The current pagination parameter for the requested collection.
    * @param array $link_context
    *   An associative array with extra data to build the links.
    *
@@ -621,100 +556,12 @@ class EntityResource {
    *   - a 'next' key if it is not the last page;
    *   - 'prev' and 'first' keys if it's not the first page.
    */
-  protected static function getPagerLinks(Request $request, OffsetPage $page_param, array $link_context = []) {
+  protected static function getPagerLinks(Request $request,  array $link_context = []) {
     $pager_links = new LinkCollection([]);
     if (!empty($link_context['total_count']) && !$total = (int) $link_context['total_count']) {
       return $pager_links;
     }
-    /* @var \Drupal\wotapi\Query\OffsetPage $page_param */
-    $offset = $page_param->getOffset();
-    $size = $page_param->getSize();
-    if ($size <= 0) {
-      $cacheability = (new CacheableMetadata())->addCacheContexts(['url.query_args:page']);
-      throw new CacheableBadRequestHttpException($cacheability, sprintf('The page size needs to be a positive integer.'));
-    }
-    $query = (array) $request->query->getIterator();
-    // Check if this is not the last page.
-    if ($link_context['has_next_page']) {
-      $next_url = static::getRequestLink($request, static::getPagerQueries('next', $offset, $size, $query));
-      $pager_links = $pager_links->withLink('next', new Link(new CacheableMetadata(), $next_url, ['next']));
-
-      if (!empty($total)) {
-        $last_url = static::getRequestLink($request, static::getPagerQueries('last', $offset, $size, $query, $total));
-        $pager_links = $pager_links->withLink('last', new Link(new CacheableMetadata(), $last_url, ['last']));
-      }
-    }
-
-    // Check if this is not the first page.
-    if ($offset > 0) {
-      $first_url = static::getRequestLink($request, static::getPagerQueries('first', $offset, $size, $query));
-      $pager_links = $pager_links->withLink('first', new Link(new CacheableMetadata(), $first_url, ['first']));
-      $prev_url = static::getRequestLink($request, static::getPagerQueries('prev', $offset, $size, $query));
-      $pager_links = $pager_links->withLink('prev', new Link(new CacheableMetadata(), $prev_url, ['prev']));
-    }
 
     return $pager_links;
   }
-
-  /**
-   * Get the query param array.
-   *
-   * @param string $link_id
-   *   The name of the pagination link requested.
-   * @param int $offset
-   *   The starting index.
-   * @param int $size
-   *   The pagination page size.
-   * @param array $query
-   *   The query parameters.
-   * @param int $total
-   *   The total size of the collection.
-   *
-   * @return array
-   *   The pagination query param array.
-   */
-  protected static function getPagerQueries($link_id, $offset, $size, array $query = [], $total = 0) {
-    $extra_query = [];
-    switch ($link_id) {
-      case 'next':
-        $extra_query = [
-          'page' => [
-            'offset' => $offset + $size,
-            'limit' => $size,
-          ],
-        ];
-        break;
-
-      case 'first':
-        $extra_query = [
-          'page' => [
-            'offset' => 0,
-            'limit' => $size,
-          ],
-        ];
-        break;
-
-      case 'last':
-        if ($total) {
-          $extra_query = [
-            'page' => [
-              'offset' => (ceil($total / $size) - 1) * $size,
-              'limit' => $size,
-            ],
-          ];
-        }
-        break;
-
-      case 'prev':
-        $extra_query = [
-          'page' => [
-            'offset' => max($offset - $size, 0),
-            'limit' => $size,
-          ],
-        ];
-        break;
-    }
-    return array_merge($query, $extra_query);
-  }
-
 }

@@ -30,8 +30,6 @@ class WotApiRequestValidator implements EventSubscriberInterface {
     if ($request->getRequestFormat() !== 'api_json') {
       return;
     }
-
-//    $this->validateQueryParams($request);
   }
 
   /**
