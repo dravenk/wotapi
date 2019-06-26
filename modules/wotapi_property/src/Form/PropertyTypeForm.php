@@ -43,7 +43,6 @@ class PropertyTypeForm extends EntityForm {
       '#maxlength' => 255,
       '#default_value' => $wotapi_property_type->getTitle(),
       '#description' => $this->t("A title (A string providing a human friendly name)"),
-      '#required' => TRUE,
     ];
 
     $form['description'] = [
@@ -52,7 +51,6 @@ class PropertyTypeForm extends EntityForm {
       '#maxlength' => 255,
       '#default_value' => $wotapi_property_type->getDescription(),
       '#description' => $this->t("The description member is a human friendly string which describes the device and its functions."),
-      '#required' => TRUE,
     ];
 
     $form['at_type'] = [
@@ -69,7 +67,6 @@ class PropertyTypeForm extends EntityForm {
       '#maxlength' => 255,
       '#default_value' => $wotapi_property_type->getType(),
       '#description' => $this->t("A primitive type (one of null, boolean, object, array, number, integer or string as per [json-schema])."),
-      '#required' => TRUE,
     ];
 
     $form['unit'] = [
