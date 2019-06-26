@@ -2,7 +2,7 @@ wotapi_property.admin:
   path: 'admin/structure/wotapi_property'
   defaults:
     _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
-    _title: 'Administer Property Entities'
+    _title: 'Administer Thing property'
   requirements:
     _permission: 'administer property entities'
 

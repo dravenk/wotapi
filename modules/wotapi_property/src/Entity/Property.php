@@ -15,8 +15,8 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *
  * @ContentEntityType(
  *   id = "wotapi_property",
- *   label = @Translation("Property"),
- *   bundle_label = @Translation("Property type"),
+ *   label = @Translation("Thing property"),
+ *   bundle_label = @Translation("Thing property type"),
  *   handlers = {
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
  *     "list_builder" = "Drupal\wotapi_property\PropertyListBuilder",
@@ -51,7 +51,8 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *     "collection" = "/admin/structure/wotapi_property/overview",
  *   },
  *   bundle_entity_type = "wotapi_property_type",
- *   field_ui_base_route = "entity.wotapi_property_type.edit_form"
+ *   field_ui_base_route = "entity.wotapi_property_type.edit_form",
+ *   common_reference_target = TRUE
  * )
  */
 class Property extends ContentEntityBase implements PropertyInterface {
