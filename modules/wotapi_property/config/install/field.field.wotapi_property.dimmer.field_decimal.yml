@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.wotapi_property.field_decimal
+    - wotapi_property.wotapi_property_type.dimmer
+id: wotapi_property.dimmer.field_decimal
+field_name: field_decimal
+entity_type: wotapi_property
+bundle: dimmer
+label: Value
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: decimal
