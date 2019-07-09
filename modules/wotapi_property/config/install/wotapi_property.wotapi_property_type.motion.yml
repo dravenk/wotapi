@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: motion
+label: MotionProperty
+description: 'A MotionProperty is like a BooleanProperty, but with the added semantics that true means "motion" and false means "no motion".'
+title: MotionProperty
+at_type: MotionProperty
+type: boolean
+read_only: false
+unit: ''

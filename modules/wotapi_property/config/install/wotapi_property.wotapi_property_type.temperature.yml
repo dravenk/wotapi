@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: temperature
+label: TemperatureProperty
+description: ''
+title: TemperatureProperty
+at_type: TemperatureProperty
+type: integer
+read_only: false
+unit: 'degree celsius'

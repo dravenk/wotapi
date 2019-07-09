@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: alarm
+label: AlarmProperty
+description: ''
+title: AlarmProperty
+at_type: AlarmProperty
+type: boolean
+read_only: false
+unit: ''

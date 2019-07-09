@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: open
+label: OpenProperty
+description: 'An OpenProperty is like a BooleanProperty, but with the added semantics that true means "open" and false means "closed".'
+title: OpenProperty
+at_type: OpenProperty
+type: boolean
+read_only: false
+unit: ''

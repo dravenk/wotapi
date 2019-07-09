@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: reactivepower
+label: ReactivePowerData
+description: 'Data for the reactive power'
+title: ReactivePowerData
+at_type: ReactivePowerData
+type: integer
+read_only: false
+unit: ''

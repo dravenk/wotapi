@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.wotapi_property.boolean.field_boolean
+    - wotapi_property.wotapi_property_type.boolean
+id: wotapi_property.boolean.default
+targetEntityType: wotapi_property
+bundle: boolean
+mode: default
+content:
+  field_boolean:
+    weight: 0
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
+    region: content
+hidden: {  }

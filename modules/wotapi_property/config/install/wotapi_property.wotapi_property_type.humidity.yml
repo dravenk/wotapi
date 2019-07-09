@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: humidity
+label: HumidityData
+description: 'Humidity data'
+title: HumidityData
+at_type: HumidityData
+type: number
+read_only: false
+unit: percent

@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.wotapi_property.argonconcentration.field_integer
+    - wotapi_property.wotapi_property_type.argonconcentration
+id: wotapi_property.argonconcentration.default
+targetEntityType: wotapi_property
+bundle: argonconcentration
+mode: default
+content:
+  field_integer:
+    weight: 0
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+hidden: {  }

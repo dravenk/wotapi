@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: instantaneouspower
+label: InstantaneousPowerProperty
+description: ''
+title: InstantaneousPowerProperty
+at_type: InstantaneousPowerProperty
+type: integer
+read_only: false
+unit: watt

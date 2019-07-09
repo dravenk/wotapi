@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.wotapi_property.gcolour.field_integer
+    - wotapi_property.wotapi_property_type.gcolour
+id: wotapi_property.gcolour.default
+targetEntityType: wotapi_property
+bundle: gcolour
+mode: default
+content:
+  field_integer:
+    weight: 0
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+hidden: {  }

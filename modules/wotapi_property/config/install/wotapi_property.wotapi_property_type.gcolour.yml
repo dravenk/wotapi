@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: gcolour
+label: GColourData
+description: 'Green component of the RGB colour data'
+title: GColourData
+at_type: GColourData
+type: number
+read_only: false
+unit: ''

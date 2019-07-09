@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.wotapi_property.field_boolean
+    - wotapi_property.wotapi_property_type.status
+id: wotapi_property.status.field_boolean
+field_name: field_boolean
+entity_type: wotapi_property
+bundle: status
+label: Value
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

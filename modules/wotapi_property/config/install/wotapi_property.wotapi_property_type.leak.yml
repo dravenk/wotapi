@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: leak
+label: LeakProperty
+description: 'A LeakProperty is like a BooleanProperty, but with the added semantics that true means "leak" and false means "no leak".'
+title: LeakProperty
+at_type: LeakProperty
+type: boolean
+read_only: false
+unit: ''

@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: activeenergy
+label: ActiveEnergyData
+description: 'Active energy data.'
+title: ActiveEnergyData
+at_type: ActiveEnergyData
+type: number
+read_only: false
+unit: ''

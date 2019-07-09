@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: bcolour
+label: BColourData
+description: 'Blue component of the RGB colour data'
+title: BColourData
+at_type: BColourData
+type: number
+read_only: false
+unit: ''

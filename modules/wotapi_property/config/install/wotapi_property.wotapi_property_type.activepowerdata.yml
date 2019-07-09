@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: activepowerdata
+label: ActivePowerData
+description: 'Data for the active power'
+title: ActivePowerData
+at_type: ActivePowerData
+type: number
+read_only: false
+unit: ''

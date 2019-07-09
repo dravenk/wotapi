@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - wotapi_property.wotapi_property_type.image
+id: wotapi_property.image.default
+targetEntityType: wotapi_property
+bundle: image
+mode: default
+content: {  }
+hidden: {  }

@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: color
+label: ColorProperty
+description: ''
+title: ColorProperty
+at_type: ColorProperty
+type: string
+read_only: false
+unit: ''

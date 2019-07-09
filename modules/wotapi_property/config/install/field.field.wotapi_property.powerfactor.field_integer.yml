@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.wotapi_property.field_integer
+    - wotapi_property.wotapi_property_type.powerfactor
+id: wotapi_property.powerfactor.field_integer
+field_name: field_integer
+entity_type: wotapi_property
+bundle: powerfactor
+label: Value
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

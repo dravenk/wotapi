@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: illuminance
+label: IlluminanceData
+description: 'Illuminance data'
+title: IlluminanceData
+at_type: IlluminanceData
+type: number
+read_only: false
+unit: ''

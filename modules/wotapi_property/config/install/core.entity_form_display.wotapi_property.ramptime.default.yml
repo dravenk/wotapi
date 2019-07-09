@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.wotapi_property.ramptime.field_integer
+    - wotapi_property.wotapi_property_type.ramptime
+id: wotapi_property.ramptime.default
+targetEntityType: wotapi_property
+bundle: ramptime
+mode: default
+content:
+  field_integer:
+    weight: 0
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+hidden: {  }

@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: rcolour
+label: RColourData
+description: 'Red component of the RGB colour data'
+title: RColourData
+at_type: RColourData
+type: number
+read_only: false
+unit: ''

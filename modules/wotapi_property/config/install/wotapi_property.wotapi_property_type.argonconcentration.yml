@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: argonconcentration
+label: ArgonConcentrationData
+description: 'Argon concentration data.'
+title: ArgonConcentrationData
+at_type: ArgonConcentrationData
+type: number
+read_only: false
+unit: ''

@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: flowrate
+label: FlowRateData
+description: 'Flow rate data'
+title: FlowRateData
+at_type: FlowRateData
+type: number
+read_only: false
+unit: ''

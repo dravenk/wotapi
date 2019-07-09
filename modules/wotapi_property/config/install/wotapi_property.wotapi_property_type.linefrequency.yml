@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: linefrequency
+label: LineFrequencyData
+description: LineFrequencyData
+title: 'Line frequency data.'
+at_type: LineFrequencyData
+type: number
+read_only: false
+unit: ''

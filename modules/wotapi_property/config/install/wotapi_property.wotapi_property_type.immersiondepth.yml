@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: immersiondepth
+label: ImmersionDepthData
+description: 'Liquid immersion depth data'
+title: ImmersionDepthData
+at_type: ImmersionDepthData
+type: number
+read_only: false
+unit: ''

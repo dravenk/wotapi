@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.wotapi_property.illuminance.field_integer
+    - wotapi_property.wotapi_property_type.illuminance
+id: wotapi_property.illuminance.default
+targetEntityType: wotapi_property
+bundle: illuminance
+mode: default
+content:
+  field_integer:
+    weight: 0
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+hidden: {  }

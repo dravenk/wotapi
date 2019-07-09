@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: voltage
+label: VoltageProperty
+description: ''
+title: VoltageProperty
+at_type: VoltageProperty
+type: integer
+read_only: false
+unit: volt

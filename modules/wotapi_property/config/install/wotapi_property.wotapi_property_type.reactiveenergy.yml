@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: reactiveenergy
+label: ReactiveEnergyData
+description: 'Reactive energy data.'
+title: ReactiveEnergyData
+at_type: ReactiveEnergyData
+type: ''
+read_only: false
+unit: ''

@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: carbondioxideconcentration
+label: CarbonDioxideConcentrationData
+description: 'Carbon dioxide concentration data.'
+title: CarbonDioxideConcentrationData
+at_type: CarbonDioxideConcentrationData
+type: number
+read_only: false
+unit: ''

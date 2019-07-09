@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: level
+label: LevelProperty
+description: ''
+title: LevelProperty
+at_type: LevelProperty
+type: integer
+read_only: false
+unit: ''

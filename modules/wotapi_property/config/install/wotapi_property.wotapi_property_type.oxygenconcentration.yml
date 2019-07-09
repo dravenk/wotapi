@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: oxygenconcentration
+label: OxygenConcentrationData
+description: 'Oxygen concentration data.'
+title: OxygenConcentrationData
+at_type: OxygenConcentrationData
+type: number
+read_only: false
+unit: ''

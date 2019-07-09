@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: apparentpower
+label: ApparentPowerData
+description: 'Data for the apparent power.'
+title: ApparentPowerData
+at_type: ApparentPowerData
+type: number
+read_only: false
+unit: ''

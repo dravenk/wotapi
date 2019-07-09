@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: state
+label: StateData
+description: 'State data'
+title: StateData
+at_type: StateData
+type: boolean
+read_only: false
+unit: ''

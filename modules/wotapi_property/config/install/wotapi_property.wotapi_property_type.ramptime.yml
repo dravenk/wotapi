@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: ramptime
+label: RampTimeData
+description: ''
+title: RampTimeData
+at_type: RampTimeData
+type: number
+read_only: false
+unit: ''

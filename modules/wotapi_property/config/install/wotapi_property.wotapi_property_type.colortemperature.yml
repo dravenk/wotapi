@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: colortemperature
+label: ColorTemperatureProperty
+description: ''
+title: ColorTemperatureProperty
+at_type: ColorTemperatureProperty
+type: integer
+read_only: false
+unit: kelvin

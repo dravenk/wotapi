@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: nitrogenconcentration
+label: NitrogenConcentrationData
+description: 'Nitrogen concentration data.'
+title: NitrogenConcentrationData
+at_type: NitrogenConcentrationData
+type: number
+read_only: false
+unit: ''

@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: video
+label: VideoProperty
+description: ''
+title: VideoProperty
+at_type: ''
+type: ''
+read_only: false
+unit: ''

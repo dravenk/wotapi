@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: frequency
+label: FrequencyProperty
+description: ''
+title: FrequencyProperty
+at_type: FrequencyProperty
+type: integer
+read_only: false
+unit: hertz
