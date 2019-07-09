@@ -77,14 +77,12 @@ class PropertyTypeForm extends EntityForm {
       '#description' => $this->t("A unit ([SI] unit)."),
     ];
 
-/*    // readOnly field for the property.
     $form['read_only'] = [
-      '#type' => 'boolean',
+      '#type' => 'checkbox',
       '#title' => $this->t('readOnly'),
-      '#maxlength' => 255,
-      '#default_value' => false,
-//      '#required' => TRUE,
-    ];*/
+      '#description' => $this->t("A boolean indicating whether or not the property is read-only, defaulting to false."),
+      '#default_value' => $wotapi_property_type->getReadOnly()? 1 : 0,
+    ];
 
     /* You will need additional form elements for your custom properties. */
 
@@ -100,15 +98,15 @@ class PropertyTypeForm extends EntityForm {
 
     switch ($status) {
       case SAVED_NEW:
-        $this->messenger()->addMessage('Created the %label Property type.', [
-          '%label' => $wotapi_property_type->label(),
-        ]);
+//        $this->messenger()->addMessage('Created the %label Property type.', [
+//          '%label' => $wotapi_property_type->label(),
+//        ]);
         break;
 
       default:
-        $this->messenger()->addMessage('Saved the %label Property type.', [
-          '%label' => $wotapi_property_type->label(),
-        ]);
+//        $this->messenger()->addMessage('Saved the %label Property type.', [
+//          '%label' => $wotapi_property_type->label(),
+//        ]);
     }
     $form_state->setRedirectUrl($wotapi_property_type->toUrl('collection'));
   }

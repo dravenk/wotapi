@@ -64,6 +64,6 @@ interface PropertyTypeInterface extends ConfigEntityInterface, EntityDescription
   /**
    * {@inheritdoc}
    */
-  public function setReadOnly($at_type);
+  public function setReadOnly($read_only);
 
 }

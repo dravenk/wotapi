@@ -40,7 +40,6 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *     "id" = "id",
  *     "bundle" = "type",
  *     "uuid" = "uuid",
- *     "label" = "label",
  *   },
  *   links = {
  *     "canonical" = "/admin/structure/wotapi_property/{wotapi_property}",
@@ -87,30 +86,6 @@ class Property extends ContentEntityBase implements PropertyInterface {
     $fields['changed'] = BaseFieldDefinition::create('changed')
       ->setLabel(t('Changed'))
       ->setDescription(t('The time that the entity was last edited.'));
-
-    // label field for the property.
-    // We set display options for the view as well as the form.
-    // Users with correct privileges can change the view and edit configuration.
-    $fields['label'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Label'))
-      ->setDescription(t('The property label.'))
-      ->setSettings([
-        'max_length' => 255,
-        'text_processing' => 0,
-      ])
-      // Set no default value.
-      ->setDefaultValue(NULL)
-      ->setDisplayOptions('view', [
-        'label' => 'above',
-        'type' => 'string',
-        'weight' => -6,
-      ])
-      ->setDisplayOptions('form', [
-        'type' => 'string_textfield',
-        'weight' => -6,
-      ])
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayConfigurable('view', TRUE);
 
     return $fields;
   }

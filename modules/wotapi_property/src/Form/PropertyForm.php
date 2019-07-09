@@ -32,15 +32,17 @@ class PropertyForm extends ContentEntityForm {
 
     switch ($status) {
       case SAVED_NEW:
-        $this->messenger()->addMessage('Created the %label Property.', [
-          '%label' => $entity->label(),
-        ]);
+//        $this->messenger()->addMessage('Created the %label Property.', [
+////          '%label' => $entity->label(),
+//          '%label' => $entity->id(),
+//        ]);
         break;
 
       default:
-        $this->messenger()->addMessage('Saved the %label Property.', [
-          '%label' => $entity->label(),
-        ]);
+//        $this->messenger()->addMessage('Saved the %label Property.', [
+////          '%label' => $entity->label(),
+//          '%label' => $entity->id(),
+//        ]);
     }
     $form_state->setRedirect('entity.wotapi_property.canonical', ['wotapi_property' => $entity->id()]);
   }
