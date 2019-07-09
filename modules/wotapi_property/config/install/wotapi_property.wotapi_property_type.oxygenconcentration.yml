@@ -7,5 +7,4 @@ description: 'Oxygen concentration data.'
 title: OxygenConcentrationData
 at_type: OxygenConcentrationData
 type: number
-read_only: false
 unit: ''

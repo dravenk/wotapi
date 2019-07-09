@@ -7,5 +7,4 @@ description: ''
 title: FrequencyProperty
 at_type: FrequencyProperty
 type: integer
-read_only: false
 unit: hertz

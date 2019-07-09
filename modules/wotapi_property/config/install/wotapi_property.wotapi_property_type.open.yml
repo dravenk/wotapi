@@ -7,5 +7,4 @@ description: 'An OpenProperty is like a BooleanProperty, but with the added sema
 title: OpenProperty
 at_type: OpenProperty
 type: boolean
-read_only: false
 unit: ''

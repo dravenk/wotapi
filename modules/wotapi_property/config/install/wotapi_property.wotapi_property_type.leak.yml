@@ -7,5 +7,4 @@ description: 'A LeakProperty is like a BooleanProperty, but with the added seman
 title: LeakProperty
 at_type: LeakProperty
 type: boolean
-read_only: false
 unit: ''

@@ -83,14 +83,6 @@ class PropertyTypeForm extends EntityForm {
       '#default_value' => $wotapi_property_type->getUnit(),
       '#description' => $this->t("A unit ([SI] unit)."),
     ];
-
-    $form['read_only'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('readOnly'),
-      '#description' => $this->t("A boolean indicating whether or not the property is read-only, defaulting to false."),
-      '#default_value' => $wotapi_property_type->getReadOnly()? 1 : 0,
-    ];
-
     /* You will need additional form elements for your custom properties. */
 
     return $form;

@@ -7,5 +7,4 @@ description: StatusData
 title: StatusData
 at_type: StatusData
 type: boolean
-read_only: false
 unit: ''

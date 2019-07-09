@@ -7,5 +7,4 @@ description: 'Time data'
 title: TimeData
 at_type: TimeData
 type: number
-read_only: false
 unit: ''

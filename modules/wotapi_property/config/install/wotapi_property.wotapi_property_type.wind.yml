@@ -7,5 +7,4 @@ description: 'Wind data'
 title: WindData
 at_type: WindData
 type: number
-read_only: false
 unit: ''

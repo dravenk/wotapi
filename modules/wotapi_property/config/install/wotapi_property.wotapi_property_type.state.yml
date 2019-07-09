@@ -7,5 +7,4 @@ description: 'State data'
 title: StateData
 at_type: StateData
 type: boolean
-read_only: false
 unit: ''

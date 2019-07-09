@@ -7,5 +7,4 @@ description: 'Dimmer data'
 title: DimmerData
 at_type: DimmerData
 type: ''
-read_only: false
 unit: ''

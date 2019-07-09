@@ -7,5 +7,4 @@ description: 'Active energy data.'
 title: ActiveEnergyData
 at_type: ActiveEnergyData
 type: number
-read_only: false
 unit: ''

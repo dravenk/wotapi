@@ -7,5 +7,4 @@ description: ''
 title: BooleanProperty
 at_type: BooleanProperty
 type: boolean
-read_only: false
 unit: ''

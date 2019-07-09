@@ -7,5 +7,4 @@ description: ''
 title: ColorTemperatureProperty
 at_type: ColorTemperatureProperty
 type: integer
-read_only: false
 unit: kelvin

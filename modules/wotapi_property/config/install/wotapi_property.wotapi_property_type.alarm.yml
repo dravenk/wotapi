@@ -7,5 +7,4 @@ description: ''
 title: AlarmProperty
 at_type: AlarmProperty
 type: boolean
-read_only: false
 unit: ''

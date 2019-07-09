@@ -7,5 +7,4 @@ description: ''
 title: InstantaneousPowerProperty
 at_type: InstantaneousPowerProperty
 type: integer
-read_only: false
 unit: watt

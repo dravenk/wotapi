@@ -7,5 +7,4 @@ description: ''
 title: RampTimeData
 at_type: RampTimeData
 type: number
-read_only: false
 unit: ''

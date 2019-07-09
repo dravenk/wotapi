@@ -7,5 +7,4 @@ description: 'Sound Pressure data'
 title: SoundPressureData
 at_type: SoundPressureData
 type: number
-read_only: false
 unit: ''

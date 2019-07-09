@@ -7,5 +7,4 @@ description: 'A MotionProperty is like a BooleanProperty, but with the added sem
 title: MotionProperty
 at_type: MotionProperty
 type: boolean
-read_only: false
 unit: ''

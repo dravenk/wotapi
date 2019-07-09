@@ -7,5 +7,4 @@ description: 'An OnOffProperty is like a BooleanProperty, but with the added sem
 title: OnOffProperty
 at_type: OnOffProperty
 type: boolean
-read_only: false
 unit: ''

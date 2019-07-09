@@ -7,5 +7,4 @@ description: ''
 title: BrightnessProperty
 at_type: BrightnessProperty
 type: integer
-read_only: false
 unit: percent

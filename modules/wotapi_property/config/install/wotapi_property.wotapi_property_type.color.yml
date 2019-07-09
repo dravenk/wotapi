@@ -7,5 +7,4 @@ description: ''
 title: ColorProperty
 at_type: ColorProperty
 type: string
-read_only: false
 unit: ''

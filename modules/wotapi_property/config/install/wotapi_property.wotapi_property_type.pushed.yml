@@ -7,5 +7,4 @@ description: 'A PushedProperty is like a BooleanProperty, but with the added sem
 title: PushedProperty
 at_type: PushedProperty
 type: boolean
-read_only: false
 unit: ''

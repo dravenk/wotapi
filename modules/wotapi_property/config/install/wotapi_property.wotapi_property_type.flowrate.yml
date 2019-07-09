@@ -7,5 +7,4 @@ description: 'Flow rate data'
 title: FlowRateData
 at_type: FlowRateData
 type: number
-read_only: false
 unit: ''

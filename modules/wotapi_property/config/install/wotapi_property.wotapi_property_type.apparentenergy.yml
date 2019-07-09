@@ -7,5 +7,4 @@ description: 'Apparent energy data.'
 title: ApparentEnergyData
 at_type: ApparentEnergyData
 type: number
-read_only: false
 unit: ''

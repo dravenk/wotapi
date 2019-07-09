@@ -25,6 +25,3 @@ wotapi_property.wotapi_property_type.*:
     unit:
       type: text
       label: 'unit'
-    read_only:
-      type: boolean
-      label: 'read_only'

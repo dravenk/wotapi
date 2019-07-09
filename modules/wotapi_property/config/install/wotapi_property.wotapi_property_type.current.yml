@@ -7,5 +7,4 @@ description: ''
 title: CurrentProperty
 at_type: CurrentProperty
 type: integer
-read_only: false
 unit: ampere

@@ -7,5 +7,4 @@ description: ''
 title: VoltageProperty
 at_type: VoltageProperty
 type: integer
-read_only: false
 unit: volt

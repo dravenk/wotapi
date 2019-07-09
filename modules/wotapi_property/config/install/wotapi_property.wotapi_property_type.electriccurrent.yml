@@ -7,5 +7,4 @@ description: 'Electric current data.'
 title: ElectricCurrentData
 at_type: ElectricCurrentData
 type: number
-read_only: false
 unit: ''

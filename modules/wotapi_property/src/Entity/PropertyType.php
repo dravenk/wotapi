@@ -38,7 +38,6 @@ use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
  *     "title",
  *     "at_type",
  *     "type",
- *     "read_only",
  *     "unit",
  *   },
  *   links = {
@@ -107,13 +106,6 @@ class PropertyType extends ConfigEntityBundleBase implements PropertyTypeInterfa
    * @var string
    */
   protected $description;
-
-  /**
-   * readOnly (A boolean indicating whether or not the property is read-only, defaulting to false)
-   *
-   * @var string
-   */
-  protected $read_only;
 
   /**
    * {@inheritdoc}
@@ -190,18 +182,4 @@ class PropertyType extends ConfigEntityBundleBase implements PropertyTypeInterfa
     return $this;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getReadOnly() {
-    return $this->read_only;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setReadOnly($read_only) {
-    $this->read_only = $read_only;
-    return $this;
-  }
 }

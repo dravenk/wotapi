@@ -7,5 +7,4 @@ description: ''
 title: LevelProperty
 at_type: LevelProperty
 type: integer
-read_only: false
 unit: ''

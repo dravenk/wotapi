@@ -7,5 +7,4 @@ description: 'Data for the power factor.'
 title: PowerFactorData
 at_type: PowerFactorData
 type: integer
-read_only: false
 unit: percent
