@@ -87,6 +87,22 @@ class Property extends ContentEntityBase implements PropertyInterface {
       ->setLabel(t('Changed'))
       ->setDescription(t('The time that the entity was last edited.'));
 
+    // readOnly (A boolean indicating whether or not the property is read-only, defaulting to false)
+    // see https://iot.mozilla.org/wot/#property-object
+    $fields['read_only'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('readOnly'))
+      ->setDescription(t('A boolean indicating whether or not the property is read-only, defaulting to false.'))
+      ->setDefaultValue(FALSE)
+      ->setDisplayOptions('view', [
+        'label' => 'above',
+        'type' => 'boolean',
+        'weight' => 0,
+      ])
+      ->setDisplayOptions('form', [
+        'settings' => ['display_label' => TRUE],
+        'weight' => 0,
+      ]);
+
     return $fields;
   }
 
