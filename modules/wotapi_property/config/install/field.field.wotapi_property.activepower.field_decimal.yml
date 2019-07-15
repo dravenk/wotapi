@@ -3,12 +3,12 @@ status: true
 dependencies:
   config:
     - field.storage.wotapi_property.field_decimal
-    - wotapi_property.wotapi_property_type.activepowerdata
-id: wotapi_property.activepowerdata.field_decimal
+    - wotapi_property.wotapi_property_type.activepower
+id: wotapi_property.activepower.field_decimal
 field_name: field_decimal
 entity_type: wotapi_property
-bundle: activepowerdata
-label: Value
+bundle: activepower
+label: ActivePower
 description: ''
 required: false
 translatable: true

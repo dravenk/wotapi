@@ -2,15 +2,15 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.wotapi_property.activepowerdata.field_decimal
-    - wotapi_property.wotapi_property_type.activepowerdata
-id: wotapi_property.activepowerdata.default
+    - field.field.wotapi_property.activepower.field_decimal
+    - wotapi_property.wotapi_property_type.activepower
+id: wotapi_property.activepower.default
 targetEntityType: wotapi_property
-bundle: activepowerdata
+bundle: activepower
 mode: default
 content:
   field_decimal:
-    weight: 0
+    weight: 1
     settings:
       placeholder: ''
     third_party_settings: {  }
