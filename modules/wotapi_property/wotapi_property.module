@@ -1,1 +1,51 @@
 <?php
+
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\field\FieldConfigInterface;
+use Symfony\Component\Validator\Constraints\IsNull;
+
+/**
+ * Implement hook_entity_presave().
+ * Change the default widget form entity_reference to IEF if the target is Thing property
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ */
+function wotapi_property_entity_presave(EntityInterface $entity) {
+  if ($entity instanceof FieldConfigInterface && !$entity->isDeleted() && !$entity->isSyncing()) {
+    /** @var \Drupal\field\FieldConfigInterface $entity */
+    if ($entity->getType() === 'entity_reference' && $entity->getSetting('target_type') === 'wotapi_property') {
+      // TODO don't hard code EntityFormDisplay type -- default
+      $display_form_id = $entity->getTargetEntityTypeId(). '.' .$entity->getTargetBundle().'.default';
+      $entity_form_display = EntityFormDisplay::load($display_form_id);
+      // returned if entity_form_display is not set
+      if (is_null($entity_form_display)){
+          return;
+      }
+      $config_copy = $entity_form_display->get('content');
+      // If the widget is already IEF, then we don't override the settings at all
+      if ($config_copy[$entity->getName()]['type'] === 'inline_entity_form_simple') {
+        return;
+      }
+      // Set IEF form
+      $config_copy[$entity->getName()]['type'] = 'inline_entity_form_simple';
+      $config_copy[$entity->getName()]['settings'] = [
+        'form_mode' => 'default',
+        'override_labels' => false,
+        'label_singular' => '',
+        'label_plural' => ''
+      ];
+      $entity_form_display->set('content', $config_copy);
+      $entity_form_display->save();
+
+      // Set rendered entity view for Thing property Entity
+      $entity_view_display = EntityViewDisplay::load($display_form_id);
+      $config_copy = $entity_view_display->get('content');
+      $config_copy[$entity->getName()]['type'] = 'entity_reference_entity_view';
+      $config_copy[$entity->getName()]['settings']['view_mode'] = 'default';
+      $entity_view_display->set('content', $config_copy);
+      $entity_view_display->save();
+    }
+  }
+}
