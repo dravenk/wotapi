@@ -90,7 +90,7 @@ class Property extends ContentEntityBase implements PropertyInterface {
     // readOnly (A boolean indicating whether or not the property is read-only, defaulting to false)
     // see https://iot.mozilla.org/wot/#property-object
     $fields['read_only'] = BaseFieldDefinition::create('boolean')
-      ->setLabel(t('Read Only'))
+      ->setLabel(t('Read-Only'))
       ->setDescription(t('A boolean indicating whether or not the property is read-only, defaulting to false.'))
       ->setDefaultValue(FALSE)
       ->setDisplayOptions('view', [
