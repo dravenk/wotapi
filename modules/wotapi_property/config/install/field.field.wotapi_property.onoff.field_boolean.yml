@@ -10,7 +10,7 @@ entity_type: wotapi_property
 bundle: onoff
 label: Value
 description: ''
-required: false
+required: true
 translatable: true
 default_value:
   -

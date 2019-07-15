@@ -9,14 +9,14 @@ field_name: field_boolean
 entity_type: wotapi_property
 bundle: leak
 label: Value
-description: ''
-required: false
+description: 'true means "leak" and false means "no leak".'
+required: true
 translatable: true
 default_value:
   -
     value: 0
 default_value_callback: ''
 settings:
-  on_label: 'On'
-  off_label: 'Off'
+  on_label: 'True'
+  off_label: 'False'
 field_type: boolean

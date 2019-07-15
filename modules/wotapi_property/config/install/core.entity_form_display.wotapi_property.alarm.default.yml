@@ -12,7 +12,7 @@ content:
   field_boolean:
     weight: 0
     settings:
-      display_label: true
+      display_label: false
     third_party_settings: {  }
     type: boolean_checkbox
     region: content

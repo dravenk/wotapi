@@ -11,9 +11,8 @@ mode: default
 content:
   field_boolean:
     weight: 0
-    settings:
-      display_label: true
+    settings: {  }
     third_party_settings: {  }
-    type: boolean_checkbox
+    type: options_buttons
     region: content
 hidden: {  }
