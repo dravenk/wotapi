@@ -32,15 +32,15 @@ class ThingForm extends ContentEntityForm {
 
     switch ($status) {
       case SAVED_NEW:
-        $this->messenger()->addMessage('Created the %label Thing.', [
+        drupal_set_message($this->t('Created the %label.', [
           '%label' => $entity->label(),
-        ]);
+        ]));
         break;
 
       default:
-        $this->messenger()->addMessage('Saved the %label Thing.', [
+        drupal_set_message($this->t('Saved the %label.', [
           '%label' => $entity->label(),
-        ]);
+        ]));
     }
     $form_state->setRedirect('entity.wotapi_thing.canonical', ['wotapi_thing' => $entity->id()]);
   }

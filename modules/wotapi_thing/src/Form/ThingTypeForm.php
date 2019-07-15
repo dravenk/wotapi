@@ -51,15 +51,15 @@ class ThingTypeForm extends EntityForm {
 
     switch ($status) {
       case SAVED_NEW:
-        $this->messenger()->addMessage('Created the %label Thing type.', [
+        drupal_set_message($this->t('Created the %label Thing type.', [
           '%label' => $wotapi_thing_type->label(),
-        ]);
+        ]));
         break;
 
       default:
-        $this->messenger()->addMessage('Saved the %label Thing type.', [
+        drupal_set_message($this->t('Saved the %label Thing type.', [
           '%label' => $wotapi_thing_type->label(),
-        ]);
+        ]));
     }
     $form_state->setRedirectUrl($wotapi_thing_type->toUrl('collection'));
   }
