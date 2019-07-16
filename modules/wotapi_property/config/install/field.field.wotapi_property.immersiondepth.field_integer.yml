@@ -8,7 +8,7 @@ id: wotapi_property.immersiondepth.field_integer
 field_name: field_integer
 entity_type: wotapi_property
 bundle: immersiondepth
-label: Value
+label: ImmersionDepthData
 description: ''
 required: false
 translatable: true

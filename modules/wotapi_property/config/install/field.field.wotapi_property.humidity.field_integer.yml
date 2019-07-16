@@ -8,7 +8,7 @@ id: wotapi_property.humidity.field_integer
 field_name: field_integer
 entity_type: wotapi_property
 bundle: humidity
-label: Value
+label: HumidityData
 description: ''
 required: false
 translatable: true

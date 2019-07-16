@@ -8,7 +8,7 @@ id: wotapi_property.carbondioxideconcentration.field_integer
 field_name: field_integer
 entity_type: wotapi_property
 bundle: carbondioxideconcentration
-label: Value
+label: CarbonDioxideConcentrationData
 description: ''
 required: false
 translatable: true

@@ -8,7 +8,7 @@ id: wotapi_property.temperature.field_integer
 field_name: field_integer
 entity_type: wotapi_property
 bundle: temperature
-label: Value
+label: TemperatureProperty
 description: ''
 required: false
 translatable: true

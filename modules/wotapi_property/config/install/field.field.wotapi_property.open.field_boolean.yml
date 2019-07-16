@@ -8,7 +8,7 @@ id: wotapi_property.open.field_boolean
 field_name: field_boolean
 entity_type: wotapi_property
 bundle: open
-label: Value
+label: OpenProperty
 description: ''
 required: true
 translatable: true

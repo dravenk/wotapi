@@ -8,7 +8,7 @@ id: wotapi_property.boolean.field_boolean
 field_name: field_boolean
 entity_type: wotapi_property
 bundle: boolean
-label: Value
+label: BooleanProperty
 description: ''
 required: true
 translatable: false

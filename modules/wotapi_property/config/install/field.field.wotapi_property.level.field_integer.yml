@@ -8,7 +8,7 @@ id: wotapi_property.level.field_integer
 field_name: field_integer
 entity_type: wotapi_property
 bundle: level
-label: Value
+label: LevelProperty
 description: ''
 required: false
 translatable: false

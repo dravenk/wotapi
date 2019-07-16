@@ -8,7 +8,7 @@ id: wotapi_property.instantaneouspower.field_integer
 field_name: field_integer
 entity_type: wotapi_property
 bundle: instantaneouspower
-label: Value
+label: InstantaneousPowerProperty
 description: ''
 required: false
 translatable: true

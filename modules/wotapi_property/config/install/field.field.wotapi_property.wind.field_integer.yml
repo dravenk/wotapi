@@ -8,7 +8,7 @@ id: wotapi_property.wind.field_integer
 field_name: field_integer
 entity_type: wotapi_property
 bundle: wind
-label: Value
+label: WindData
 description: ''
 required: false
 translatable: true

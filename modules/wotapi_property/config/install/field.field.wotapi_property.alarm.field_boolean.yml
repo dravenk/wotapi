@@ -8,7 +8,7 @@ id: wotapi_property.alarm.field_boolean
 field_name: field_boolean
 entity_type: wotapi_property
 bundle: alarm
-label: Value
+label: AlarmProperty
 description: ''
 required: true
 translatable: true

@@ -8,7 +8,7 @@ id: wotapi_property.density.field_integer
 field_name: field_integer
 entity_type: wotapi_property
 bundle: density
-label: Value
+label: DensityData
 description: ''
 required: false
 translatable: true

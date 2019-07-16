@@ -8,7 +8,7 @@ id: wotapi_property.reactivepower.field_integer
 field_name: field_integer
 entity_type: wotapi_property
 bundle: reactivepower
-label: Value
+label: ReactivePowerData
 description: ''
 required: false
 translatable: true

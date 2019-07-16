@@ -8,7 +8,7 @@ id: wotapi_property.electriccurrent.field_decimal
 field_name: field_decimal
 entity_type: wotapi_property
 bundle: electriccurrent
-label: Value
+label: ElectricCurrentData
 description: ''
 required: false
 translatable: true

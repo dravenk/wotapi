@@ -8,7 +8,7 @@ id: wotapi_property.apparentpower.field_integer
 field_name: field_integer
 entity_type: wotapi_property
 bundle: apparentpower
-label: Value
+label: ApparentPowerData
 description: ''
 required: false
 translatable: true

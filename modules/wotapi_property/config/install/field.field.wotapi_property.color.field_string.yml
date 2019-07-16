@@ -8,7 +8,7 @@ id: wotapi_property.color.field_string
 field_name: field_string
 entity_type: wotapi_property
 bundle: color
-label: string
+label: ColorProperty
 description: ''
 required: false
 translatable: false

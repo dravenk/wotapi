@@ -8,7 +8,7 @@ id: wotapi_property.pushed.field_boolean
 field_name: field_boolean
 entity_type: wotapi_property
 bundle: pushed
-label: Value
+label: PushedProperty
 description: 'true means "pushed" and false means "not pushed".'
 required: true
 translatable: true

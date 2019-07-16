@@ -8,7 +8,7 @@ id: wotapi_property.frequency.field_integer
 field_name: field_integer
 entity_type: wotapi_property
 bundle: frequency
-label: Value
+label: FrequencyProperty
 description: ''
 required: false
 translatable: true

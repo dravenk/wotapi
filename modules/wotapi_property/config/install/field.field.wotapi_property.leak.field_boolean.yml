@@ -8,7 +8,7 @@ id: wotapi_property.leak.field_boolean
 field_name: field_boolean
 entity_type: wotapi_property
 bundle: leak
-label: Value
+label: LeakProperty
 description: 'true means "leak" and false means "no leak".'
 required: true
 translatable: true

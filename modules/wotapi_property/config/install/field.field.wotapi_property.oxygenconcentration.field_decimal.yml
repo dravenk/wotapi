@@ -8,7 +8,7 @@ id: wotapi_property.oxygenconcentration.field_decimal
 field_name: field_decimal
 entity_type: wotapi_property
 bundle: oxygenconcentration
-label: Value
+label: OxygenConcentrationData
 description: ''
 required: false
 translatable: true

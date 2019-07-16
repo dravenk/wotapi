@@ -8,7 +8,7 @@ id: wotapi_property.pressure.field_integer
 field_name: field_integer
 entity_type: wotapi_property
 bundle: pressure
-label: Value
+label: PressureData
 description: ''
 required: false
 translatable: true

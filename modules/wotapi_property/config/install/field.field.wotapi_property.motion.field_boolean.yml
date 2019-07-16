@@ -8,7 +8,7 @@ id: wotapi_property.motion.field_boolean
 field_name: field_boolean
 entity_type: wotapi_property
 bundle: motion
-label: Value
+label: MotionProperty
 description: 'true means "motion" and false means "no motion".'
 required: true
 translatable: true

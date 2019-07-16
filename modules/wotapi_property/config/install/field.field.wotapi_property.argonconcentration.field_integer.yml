@@ -8,7 +8,7 @@ id: wotapi_property.argonconcentration.field_integer
 field_name: field_integer
 entity_type: wotapi_property
 bundle: argonconcentration
-label: Value
+label: ArgonConcentrationData
 description: ''
 required: false
 translatable: true

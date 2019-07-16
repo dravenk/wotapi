@@ -8,7 +8,7 @@ id: wotapi_property.soundpressure.field_integer
 field_name: field_integer
 entity_type: wotapi_property
 bundle: soundpressure
-label: Value
+label: SoundPressureData
 description: ''
 required: false
 translatable: true

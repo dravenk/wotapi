@@ -8,7 +8,7 @@ id: wotapi_property.linefrequency.field_integer
 field_name: field_integer
 entity_type: wotapi_property
 bundle: linefrequency
-label: Value
+label: LineFrequencyData
 description: ''
 required: false
 translatable: true

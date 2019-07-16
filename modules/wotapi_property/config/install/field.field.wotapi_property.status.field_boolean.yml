@@ -8,7 +8,7 @@ id: wotapi_property.status.field_boolean
 field_name: field_boolean
 entity_type: wotapi_property
 bundle: status
-label: Value
+label: StatusData
 description: ''
 required: false
 translatable: true

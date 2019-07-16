@@ -8,7 +8,7 @@ id: wotapi_property.brightness.field_integer
 field_name: field_integer
 entity_type: wotapi_property
 bundle: brightness
-label: Value
+label: BrightnessProperty
 description: ''
 required: false
 translatable: true
