@@ -4,7 +4,6 @@ namespace Drupal\wotapi\Routing;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\wotapi\Access\RelationshipFieldAccess;
-use Drupal\wotapi\Controller\EntryPoint;
 use Drupal\wotapi\ParamConverter\ResourceTypeConverter;
 use Drupal\wotapi\ResourceType\ResourceType;
 use Drupal\wotapi\ResourceType\ResourceTypeRepositoryInterface;
@@ -112,7 +111,6 @@ class Routes implements ContainerInjectionInterface {
     foreach ($this->resourceTypeRepository->all() as $resource_type) {
       $routes->addCollection(static::getRoutesForResourceType($resource_type, $this->wotApiBasePath));
     }
-    $routes->add('wotapi.resource_list', static::getEntryPointRoute($this->wotApiBasePath));
 
     // Require the WOT:API media type header on every route, except on file
     // upload routes, where we require `application/octet-stream`.
@@ -253,23 +251,6 @@ class Routes implements ContainerInjectionInterface {
     $routes->addOptions(['parameters' => ['entity' => ['type' => 'entity:' . $entity_type_id]]]);
 
     return $routes;
-  }
-
-  /**
-   * Provides the entry point route.
-   *
-   * @param string $path_prefix
-   *   The root path prefix.
-   *
-   * @return \Symfony\Component\Routing\Route
-   *   The entry point route.
-   */
-  protected function getEntryPointRoute($path_prefix) {
-    $entry_point = new Route("/{$path_prefix}");
-    $entry_point->addDefaults([RouteObjectInterface::CONTROLLER_NAME => EntryPoint::class . '::index']);
-    $entry_point->setRequirement('_access', 'TRUE');
-    $entry_point->setMethods(['GET']);
-    return $entry_point;
   }
 
   /**
