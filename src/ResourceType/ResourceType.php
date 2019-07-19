@@ -376,7 +376,15 @@ class ResourceType {
    * @see wotapi.base_path
    */
   public function getPath() {
-    return sprintf('/%s/%s', $this->getEntityTypeId(), $this->getBundle());
+    $entity_type_id = $this->getEntityTypeId();
+    switch ($entity_type_id){
+      case "wotapi_thing":
+        return"/things";
+      case "wotapi_property":
+        return "/properties";
+      default:
+        return sprintf('/%s/%s', $entity_type_id, $this->getBundle());
+    }
   }
 
 }
