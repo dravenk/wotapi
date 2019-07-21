@@ -17,7 +17,7 @@ class ThingListBuilder extends EntityListBuilder {
    */
   public function buildHeader() {
     $header['id'] = $this->t('Thing ID');
-    $header['name'] = $this->t('Thing Name');
+    $header['title'] = $this->t('Thing Title');
     $header['description'] = $this->t('Description');
 
     return $header + parent::buildHeader();
@@ -29,7 +29,7 @@ class ThingListBuilder extends EntityListBuilder {
   public function buildRow(EntityInterface $entity) {
     /* @var $entity \Drupal\wotapi_thing\Entity\Thing */
     $row['id'] = $entity->id();
-    $row['name'] = $entity->getName();
+    $row['title'] = $entity->getTitle();
     $row['description'] = $entity->getDescription();
 
     return $row + parent::buildRow($entity);
