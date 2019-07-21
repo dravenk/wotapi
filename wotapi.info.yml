@@ -5,3 +5,4 @@ core: 8.x
 package: WOTAPI
 dependencies:
   - drupal:serialization
+  - inline_entity_form:inline_entity_form
