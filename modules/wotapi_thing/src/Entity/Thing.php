@@ -40,7 +40,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *     "id" = "id",
  *     "bundle" = "type",
  *     "uuid" = "uuid",
- *     "label" = "name",
+ *     "label" = "title",
  *   },
  *   links = {
  *     "canonical" = "/admin/structure/wotapi_thing/{wotapi_thing}",
@@ -76,8 +76,8 @@ class Thing extends ContentEntityBase implements ThingInterface {
   /**
    * {@inheritdoc}
    */
-  public function getName() {
-    return $this->get('name')->value;
+  public function getTitle() {
+    return $this->get('title')->value;
   }
 
   /**
@@ -104,9 +104,9 @@ class Thing extends ContentEntityBase implements ThingInterface {
     // Name field for the thing.
     // We set display options for the view as well as the form.
     // Users with correct privileges can change the view and edit configuration.
-    $fields['name'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Name'))
-      ->setDescription(t('The name member is a human friendly string which describes the device.'))
+    $fields['title'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Title'))
+      ->setDescription(t('The title member is a human friendly string which describes the device.'))
       ->setSettings([
         'max_length' => 255,
         'text_processing' => 0,
