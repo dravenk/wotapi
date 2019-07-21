@@ -1,0 +1,9 @@
+{
+    "name": "drupal/wotapi",
+    "description": "Provides a Web Thing API standards-compliant API for accessing and manipulating Web of Things",
+    "type": "drupal-module",
+    "license": "GPL-2.0+",
+    "require-dev": {
+        "drupal/inline_entity_form": "1.x-dev"
+    }
+}
