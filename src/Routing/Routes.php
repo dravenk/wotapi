@@ -217,28 +217,11 @@ class Routes implements ContainerInjectionInterface {
     $routes->add(static::getRouteName($resource_type, 'individual'), $individual_route);
 
     foreach ($resource_type->getRelatableResourceTypes() as $relationship_field_name => $target_resource_types) {
-      // Read, update, add, or remove an individual resources properties to
-      // other resources.
-      $relationship_route = new Route("/{$path}/{entity}/properties/{$relationship_field_name}");
-      $relationship_route->addDefaults(['_on_relationship' => TRUE]);
-      $relationship_route->addDefaults(['related' => $relationship_field_name]);
-      $relationship_route->setRequirement(RelationshipFieldAccess::ROUTE_REQUIREMENT_KEY, $relationship_field_name);
-      $relationship_route->setRequirement('_csrf_request_header_token', 'TRUE');
-
-      $relationship_route_methods =  ['GET'];
-      $relationship_controller_methods = ['GET' => 'getProperties'];
-      foreach ($relationship_route_methods as $method) {
-        $method_specific_relationship_route = clone $relationship_route;
-        $method_specific_relationship_route->addDefaults([RouteObjectInterface::CONTROLLER_NAME => static::CONTROLLER_SERVICE_NAME . ":{$relationship_controller_methods[$method]}"]);
-        $method_specific_relationship_route->setMethods($method);
-        $routes->add(static::getRouteName($resource_type, sprintf("%s.relationship.%s", $relationship_field_name, strtolower($method))), $method_specific_relationship_route);
-      }
-
       // Only create routes for related routes that target at least one
       // non-internal resource type.
       if (static::hasNonInternalTargetResourceTypes($target_resource_types)) {
         // Get an individual resource's related resources.
-        $related_route = new Route("/{$path}/{entity}/{$relationship_field_name}");
+        $related_route = new Route("/{$path}/{entity}/properties/{$relationship_field_name}");
         $related_route->setMethods(['GET']);
         $related_route->addDefaults([RouteObjectInterface::CONTROLLER_NAME => static::CONTROLLER_SERVICE_NAME . ':getRelated']);
         $related_route->addDefaults(['related' => $relationship_field_name]);
