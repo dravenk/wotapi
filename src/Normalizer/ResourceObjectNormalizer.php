@@ -89,7 +89,7 @@ class ResourceObjectNormalizer extends NormalizerBase {
       "@context" => CacheableNormalization::permanent("https://iot.mozilla.org/schemas/"),
       //TODO
 //      'type' => CacheableNormalization::permanent($resource_type->getTypeName()),
-      'id' => CacheableNormalization::permanent($object->getId()),
+      'id' => CacheableNormalization::permanent(\Drupal::request()->getUri()),
       'properties' => CacheableNormalization::aggregate(array_intersect_key($normalizer_values, array_flip($relationship_field_names)))->omitIfEmpty(),
     ];
 
