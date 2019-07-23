@@ -53,15 +53,17 @@ class ResourceObjectNormalizer extends NormalizerBase {
 
     // The property returns a single value: {"temperature": 21}
     // See https://iot.mozilla.org/wot/#property-resource
-    $property = [];
+    $properties = [];
     if ($resource_type->getEntityTypeId()=='wotapi_property'){
+      $current_uri = \Drupal::request()->getUri();
+      $property_name = explode("/properties/",$current_uri)[1];
       foreach ($fields as $field_name => $field) {
         if ($field->getFieldDefinition() instanceof FieldConfig){
-          $property[$field_name] = $this->serializeField($field, $context, $format);
+          $properties[$property_name] = $this->serializeField($field, $context, $format);
         }
       }
-      if (count($property) == 1 ){
-        return CacheableNormalization::aggregate($property)->withCacheableDependency($object);
+      if (count($properties) == 1 ){
+        return CacheableNormalization::aggregate($properties)->withCacheableDependency($object);
       }
     }
 
