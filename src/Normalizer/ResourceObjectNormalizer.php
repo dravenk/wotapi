@@ -5,6 +5,7 @@ namespace Drupal\wotapi\Normalizer;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Url;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\wotapi\Routing\Routes;
 use Drupal\wotapi\WotApiResource\ResourceObject;
 use Drupal\wotapi\Normalizer\Value\CacheableNormalization;
@@ -49,6 +50,21 @@ class ResourceObjectNormalizer extends NormalizerBase {
     else {
       $field_names = array_keys($fields);
     }
+
+    // The property returns a single value: {"temperature": 21}
+    // See https://iot.mozilla.org/wot/#property-resource
+    $property = [];
+    if ($resource_type->getEntityTypeId()=='wotapi_property'){
+      foreach ($fields as $field_name => $field) {
+        if ($field->getFieldDefinition() instanceof FieldConfig){
+          $property[$field_name] = $this->serializeField($field, $context, $format);
+        }
+      }
+      if (count($property) == 1 ){
+        return CacheableNormalization::aggregate($property)->withCacheableDependency($object);
+      }
+    }
+
     $normalizer_values = [];
     foreach ($fields as $field_name => $field) {
       $in_sparse_fieldset = in_array($field_name, $field_names);
