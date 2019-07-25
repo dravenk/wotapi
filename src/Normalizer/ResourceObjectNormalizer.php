@@ -85,11 +85,12 @@ class ResourceObjectNormalizer extends NormalizerBase {
 //      'links' => $this->serializer->normalize($object->getLinks(), $format, $context)->omitIfEmpty(),
 //    ])->withCacheableDependency($object);
 
+    $id = \Drupal::request()->getSchemeAndHttpHost() . Url::fromRoute(Routes::getRouteName($resource_type, 'individual'), ['entity' => $object->getId()])->toString();
     $normalization = [
       "@context" => CacheableNormalization::permanent("https://iot.mozilla.org/schemas/"),
       //TODO
 //      'type' => CacheableNormalization::permanent($resource_type->getTypeName()),
-      'id' => CacheableNormalization::permanent(\Drupal::request()->getUri()),
+      'id' => CacheableNormalization::permanent($id),
       'properties' => CacheableNormalization::aggregate(array_intersect_key($normalizer_values, array_flip($relationship_field_names)))->omitIfEmpty(),
     ];
 
