@@ -27,14 +27,6 @@ class WotApiDocumentTopLevel {
    */
   protected $links;
 
-
-  /**
-   * Resource objects that will be omitted from the response for access reasons.
-   *
-   * @var \Drupal\wotapi\WotApiResource\OmittedData
-   */
-  protected $omissions;
-
   /**
    * Instantiates a WotApiDocumentTopLevel object.
    *
@@ -48,9 +40,6 @@ class WotApiDocumentTopLevel {
     assert($data instanceof ResourceIdentifierInterface || $data instanceof Data || $data instanceof ErrorCollection || $data instanceof EntityReferenceFieldItemListInterface);
     $this->data = $data instanceof ResourceObjectData ? $data->getAccessible() : $data;
     $this->links = $links->withContext($this);
-    $this->omissions = $data instanceof ResourceObjectData
-      ? $data->getOmissions()
-      : null;
   }
 
   /**
@@ -71,16 +60,6 @@ class WotApiDocumentTopLevel {
    */
   public function getLinks() {
     return $this->links;
-  }
-
-  /**
-   * Gets an OmittedData instance containing resources to be omitted.
-   *
-   * @return \Drupal\wotapi\WotApiResource\OmittedData
-   *   The omissions.
-   */
-  public function getOmissions() {
-    return $this->omissions;
   }
 
 }

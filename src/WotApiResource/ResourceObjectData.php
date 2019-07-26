@@ -44,19 +44,4 @@ class ResourceObjectData extends Data {
     return new static($accessible_data, $this->cardinality);
   }
 
-  /**
-   * Gets only data to be omitted.
-   *
-   * @return static
-   */
-  public function getOmissions() {
-    $omitted_data = [];
-    foreach ($this->data as $resource_object) {
-      if ($resource_object instanceof EntityAccessDeniedHttpException) {
-        $omitted_data[] = $resource_object;
-      }
-    }
-    return new OmittedData($omitted_data);
-  }
-
 }
