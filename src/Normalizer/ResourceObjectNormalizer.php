@@ -104,45 +104,8 @@ class ResourceObjectNormalizer extends NormalizerBase {
       $normalization[$key] = $value;
     };
 
-    // @Todo ugly code.
-    $relationship_normalization = array_intersect_key($normalizer_values, array_flip($relationship_field_names));
-    $normalization =  $this->setReferenceFieldsNormalize($normalization,$relationship_normalization,$context);
-
     $obj = CacheableNormalization::aggregate($normalization)->withCacheableDependency($object);
     return $obj;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setReferenceFieldsNormalize($normalization ,$relationship_normalization, $context =[]){
-    $links = [];
-
-    $object = $context['resource_object'];
-    $link['rel'] = $object->getResourceType()->getTypeName();
-    $self_links = $object->getLinks();
-    foreach ($self_links as $k => $v){
-      $href = $v[0];
-      $link['href'] = $href->getHref();
-    }
-    array_push($links, $link);
-
-    foreach ($relationship_normalization as $key => $value){
-
-      foreach ($value->getNormalization() as $k => $v){
-        if ($k == 'links' && count($v) == 1){
-          $link['rel'] = $key;
-          $link['href'] = $v[0]['href'];
-          array_push($links,$link);
-        }
-      }
-    };
-
-    if (count($links)>0){
-     $normalization['links'] = CacheableNormalization::permanent($links);
-    }
-
-    return $normalization;
   }
 
 
