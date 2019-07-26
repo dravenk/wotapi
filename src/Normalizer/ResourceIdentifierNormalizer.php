@@ -3,7 +3,6 @@
 namespace Drupal\wotapi\Normalizer;
 
 use Drupal\Core\Entity\EntityFieldManagerInterface;
-use Drupal\wotapi\WotApiResource\LinkCollection;
 use Drupal\wotapi\WotApiResource\ResourceIdentifier;
 use Drupal\wotapi\Normalizer\Value\CacheableNormalization;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -47,7 +46,6 @@ class ResourceIdentifierNormalizer extends NormalizerBase implements Denormalize
     $normalization = [
       'type' => $object->getTypeName(),
       'id' => $object->getId(),
-//      'links' => ['href'=>''],
     ];
 
     return CacheableNormalization::permanent($normalization);

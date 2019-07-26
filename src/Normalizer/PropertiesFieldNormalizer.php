@@ -49,12 +49,6 @@ class PropertiesFieldNormalizer extends FieldNormalizer {
       return ['href' => $href->getGeneratedUrl()];
     }, static::getPropertiesLinks($context['resource_object'], $field->getName()));
     $data_normalization = $normalized_items->getNormalization();
-//    $normalization = [
-//      // Empty 'to-one' properties must be NULL.
-//      // Empty 'to-many' properties must be an empty array.
-//      // @link http://wotapi.org/format/#document-resource-object-linkage
-//      'data' => $cardinality === 1 ? array_shift($data_normalization) : $data_normalization,
-//    ];
 
     $normalization = $cardinality === 1 ? array_shift($data_normalization) : $data_normalization;
 
@@ -81,23 +75,12 @@ class PropertiesFieldNormalizer extends FieldNormalizer {
       return [];
     }
     $public_field_name = $resource_type->getPublicName($relationship_field_name);
-//    $relationship_route_name = Routes::getRouteName($resource_type, "$public_field_name.relationship.get");
 
     $links = [];
-//    $links['self'] = Url::fromRoute($relationship_route_name, ['entity' => $relationship_context->getId()]);
-
     if (static::hasNonInternalResourceType($resource_type->getRelatableResourceTypesByField($public_field_name))) {
       $related_route_name = Routes::getRouteName($resource_type, "$public_field_name.related");
-//      $links['related'] = Url::fromRoute($related_route_name, ['entity' => $relationship_context->getId()]);
       array_push($links, Url::fromRoute($related_route_name, ['entity' => $relationship_context->getId()]));
     }
-//    if ($resource_type->isVersionable()) {
-//      $version_query_parameter = [WotApiSpec::VERSION_QUERY_PARAMETER => $relationship_context->getVersionIdentifier()];
-//      $links['self']->setOption('query', $version_query_parameter);
-//      if (isset($links['related'])) {
-//        $links['related']->setOption('query', $version_query_parameter);
-//      }
-//    }
 
     return $links;
   }

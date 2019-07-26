@@ -77,19 +77,9 @@ class ResourceObjectNormalizer extends NormalizerBase {
       $normalizer_values[$field_name] = $this->serializeField($field, $context, $format);
     }
     $relationship_field_names = array_keys($resource_type->getRelatableResourceTypes());
-//    return CacheableNormalization::aggregate([
-//      'type' => CacheableNormalization::permanent($resource_type->getTypeName()),
-//      'id' => CacheableNormalization::permanent($object->getId()),
-//      'attributes' => CacheableNormalization::aggregate(array_diff_key($normalizer_values, array_flip($relationship_field_names)))->omitIfEmpty(),
-//      'properties' => CacheableNormalization::aggregate(array_intersect_key($normalizer_values, array_flip($relationship_field_names)))->omitIfEmpty(),
-//      'links' => $this->serializer->normalize($object->getLinks(), $format, $context)->omitIfEmpty(),
-//    ])->withCacheableDependency($object);
-
     $id = \Drupal::request()->getSchemeAndHttpHost() . Url::fromRoute(Routes::getRouteName($resource_type, 'individual'), ['entity' => $object->getId()])->toString();
     $normalization = [
       "@context" => CacheableNormalization::permanent("https://iot.mozilla.org/schemas/"),
-      //TODO
-//      'type' => CacheableNormalization::permanent($resource_type->getTypeName()),
       'id' => CacheableNormalization::permanent($id),
       'properties' => CacheableNormalization::aggregate(array_intersect_key($normalizer_values, array_flip($relationship_field_names)))->omitIfEmpty(),
     ];
@@ -124,28 +114,13 @@ class ResourceObjectNormalizer extends NormalizerBase {
 
     foreach ($relationship_normalization as $key => $value){
 
-//      $property_values =[];
-
       foreach ($value->getNormalization() as $k => $v){
-
         if ($k == 'links' && count($v) == 1){
           $link['rel'] = $key;
           $link['href'] = $v[0]['href'];
           array_push($links,$link);
         }
-//        if (is_int($k)){
-//          $property_values[$v['id']]= $v;
-//        } else{
-//          // $k = links => $v = {"href"="/"}
-//          $property_values[$k] = $v;
-//        }
       }
-
-//      if (count($value->getNormalization())>0) {
-//        $normalization[$key] = CacheableNormalization::permanent($property_values);
-//      } else{
-//        $normalization[$key] = $value;
-//      }
     };
 
     if (count($links)>0){

@@ -38,24 +38,10 @@ services:
     arguments: ['@entity_field.manager']
     tags:
       - { name: wotapi_normalizer }
-#  serializer.normalizer.data.wotapi:
-#    class: Drupal\wotapi\Normalizer\DataNormalizer
-#    tags:
-#      - { name: wotapi_normalizer }
   serializer.normalizer.resource_object.wotapi:
     class: Drupal\wotapi\Normalizer\ResourceObjectNormalizer
     tags:
       - { name: wotapi_normalizer }
-#  serializer.normalizer.content_entity.wotapi:
-#    class: Drupal\wotapi\Normalizer\ContentEntityDenormalizer
-#    arguments: ['@entity_type.manager', '@entity_field.manager', '@plugin.manager.field.field_type']
-#    tags:
-#      - { name: wotapi_normalizer }
-#  serializer.normalizer.config_entity.wotapi:
-#    class: Drupal\wotapi\Normalizer\ConfigEntityDenormalizer
-#    arguments: ['@entity_type.manager', '@entity_field.manager', '@plugin.manager.field.field_type']
-#    tags:
-#      - { name: wotapi_normalizer }
   serializer.normalizer.wotapi_document_toplevel.wotapi:
     class: Drupal\wotapi\Normalizer\WotApiDocumentTopLevelNormalizer
     arguments: ['@entity_type.manager', '@wotapi.resource_type.repository']
@@ -65,11 +51,6 @@ services:
     class: Drupal\wotapi\Normalizer\LinkCollectionNormalizer
     tags:
       - { name: wotapi_normalizer }
-#  serializer.normalizer.entity_reference_field.wotapi:
-#    class: Drupal\wotapi\Normalizer\EntityReferenceFieldNormalizer
-#    tags:
-#      # This must have a higher priority than the 'serializer.normalizer.field.wotapi' to take effect.
-#      - { name: wotapi_normalizer, priority: 1 }
   serializer.normalizer.propertytes_field.wotapi:
     class: Drupal\wotapi\Normalizer\PropertiesFieldNormalizer
     tags:
@@ -89,11 +70,6 @@ services:
   wotapi.field_resolver:
     class: Drupal\wotapi\Context\FieldResolver
     arguments: ['@entity_type.manager', '@entity_field.manager', '@entity_type.bundle.info', '@wotapi.resource_type.repository', '@module_handler']
-#  wotapi.include_resolver:
-#    class: Drupal\wotapi\IncludeResolver
-#    arguments:
-#      - '@entity_type.manager'
-#      - '@wotapi.entity_access_checker'
   paramconverter.wotapi.entity_uuid:
     parent: paramconverter.entity
     class: Drupal\wotapi\ParamConverter\EntityUuidConverter
@@ -187,34 +163,6 @@ services:
       - [setValidator, []]
     tags:
       - { name: event_subscriber, priority: 1000 }
-
-  # Revision management.
-#  wotapi.version_negotiator:
-#    class: Drupal\wotapi\Revisions\VersionNegotiator
-#    public: false
-#    tags:
-#      - { name: service_collector, tag: wotapi_version_negotiator, call: addVersionNegotiator }
-#  wotapi.version_negotiator.default:
-#    arguments: ['@entity_type.manager']
-#    public: false
-#    abstract: true
-#  wotapi.version_negotiator.id:
-#    class: Drupal\wotapi\Revisions\VersionById
-#    parent: wotapi.version_negotiator.default
-#    tags:
-#      - { name: wotapi_version_negotiator, negotiator_name: 'id' }
-#  wotapi.version_negotiator.rel:
-#    class: Drupal\wotapi\Revisions\VersionByRel
-#    parent: wotapi.version_negotiator.default
-#    tags:
-#      - { name: wotapi_version_negotiator, negotiator_name: 'rel' }
-#  wotapi.resource_version.route_enhancer:
-#    class: Drupal\wotapi\Revisions\ResourceVersionRouteEnhancer
-#    public: false
-#    arguments:
-#      - '@wotapi.version_negotiator'
-#    tags:
-#      - { name: route_enhancer }
 
   # Deprecated services.
   serializer.normalizer.htt_exception.wotapi:

@@ -83,13 +83,6 @@ class EntityResource {
    */
   protected $entityRepository;
 
-//  /**
-//   * The include resolver.
-//   *
-//   * @var \Drupal\wotapi\IncludeResolver
-//   */
-//  protected $includeResolver;
-
   /**
    * The WOT:API entity access checker.
    *
@@ -204,7 +197,6 @@ class EntityResource {
     // Instantiate the query for the filtering.
     $entity_type_id = $resource_type->getEntityTypeId();
 
-//    $params = $this->getWotApiParams($request, $resource_type);
     $query_cacheability = new CacheableMetadata();
     $query = $this->getCollectionQuery($resource_type, $query_cacheability);
 
@@ -353,7 +345,6 @@ class EntityResource {
     // Access will have already been checked by the RelationshipFieldAccess
     // service, so we don't need to call ::getAccessCheckedResourceObject().
     $resource_object = ResourceObject::createFromEntity($resource_type, $entity);
-//    $relationship_object_urls = EntityReferenceFieldNormalizer::getRelationshipLinks($resource_object, $related);
     $relationship_object_urls = PropertiesFieldNormalizer::getPropertiesLinks($resource_object, $related);
 
     $response = $this->buildWrappedResponse($field_list, $request, $response_code, [], array_reduce(array_keys($relationship_object_urls), function (LinkCollection $links, $key) use ($relationship_object_urls) {
