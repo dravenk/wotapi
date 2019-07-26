@@ -76,14 +76,29 @@ class ResourceObjectNormalizer extends NormalizerBase {
       }
       $normalizer_values[$field_name] = $this->serializeField($field, $context, $format);
     }
-    $relationship_field_names = array_keys($resource_type->getRelatableResourceTypes());
+
     $id = \Drupal::request()->getSchemeAndHttpHost() . Url::fromRoute(Routes::getRouteName($resource_type, 'individual'), ['entity' => $object->getId()])->toString();
     $normalization = [
       "@context" => CacheableNormalization::permanent("https://iot.mozilla.org/schemas/"),
       'id' => CacheableNormalization::permanent($id),
-      'properties' => CacheableNormalization::aggregate(array_intersect_key($normalizer_values, array_flip($relationship_field_names)))->omitIfEmpty(),
     ];
 
+    $properties_names = [];
+    $related_resource_types = $resource_type->getRelatableResourceTypes();
+    foreach ($related_resource_types as $property_field_name => $related ) {
+      foreach ($related as $K => $related_resource) {
+        $related_resource_name =  $related_resource->getEntityTypeId();
+        if ( $related_resource_name=='wotapi_property') {
+          array_push($properties_names,$property_field_name);
+        }
+      }
+    }
+    $properties_key = array_intersect_key($normalizer_values, array_flip($properties_names));
+    if(count($properties_key)>0) {
+      $normalization['properties'] = CacheableNormalization::aggregate($properties_key);
+    }
+
+    $relationship_field_names = array_keys($related_resource_types);
     $attributes = array_diff_key($normalizer_values, array_flip($relationship_field_names));
     foreach ($attributes as $key => $value){
       $normalization[$key] = $value;
