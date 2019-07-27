@@ -100,9 +100,7 @@ class ResourceObjectNormalizer extends NormalizerBase {
 
     $relationship_field_names = array_keys($related_resource_types);
     $attributes = array_diff_key($normalizer_values, array_flip($relationship_field_names));
-    foreach ($attributes as $key => $value){
-      $normalization[$key] = $value;
-    };
+    $normalization += $attributes;
 
     $obj = CacheableNormalization::aggregate($normalization)->withCacheableDependency($object);
     return $obj;
