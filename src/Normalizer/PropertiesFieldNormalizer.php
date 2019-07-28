@@ -5,11 +5,13 @@ namespace Drupal\wotapi\Normalizer;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\Core\Url;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\wotapi\WotApiResource\ResourceIdentifier;
 use Drupal\wotapi\WotApiResource\ResourceIdentifierInterface;
 use Drupal\wotapi\WotApiResource\ResourceObject;
 use Drupal\wotapi\Normalizer\Value\CacheableNormalization;
 use Drupal\wotapi\Routing\Routes;
+use Drupal\wotapi_property\Entity\PropertyType;
 
 /**
  * Normalizer class specific for entity reference field objects.
@@ -51,6 +53,39 @@ class PropertiesFieldNormalizer extends FieldNormalizer {
     $data_normalization = $normalized_items->getNormalization();
 
     $normalization = $cardinality === 1 ? array_shift($data_normalization) : $data_normalization;
+
+    //      "@type": "BrightnessProperty",
+    //      "type": "integer",
+    //      "title": "Brightness",
+    //      "description": "The level of light from 0-100",
+    //      "minimum" : 0,
+    //      "maximum" : 100,
+    $item_definition = $field->getItemDefinition();
+    $target_type = $item_definition->getSetting('target_type');
+    if ($target_type == 'wotapi_property'){
+      $normalization = [];
+      $referenced_entities = $field->referencedEntities();
+      foreach ($referenced_entities as $referenced_entity) {
+        $bundle = PropertyType::load( $referenced_entity->bundle());
+        if (!is_null($bundle)){
+//          $normalization['@type'] = $bundle->label();
+          $normalization['title'] = $bundle->getTitle();
+          $normalization['description'] = $bundle->getDescription();
+        }
+        $referenced_entity_fields = $referenced_entity->getFields();
+        foreach ($referenced_entity_fields as $referenced_entity_field) {
+          $field_definition = $referenced_entity_field->getFieldDefinition();
+          if ($field_definition instanceof FieldConfig){
+            $field_definition_type = $field_definition->getType();
+            $normalization['type'] = $field_definition_type;
+            if ($field_definition_type == 'integer') {
+              $normalization['minimum'] = $field_definition->getSetting('min');
+              $normalization['maximum'] = $field_definition->getSetting('max');
+            }
+          }
+        }
+      }
+    }
 
     if (!empty($links)) {
       $normalization['links'] = $links;
