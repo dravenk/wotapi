@@ -230,6 +230,12 @@ class Routes implements ContainerInjectionInterface {
       }
     }
 
+    $properties_route = new Route("/{$path}/{entity}/properties");
+    $properties_route->setMethods(['GET']);
+    $properties_route->addDefaults([RouteObjectInterface::CONTROLLER_NAME => static::CONTROLLER_SERVICE_NAME . ':getThingProperties']);
+    $properties_route->setRequirement('_access', 'TRUE');
+    $routes->add(static::getRouteName($resource_type, "properties"), $properties_route);
+
     // Add entity parameter conversion to every route.
     $routes->addOptions(['parameters' => ['entity' => ['type' => 'entity:' . $entity_type_id]]]);
 

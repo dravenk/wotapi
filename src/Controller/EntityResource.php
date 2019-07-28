@@ -22,6 +22,7 @@ use Drupal\wotapi\Context\FieldResolver;
 use Drupal\wotapi\Entity\EntityValidationTrait;
 use Drupal\wotapi\Exception\EntityAccessDeniedHttpException;
 use Drupal\wotapi\Normalizer\PropertiesFieldNormalizer;
+use Drupal\wotapi\Normalizer\Value\CacheableNormalization;
 use Drupal\wotapi\WotApiResource\LinkCollection;
 use Drupal\wotapi\WotApiResource\ResourceIdentifier;
 use Drupal\wotapi\WotApiResource\Link;
@@ -32,6 +33,7 @@ use Drupal\wotapi\WotApiResource\WotApiDocumentTopLevel;
 use Drupal\wotapi\ResourceResponse;
 use Drupal\wotapi\ResourceType\ResourceType;
 use Drupal\wotapi\ResourceType\ResourceTypeRepositoryInterface;
+use Drupal\wotapi_property\Entity\Property;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Drupal\Core\Http\Exception\CacheableBadRequestHttpException;
@@ -290,6 +292,42 @@ class EntityResource {
       return $links->withLink($key, new Link(new CacheableMetadata(), $relationship_object_urls[$key], [$key]));
     }, new LinkCollection([])));
     // Add the host entity as a cacheable dependency.
+    $response->addCacheableDependency($entity);
+    return $response;
+  }
+
+  /**
+   * Gets the relationship of an entity.
+   *
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
+   *   The requested entity.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   *
+   * @return \Drupal\wotapi\ResourceResponse
+   *   The response.
+   */
+  public function getThingProperties(FieldableEntityInterface $entity, Request $request) {
+    $resource_object = $this->entityAccessChecker->getAccessCheckedResourceObject($entity);
+    if ($resource_object instanceof EntityAccessDeniedHttpException) {
+      throw $resource_object;
+    }
+    $collection_data = [];
+    $fields = $resource_object->getFields();
+    foreach ($fields as $field) {
+      /* @var $field \Drupal\Core\Field\FieldItemList */
+      $field_target =  $field->getSetting('target_type');
+      if ($field_target == 'wotapi_property') {
+        $entities = $field->referencedEntities();
+        foreach ($entities as $referenced_entity) {
+          $collection_data[] = $this->entityAccessChecker->getAccessCheckedResourceObject($referenced_entity);
+        }
+      }
+    }
+    $primary_data = new ResourceObjectData($collection_data, -1);
+    $response = $this->buildWrappedResponse($primary_data, $request);
+    // $response does not contain the entity list cache tag. We add the
+    // cacheable metadata for the finite list of entities in the relationship.
     $response->addCacheableDependency($entity);
     return $response;
   }

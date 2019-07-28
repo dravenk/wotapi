@@ -41,15 +41,19 @@ class PropertiesFieldNormalizer extends FieldNormalizer {
     $resource_identifiers = array_filter(ResourceIdentifier::toResourceIdentifiers($field->filterEmptyItems()), function (ResourceIdentifierInterface $resource_identifier) {
       return !$resource_identifier->getResourceType()->isInternal();
     });
-    $context['field_name'] = $field->getName();
+    $field_name = $field->getName();
+    $resource_object = $context['resource_object'];
+    $context['field_name'] = $field_name;
     $normalized_items = CacheableNormalization::aggregate($this->serializer->normalize($resource_identifiers, $format, $context));
     assert($context['resource_object'] instanceof ResourceObject);
     $link_cacheability = new CacheableMetadata();
-    $links = array_map(function (Url $link) use ($link_cacheability) {
-      $href = $link->setAbsolute()->toString(TRUE);
-      $link_cacheability->addCacheableDependency($href);
-      return ['href' => $href->getGeneratedUrl()];
-    }, static::getPropertiesLinks($context['resource_object'], $field->getName()));
+    if (!is_null($resource_object)) {
+      $links = array_map(function (Url $link) use ($link_cacheability) {
+        $href = $link->setAbsolute()->toString(TRUE);
+        $link_cacheability->addCacheableDependency($href);
+        return ['href' => $href->getGeneratedUrl()];
+      }, static::getPropertiesLinks($context['resource_object'], $field_name));
+    }
     $data_normalization = $normalized_items->getNormalization();
 
     $normalization = $cardinality === 1 ? array_shift($data_normalization) : $data_normalization;

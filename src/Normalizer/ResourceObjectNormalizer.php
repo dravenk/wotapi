@@ -54,12 +54,10 @@ class ResourceObjectNormalizer extends NormalizerBase {
     // The property returns a single value: {"temperature": 21}
     // See https://iot.mozilla.org/wot/#property-resource
     if ($resource_type->getEntityTypeId()=='wotapi_property'){
-      $current_uri = \Drupal::request()->getUri();
-      $property_name = explode("/properties/",$current_uri)[1];
       $properties = [];
       foreach ($fields as $field_name => $field) {
         if ($field->getFieldDefinition() instanceof FieldConfig){
-          $properties[$property_name] = $this->serializeField($field, $context, $format);
+          $properties[$resource_type->getBundle()] = $this->serializeField($field, $context, $format);
         }
       }
       if (count($properties) == 1 ){
@@ -83,8 +81,12 @@ class ResourceObjectNormalizer extends NormalizerBase {
       'id' => CacheableNormalization::permanent($id),
     ];
 
-    $properties_names = [];
     $related_resource_types = $resource_type->getRelatableResourceTypes();
+    $relationship_field_names = array_keys($related_resource_types);
+    $attributes = array_diff_key($normalizer_values, array_flip($relationship_field_names));
+    $normalization += $attributes;
+
+    $properties_names = [];
     foreach ($related_resource_types as $property_field_name => $related ) {
       foreach ($related as $K => $related_resource) {
         $related_resource_name =  $related_resource->getEntityTypeId();
@@ -96,11 +98,9 @@ class ResourceObjectNormalizer extends NormalizerBase {
     $properties_key = array_intersect_key($normalizer_values, array_flip($properties_names));
     if(count($properties_key)>0) {
       $normalization['properties'] = CacheableNormalization::aggregate($properties_key);
+      $normalization['links'] = CacheableNormalization::permanent(['rel' => 'properties','href' => $id.'/properties']);
     }
 
-    $relationship_field_names = array_keys($related_resource_types);
-    $attributes = array_diff_key($normalizer_values, array_flip($relationship_field_names));
-    $normalization += $attributes;
 
     $obj = CacheableNormalization::aggregate($normalization)->withCacheableDependency($object);
     return $obj;
