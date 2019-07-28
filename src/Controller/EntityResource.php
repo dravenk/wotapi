@@ -197,83 +197,22 @@ class EntityResource {
     // Instantiate the query for the filtering.
     $entity_type_id = $resource_type->getEntityTypeId();
 
-    $query_cacheability = new CacheableMetadata();
-    $query = $this->getCollectionQuery($resource_type, $query_cacheability);
-
-    try {
-      $results = $this->executeQueryInRenderContext(
-        $query,
-        $query_cacheability
-      );
-    }
-    catch (\LogicException $e) {
-      // Ensure good DX when an entity query involves a config entity type.
-      // For example: getting users with a particular role, which is a config
-      // entity type: https://www.drupal.org/project/wotapi/issues/2959445.
-      // @todo Remove the message parsing in https://www.drupal.org/project/drupal/issues/3028967.
-      if (strpos($e->getMessage(), 'Getting the base fields is not supported for entity type') === 0) {
-        preg_match('/entity type (.*)\./', $e->getMessage(), $matches);
-        $config_entity_type_id = $matches[1];
-        $cacheability = (new CacheableMetadata())->addCacheContexts(['url.path']);
-        throw new CacheableBadRequestHttpException($cacheability, sprintf("Filtering on config entities is not supported by Drupal's entity API. You tried to filter on a %s config entity.", $config_entity_type_id));
-      }
-      else {
-        throw $e;
-      }
-    }
-
     $storage = $this->entityTypeManager->getStorage($entity_type_id);
-    // We request N+1 items to find out if there is a next page for the pager.
-    // We may need to remove that extra item before loading the entities.
-    $pager_size = $query->getMetaData('pager_size');
-    if ($has_next_page = $pager_size < count($results)) {
-      // Drop the last result.
-      array_pop($results);
-    }
+
     // Each item of the collection data contains an array with 'entity' and
     // 'access' elements.
-    $collection_data = $this->loadEntitiesWithAccess($storage, $results, $request->get('working_copies_requested', FALSE));
+    $ids = \Drupal::entityQuery($entity_type_id)->execute();
+    $collection_data = $this->loadEntitiesWithAccess($storage, $ids, $request->get('working_copies_requested', FALSE));
     $primary_data = new ResourceObjectData($collection_data);
-    $primary_data->setHasNextPage($has_next_page);
 
     // Calculate all the results and pass into a WOT:API Data object.
     $count_query_cacheability = new CacheableMetadata();
 
     $response = $this->respondWithCollection($primary_data, $request, $resource_type);
 
-    $response->addCacheableDependency($query_cacheability);
     $response->addCacheableDependency($count_query_cacheability);
 
     return $response;
-  }
-
-  /**
-   * Executes the query in a render context, to catch bubbled cacheability.
-   *
-   * @param \Drupal\Core\Entity\Query\QueryInterface $query
-   *   The query to execute to get the return results.
-   * @param \Drupal\Core\Cache\CacheableMetadata $query_cacheability
-   *   The value object to carry the query cacheability.
-   *
-   * @return int|array
-   *   Returns an integer for count queries or an array of IDs. The values of
-   *   the array are always entity IDs. The keys will be revision IDs if the
-   *   entity supports revision and entity IDs if not.
-   *
-   * @see node_query_node_access_alter()
-   * @see https://www.drupal.org/project/drupal/issues/2557815
-   * @see https://www.drupal.org/project/drupal/issues/2794385
-   * @todo Remove this after https://www.drupal.org/project/drupal/issues/3028976 is fixed.
-   */
-  protected function executeQueryInRenderContext(QueryInterface $query, CacheableMetadata $query_cacheability) {
-    $context = new RenderContext();
-    $results = $this->renderer->executeInRenderContext($context, function () use ($query) {
-      return $query->execute();
-    });
-    if (!$context->isEmpty()) {
-      $query_cacheability->addCacheableDependency($context->pop());
-    }
-    return $results;
   }
 
   /**
@@ -353,39 +292,6 @@ class EntityResource {
     // Add the host entity as a cacheable dependency.
     $response->addCacheableDependency($entity);
     return $response;
-  }
-
-  /**
-   * Gets a basic query for a collection.
-   *
-   * @param \Drupal\wotapi\ResourceType\ResourceType $resource_type
-   *   The base WOT:API resource type for the query.
-   * @param \Drupal\Core\Cache\CacheableMetadata $query_cacheability
-   *   Collects cacheability for the query.
-   *
-   * @return \Drupal\Core\Entity\Query\QueryInterface
-   *   A new query.
-   */
-  protected function getCollectionQuery(ResourceType $resource_type,CacheableMetadata $query_cacheability) {
-    $entity_type = $this->entityTypeManager->getDefinition($resource_type->getEntityTypeId());
-    $entity_storage = $this->entityTypeManager->getStorage($resource_type->getEntityTypeId());
-
-    $query = $entity_storage->getQuery();
-
-    // Ensure that access checking is performed on the query.
-    $query->accessCheck(TRUE);
-
-    $query->addMetaData('pager_size', (int) 50);
-
-    // Limit this query to the bundle type for this resource.
-    $bundle = $resource_type->getBundle();
-    if ($bundle && ($bundle_key = $entity_type->getKey('bundle'))) {
-      $query->condition(
-        $bundle_key, $bundle
-      );
-    }
-
-    return $query;
   }
 
   /**
