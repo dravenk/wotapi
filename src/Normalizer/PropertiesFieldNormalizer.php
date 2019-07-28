@@ -68,7 +68,7 @@ class PropertiesFieldNormalizer extends FieldNormalizer {
       foreach ($referenced_entities as $referenced_entity) {
         $bundle = PropertyType::load( $referenced_entity->bundle());
         if (!is_null($bundle)){
-//          $normalization['@type'] = $bundle->label();
+          $normalization['@type'] = $bundle->label();
           $normalization['title'] = $bundle->getTitle();
           $normalization['description'] = $bundle->getDescription();
         }
