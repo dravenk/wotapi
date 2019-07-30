@@ -76,6 +76,13 @@ class Property extends ContentEntityBase implements PropertyInterface {
   /**
    * {@inheritdoc}
    */
+  public function isReadOnly() {
+    return $this->get('read_only')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
 

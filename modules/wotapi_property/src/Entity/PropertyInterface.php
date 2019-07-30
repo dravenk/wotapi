@@ -32,4 +32,12 @@ interface PropertyInterface extends  ContentEntityInterface, EntityChangedInterf
    */
   public function setCreatedTime($timestamp);
 
+  /**
+   * Gets the Property read_only value.
+   *
+   * @return boolean
+   *  The Property read_only value.
+   */
+  public function isReadOnly();
+
 }

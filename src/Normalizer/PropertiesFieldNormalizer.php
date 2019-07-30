@@ -11,6 +11,7 @@ use Drupal\wotapi\WotApiResource\ResourceIdentifierInterface;
 use Drupal\wotapi\WotApiResource\ResourceObject;
 use Drupal\wotapi\Normalizer\Value\CacheableNormalization;
 use Drupal\wotapi\Routing\Routes;
+use Drupal\wotapi_property\Entity\Property;
 use Drupal\wotapi_property\Entity\PropertyType;
 
 /**
@@ -64,30 +65,46 @@ class PropertiesFieldNormalizer extends FieldNormalizer {
     //      "description": "The level of light from 0-100",
     //      "minimum" : 0,
     //      "maximum" : 100,
-    $item_definition = $field->getItemDefinition();
-    $target_type = $item_definition->getSetting('target_type');
-    if ($target_type == 'wotapi_property'){
+    //      "readOnly": true,
+    if ($field->getItemDefinition()->getSetting('target_type') == 'wotapi_property'){
       $normalization = [];
-      $referenced_entities = $field->referencedEntities();
-      foreach ($referenced_entities as $referenced_entity) {
-        $bundle = PropertyType::load( $referenced_entity->bundle());
-        if (!is_null($bundle)){
-          $normalization['@type'] = $bundle->getAtType();
-          $normalization['title'] = $bundle->getTitle();
-          $normalization['description'] = $bundle->getDescription();
-          if (!empty($bundle->getUnit())) {
-            $normalization['unit'] = $bundle->getUnit();
+      foreach ($field->referencedEntities() as $referenced_entity) {
+        $bundle = PropertyType::load($referenced_entity->bundle());
+        if ($bundle){
+          $at_type = $bundle->getAtType();
+          $title = $bundle->getTitle();
+          $unit = $bundle->getUnit();
+          $description = $bundle->getDescription();
+          if ($at_type) {
+            $normalization['@type'] = $at_type;
+          }
+          if ($title) {
+            $normalization['title'] = $title;
+          }
+          if ($description) {
+            $normalization['description'] = $description;
+          }
+          if ($unit) {
+            $normalization['unit'] = $unit;
           };
         }
-        $referenced_entity_fields = $referenced_entity->getFields();
-        foreach ($referenced_entity_fields as $referenced_entity_field) {
+        foreach ($referenced_entity->getFields() as $referenced_entity_field) {
           $field_definition = $referenced_entity_field->getFieldDefinition();
+          if($referenced_entity->isReadOnly()) {
+            $normalization['readOnly'] = TRUE;
+          }
           if ($field_definition instanceof FieldConfig){
             $field_definition_type = $field_definition->getType();
             $normalization['type'] = $field_definition_type;
             if ($field_definition_type == 'integer') {
-              $normalization['minimum'] = $field_definition->getSetting('min');
-              $normalization['maximum'] = $field_definition->getSetting('max');
+              $min = $field_definition->getSetting('min');
+              if ($min) {
+                $normalization['minimum'] = $field_definition->getSetting('min');
+              }
+              $max = $field_definition->getSetting('max');
+              if ($max) {
+                $normalization['maximum'] = $max;
+              }
             }
           }
         }
