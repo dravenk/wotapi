@@ -98,11 +98,11 @@ class PropertiesFieldNormalizer extends FieldNormalizer {
             $normalization['type'] = $field_definition_type;
             if ($field_definition_type == 'integer') {
               $min = $field_definition->getSetting('min');
-              if ($min) {
-                $normalization['minimum'] = $field_definition->getSetting('min');
+              if (!is_null($min)) {
+                $normalization['minimum'] = $min;
               }
               $max = $field_definition->getSetting('max');
-              if ($max) {
+              if (!is_null($max)) {
                 $normalization['maximum'] = $max;
               }
             }
