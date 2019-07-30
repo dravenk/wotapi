@@ -37,7 +37,6 @@ use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
  *     "description",
  *     "title",
  *     "at_type",
- *     "type",
  *     "unit",
  *   },
  *   links = {
@@ -84,13 +83,6 @@ class PropertyType extends ConfigEntityBundleBase implements PropertyTypeInterfa
    * @var string
    */
   protected $at_type;
-
-  /**
-   * A primitive type (one of null, boolean, object, array, number, integer or string as per [json-schema]).
-   *
-   * @var string
-   */
-  protected $type;
 
   /**
    * A unit ([SI] unit).
@@ -149,21 +141,6 @@ class PropertyType extends ConfigEntityBundleBase implements PropertyTypeInterfa
    */
   public function setAtType($at_type) {
     $this->at_type = $at_type;
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getType() {
-    return $this->type;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setType($type) {
-    $this->type = $type;
     return $this;
   }
 

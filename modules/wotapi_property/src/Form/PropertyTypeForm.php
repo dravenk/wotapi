@@ -61,21 +61,6 @@ class PropertyTypeForm extends EntityForm {
       '#description' => $this->t("A semantic @type (a string identifying a type from the linked @context)"),
     ];
 
-    $form['type'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Type'),
-      '#default_value' => $wotapi_property_type->getType(),
-      '#options' => [
-        'boolean' => $this->t('boolean'),
-        'number' => $this->t('number'),
-        'integer' => $this->t('integer'),
-        'string' => $this->t('string'),
-        'array' => $this->t('array'),
-      ],
-      '#empty_option' => $this->t('-select-'),
-      '#description' => $this->t("A primitive type (one of null, boolean, object, array, number, integer or string as per [json-schema])."),
-    ];
-
     $form['unit'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Unit'),

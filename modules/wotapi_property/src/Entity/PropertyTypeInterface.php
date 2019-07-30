@@ -42,15 +42,6 @@ interface PropertyTypeInterface extends ConfigEntityInterface, EntityDescription
   /**
    * {@inheritdoc}
    */
-  public function getType();
-  /**
-   * {@inheritdoc}
-   */
-  public function setType($at_type);
-
-  /**
-   * {@inheritdoc}
-   */
   public function getUnit();
   /**
    * {@inheritdoc}

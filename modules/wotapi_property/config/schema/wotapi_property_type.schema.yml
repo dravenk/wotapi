@@ -19,9 +19,6 @@ wotapi_property.wotapi_property_type.*:
     at_type:
       type: text
       label: 'at_type'
-    type:
-      type: text
-      label: 'type'
     unit:
       type: text
       label: 'unit'
