@@ -252,9 +252,7 @@ class EntityResource {
     $collection_data = [];
     foreach ($referenced_entities as $referenced_entity) {
       $property = $this->entityAccessChecker->getAccessCheckedResourceObject($referenced_entity);
-      foreach ($entity->getFields($related) as $field) {
-        $property->setSourceField($field);
-      }
+      $property->setSourceField($entity->get($related));
       $collection_data[] = $property;
     }
     $primary_data = new ResourceObjectData($collection_data, $field_list->getFieldDefinition()->getFieldStorageDefinition()->getCardinality());
