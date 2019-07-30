@@ -3,6 +3,7 @@
 namespace Drupal\wotapi\Normalizer;
 
 use Drupal\Component\Utility\Crypt;
+use Drupal\Console\Bootstrap\Drupal;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
@@ -69,7 +70,7 @@ class WotApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorma
     $data = $object->getData();
 
     $doc = [];
-    foreach ($data as $key => $value) {
+    foreach ($data as $value) {
       // Add data.
       // @todo: remove this if-else and just call $this->serializer->normalize($data...) in https://www.drupal.org/project/jsonapi/issues/3036285.
 //      if ($data instanceof EntityReferenceFieldItemListInterface) {
@@ -78,8 +79,18 @@ class WotApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorma
 //      else {
 //        $doc[$key] = $this->serializer->normalize($value, $format, $context);
 //      }
-      $doc[$key] = $this->serializer->normalize($value, $format, $context);
+      $doc[] = $this->serializer->normalize($value, $format, $context);
     }
+
+    // @todo there must be a better way. Maybe Merging is the best way to do this before normalize.
+    if(strrchr(\Drupal::routeMatch()->getRouteName(),'.properties') == '.properties') {
+      $values = [];
+      foreach ($doc as $value) {
+        $values += $value->getNormalization();
+      }
+      return CacheableNormalization::permanent($values)->withCacheableDependency((new CacheableMetadata())->addCacheContexts(['url.site']));
+    }
+
     if (count($doc) == 1){
       return CacheableNormalization::permanent($doc[0]->getNormalization())->withCacheableDependency((new CacheableMetadata())->addCacheContexts(['url.site']));
     }
