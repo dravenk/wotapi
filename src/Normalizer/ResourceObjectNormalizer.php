@@ -57,7 +57,10 @@ class ResourceObjectNormalizer extends NormalizerBase {
       $properties = [];
       foreach ($fields as $field_name => $field) {
         if ($field->getFieldDefinition() instanceof FieldConfig){
-          $properties[$resource_type->getBundle()] = $this->serializeField($field, $context, $format);
+          $source_field = $object->getSourceField();
+          if($source_field){
+            $properties[$source_field->getName()] = $this->serializeField($field, $context, $format);
+          }
         }
       }
       if (count($properties) == 1 ){

@@ -8,10 +8,14 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Field\FieldItemList;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\TypedData\TypedDataInternalPropertiesHelper;
 use Drupal\Core\Url;
 use Drupal\wotapi\ResourceType\ResourceType;
 use Drupal\wotapi\Routing\Routes;
+use Drupal\wotapi_thing\Entity\Thing;
 
 /**
  * Represents a WOT:API resource object.
@@ -46,6 +50,16 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
    * @var \Drupal\wotapi\WotApiResource\LinkCollection
    */
   protected $links;
+
+  /**
+   * The resource object's source field.
+   *
+   * field_switch(source_field)
+   *   - target:$this(OnOffProperty)
+   *
+   * @var \Drupal\Core\Field\FieldItemListInterface
+   */
+  protected $source_field;
 
   /**
    * ResourceObject constructor.
@@ -142,6 +156,30 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
    */
   public function getLinks() {
     return $this->links;
+  }
+
+  /**
+   * Gets the ResourceObject's thing.
+   *
+   * @return \Drupal\Core\Field\FieldItemListInterface $source_field
+   *   The resource object's $source_field.
+   */
+  public function getSourceField() {
+    return $this->source_field;
+  }
+
+
+  /**
+   * Sets thing; useful for value object constructors.
+   *
+   * @param \Drupal\Core\Field\FieldItemListInterface $source_field
+   *   The resource object's $source_field.
+   *
+   * @return $this
+   */
+  public function setSourceField(FieldItemListInterface $source_field) {
+    $this->source_field = $source_field;
+    return $this;
   }
 
   /**

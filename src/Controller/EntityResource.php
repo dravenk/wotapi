@@ -251,7 +251,11 @@ class EntityResource {
     );
     $collection_data = [];
     foreach ($referenced_entities as $referenced_entity) {
-      $collection_data[] = $this->entityAccessChecker->getAccessCheckedResourceObject($referenced_entity);
+      $property = $this->entityAccessChecker->getAccessCheckedResourceObject($referenced_entity);
+      foreach ($entity->getFields($related) as $field) {
+        $property->setSourceField($field);
+      }
+      $collection_data[] = $property;
     }
     $primary_data = new ResourceObjectData($collection_data, $field_list->getFieldDefinition()->getFieldStorageDefinition()->getCardinality());
     $response = $this->buildWrappedResponse($primary_data, $request);
@@ -320,7 +324,9 @@ class EntityResource {
       if ($field_target == 'wotapi_property') {
         $entities = $field->referencedEntities();
         foreach ($entities as $referenced_entity) {
-          $collection_data[] = $this->entityAccessChecker->getAccessCheckedResourceObject($referenced_entity);
+          $property = $this->entityAccessChecker->getAccessCheckedResourceObject($referenced_entity);
+          $property->setSourceField($field);
+          $collection_data[] = $property;
         }
       }
     }
