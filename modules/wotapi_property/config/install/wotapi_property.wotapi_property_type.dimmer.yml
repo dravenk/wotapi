@@ -4,7 +4,7 @@ dependencies: {  }
 id: dimmer
 label: DimmerData
 description: 'Dimmer data'
-title: DimmerData
+title: Dimmer
 at_type: DimmerData
 type: ''
 unit: ''

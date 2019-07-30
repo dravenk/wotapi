@@ -4,7 +4,7 @@ dependencies: {  }
 id: nitrogenconcentration
 label: NitrogenConcentrationData
 description: 'Nitrogen concentration data.'
-title: NitrogenConcentrationData
+title: 'Nitrogen Concentration'
 at_type: NitrogenConcentrationData
 type: number
 unit: ''

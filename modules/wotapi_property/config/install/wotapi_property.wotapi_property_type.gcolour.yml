@@ -4,7 +4,7 @@ dependencies: {  }
 id: gcolour
 label: GColourData
 description: 'Green component of the RGB colour data'
-title: GColourData
+title: GColour
 at_type: GColourData
 type: number
 unit: ''

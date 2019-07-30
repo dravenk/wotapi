@@ -4,7 +4,7 @@ dependencies: {  }
 id: oxygenconcentration
 label: OxygenConcentrationData
 description: 'Oxygen concentration data.'
-title: OxygenConcentrationData
+title: 'Oxygen Concentration'
 at_type: OxygenConcentrationData
 type: number
 unit: ''

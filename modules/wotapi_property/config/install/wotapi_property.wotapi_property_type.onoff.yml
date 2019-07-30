@@ -4,7 +4,7 @@ dependencies: {  }
 id: onoff
 label: OnOffProperty
 description: 'An OnOffProperty is like a BooleanProperty, but with the added semantics that true means "on" and false means "off".'
-title: OnOffProperty
+title: 'On/Off'
 at_type: OnOffProperty
 type: boolean
 unit: ''

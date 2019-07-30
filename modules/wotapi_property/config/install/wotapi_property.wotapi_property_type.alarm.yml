@@ -4,7 +4,7 @@ dependencies: {  }
 id: alarm
 label: AlarmProperty
 description: ''
-title: AlarmProperty
+title: Alarm
 at_type: AlarmProperty
 type: boolean
 unit: ''

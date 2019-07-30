@@ -4,7 +4,7 @@ dependencies: {  }
 id: immersiondepth
 label: ImmersionDepthData
 description: 'Liquid immersion depth data'
-title: ImmersionDepthData
+title: 'Immersion Depth'
 at_type: ImmersionDepthData
 type: number
 unit: ''

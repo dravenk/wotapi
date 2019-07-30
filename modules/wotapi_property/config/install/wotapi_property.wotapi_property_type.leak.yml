@@ -4,7 +4,7 @@ dependencies: {  }
 id: leak
 label: LeakProperty
 description: 'A LeakProperty is like a BooleanProperty, but with the added semantics that true means "leak" and false means "no leak".'
-title: LeakProperty
+title: 'Leak Property'
 at_type: LeakProperty
 type: boolean
 unit: ''

@@ -4,7 +4,7 @@ dependencies: {  }
 id: bcolour
 label: BColourData
 description: 'Blue component of the RGB colour data'
-title: BColourData
+title: BColour
 at_type: BColourData
 type: number
 unit: ''

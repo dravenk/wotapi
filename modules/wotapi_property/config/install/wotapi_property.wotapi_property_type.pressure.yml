@@ -4,7 +4,7 @@ dependencies: {  }
 id: pressure
 label: PressureData
 description: 'Pressure data'
-title: PressureData
+title: Pressure
 at_type: PressureData
 type: ''
 unit: ''

@@ -4,7 +4,7 @@ dependencies: {  }
 id: image
 label: ImageProperty
 description: ''
-title: ImageProperty
+title: Image
 at_type: ImageProperty
 type: ''
 unit: ''

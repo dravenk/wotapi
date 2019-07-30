@@ -4,7 +4,7 @@ dependencies: {  }
 id: electriccurrent
 label: ElectricCurrentData
 description: 'Electric current data.'
-title: ElectricCurrentData
+title: 'Electric Current'
 at_type: ElectricCurrentData
 type: number
 unit: ''

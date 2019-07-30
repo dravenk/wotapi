@@ -4,7 +4,7 @@ dependencies: {  }
 id: activeenergy
 label: ActiveEnergyData
 description: 'Active energy data.'
-title: ActiveEnergyData
+title: 'Active Energy'
 at_type: ActiveEnergyData
 type: number
 unit: ''

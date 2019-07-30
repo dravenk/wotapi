@@ -4,7 +4,7 @@ dependencies: {  }
 id: video
 label: VideoProperty
 description: ''
-title: VideoProperty
+title: Video
 at_type: ''
 type: ''
 unit: ''

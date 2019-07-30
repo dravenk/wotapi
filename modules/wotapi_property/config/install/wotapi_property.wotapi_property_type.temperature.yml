@@ -4,7 +4,7 @@ dependencies: {  }
 id: temperature
 label: TemperatureProperty
 description: ''
-title: TemperatureProperty
+title: Temperature
 at_type: TemperatureProperty
 type: integer
 unit: 'degree celsius'

@@ -4,7 +4,7 @@ dependencies: {  }
 id: level
 label: LevelProperty
 description: ''
-title: LevelProperty
+title: Level
 at_type: LevelProperty
 type: integer
 unit: ''

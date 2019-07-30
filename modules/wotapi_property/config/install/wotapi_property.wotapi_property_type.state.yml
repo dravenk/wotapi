@@ -4,7 +4,7 @@ dependencies: {  }
 id: state
 label: StateData
 description: 'State data'
-title: StateData
+title: State
 at_type: StateData
 type: boolean
 unit: ''

@@ -4,7 +4,7 @@ dependencies: {  }
 id: reactivepower
 label: ReactivePowerData
 description: 'Data for the reactive power'
-title: ReactivePowerData
+title: 'Reactive Power'
 at_type: ReactivePowerData
 type: integer
 unit: ''

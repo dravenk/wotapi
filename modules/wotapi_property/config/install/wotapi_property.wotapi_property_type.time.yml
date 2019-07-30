@@ -4,7 +4,7 @@ dependencies: {  }
 id: time
 label: TimeData
 description: 'Time data'
-title: TimeData
+title: Time
 at_type: TimeData
 type: number
 unit: ''

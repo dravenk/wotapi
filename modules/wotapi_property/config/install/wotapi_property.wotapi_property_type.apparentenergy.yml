@@ -4,7 +4,7 @@ dependencies: {  }
 id: apparentenergy
 label: ApparentEnergyData
 description: 'Apparent energy data.'
-title: ApparentEnergyData
+title: 'Apparent Energy'
 at_type: ApparentEnergyData
 type: number
 unit: ''

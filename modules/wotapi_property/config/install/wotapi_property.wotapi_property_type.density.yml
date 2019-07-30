@@ -4,7 +4,7 @@ dependencies: {  }
 id: density
 label: DensityData
 description: 'Density data'
-title: DensityData
+title: Density
 at_type: DensityData
 type: number
 unit: ''

@@ -4,7 +4,7 @@ dependencies: {  }
 id: argonconcentration
 label: ArgonConcentrationData
 description: 'Argon concentration data.'
-title: ArgonConcentrationData
+title: 'ArgonConcentration'
 at_type: ArgonConcentrationData
 type: number
 unit: ''

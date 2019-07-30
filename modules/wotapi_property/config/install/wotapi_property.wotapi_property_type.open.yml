@@ -4,7 +4,7 @@ dependencies: {  }
 id: open
 label: OpenProperty
 description: 'An OpenProperty is like a BooleanProperty, but with the added semantics that true means "open" and false means "closed".'
-title: OpenProperty
+title: Open
 at_type: OpenProperty
 type: boolean
 unit: ''

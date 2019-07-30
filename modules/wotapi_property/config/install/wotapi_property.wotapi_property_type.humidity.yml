@@ -4,7 +4,7 @@ dependencies: {  }
 id: humidity
 label: HumidityData
 description: 'Humidity data'
-title: HumidityData
+title: Humidity
 at_type: HumidityData
 type: number
 unit: percent

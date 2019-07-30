@@ -4,7 +4,7 @@ dependencies: {  }
 id: wind
 label: WindData
 description: 'Wind data'
-title: WindData
+title: Wind
 at_type: WindData
 type: number
 unit: ''

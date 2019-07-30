@@ -4,7 +4,7 @@ dependencies: {  }
 id: ramptime
 label: RampTimeData
 description: ''
-title: RampTimeData
+title: 'Ramp Time'
 at_type: RampTimeData
 type: number
 unit: ''

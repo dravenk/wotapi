@@ -4,7 +4,7 @@ dependencies: {  }
 id: soundpressure
 label: SoundPressureData
 description: 'Sound Pressure data'
-title: SoundPressureData
+title: 'Sound Pressure'
 at_type: SoundPressureData
 type: number
 unit: ''

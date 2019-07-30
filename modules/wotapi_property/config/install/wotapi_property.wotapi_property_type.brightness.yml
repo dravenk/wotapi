@@ -4,7 +4,7 @@ dependencies: {  }
 id: brightness
 label: BrightnessProperty
 description: ''
-title: BrightnessProperty
+title: Brightness
 at_type: BrightnessProperty
 type: integer
 unit: percent

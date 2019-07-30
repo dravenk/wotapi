@@ -2,9 +2,9 @@ langcode: en
 status: true
 dependencies: {  }
 id: linefrequency
-label: LineFrequencyData
+label: 'Line frequency data.'
 description: LineFrequencyData
-title: 'Line frequency data.'
+title: 'LineFrequency'
 at_type: LineFrequencyData
 type: number
 unit: ''

@@ -4,7 +4,7 @@ dependencies: {  }
 id: frequency
 label: FrequencyProperty
 description: ''
-title: FrequencyProperty
+title: Frequency
 at_type: FrequencyProperty
 type: integer
 unit: hertz

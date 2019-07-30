@@ -4,7 +4,7 @@ dependencies: {  }
 id: apparentpower
 label: ApparentPowerData
 description: 'Data for the apparent power.'
-title: ApparentPowerData
+title: 'Apparent Power'
 at_type: ApparentPowerData
 type: number
 unit: ''

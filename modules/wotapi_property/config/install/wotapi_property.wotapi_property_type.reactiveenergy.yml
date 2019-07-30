@@ -4,7 +4,7 @@ dependencies: {  }
 id: reactiveenergy
 label: ReactiveEnergyData
 description: 'Reactive energy data.'
-title: ReactiveEnergyData
+title: 'Reactive Energy'
 at_type: ReactiveEnergyData
 type: ''
 unit: ''

@@ -4,7 +4,7 @@ dependencies: {  }
 id: pushed
 label: PushedProperty
 description: 'A PushedProperty is like a BooleanProperty, but with the added semantics that true means "pushed" and false means "not pushed".'
-title: PushedProperty
+title: Pushed
 at_type: PushedProperty
 type: boolean
 unit: ''

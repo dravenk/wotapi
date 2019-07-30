@@ -4,7 +4,7 @@ dependencies: {  }
 id: carbondioxideconcentration
 label: CarbonDioxideConcentrationData
 description: 'Carbon dioxide concentration data.'
-title: CarbonDioxideConcentrationData
+title: 'Carbon Dioxide Concentration'
 at_type: CarbonDioxideConcentrationData
 type: number
 unit: ''

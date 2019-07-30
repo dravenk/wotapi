@@ -4,7 +4,7 @@ dependencies: {  }
 id: flowrate
 label: FlowRateData
 description: 'Flow rate data'
-title: FlowRateData
+title: 'Flow Rate'
 at_type: FlowRateData
 type: number
 unit: ''

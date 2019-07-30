@@ -4,7 +4,7 @@ dependencies: {  }
 id: powerfactor
 label: PowerFactorData
 description: 'Data for the power factor.'
-title: PowerFactorData
+title: 'Power Factor'
 at_type: PowerFactorData
 type: integer
 unit: percent

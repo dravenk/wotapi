@@ -4,7 +4,7 @@ dependencies: {  }
 id: boolean
 label: BooleanProperty
 description: ''
-title: BooleanProperty
+title: Boolean
 at_type: BooleanProperty
 type: boolean
 unit: ''

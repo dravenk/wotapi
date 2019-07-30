@@ -4,7 +4,7 @@ dependencies: {  }
 id: rcolour
 label: RColourData
 description: 'Red component of the RGB colour data'
-title: RColourData
+title: RColour
 at_type: RColourData
 type: number
 unit: ''

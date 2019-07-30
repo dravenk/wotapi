@@ -4,7 +4,7 @@ dependencies: {  }
 id: color
 label: ColorProperty
 description: ''
-title: ColorProperty
+title: Color
 at_type: ColorProperty
 type: string
 unit: ''
