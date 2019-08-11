@@ -1,0 +1,18 @@
+services:
+  plugin.manager.wotapi_action:
+    parent: default_plugin_manager
+    class: Drupal\wotapi_action\Plugin\WotapiActionManager
+    public: false
+
+  wotapi_action.handler:
+    class: Drupal\wotapi_action\Handler
+    arguments: ['@plugin.manager.wotapi_action']
+
+  wotapi_action.schema_validator:
+    class: JsonSchema\Validator
+
+  serializer.normalizer.wotapi_action_annotation:
+    class: Drupal\wotapi_action\Normalizer\AnnotationNormalizer
+    public: false
+    tags:
+      - { name: normalizer }

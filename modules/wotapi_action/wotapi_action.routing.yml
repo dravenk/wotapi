@@ -1,0 +1,29 @@
+wotapi_action.handler:
+  path: '/wotapi_action'
+  defaults:
+    _controller: '\Drupal\wotapi_action\Controller\HttpController::resolve'
+  methods: [POST, GET]
+  requirements:
+    _permission: 'use wotapi_action services'
+  options:
+    _auth: ['basic_auth', 'oauth2']
+
+wotapi_action.action_collection:
+  path: '/wotapi/actions'
+  defaults:
+    _controller: '\Drupal\wotapi_action\Controller\DiscoveryController::actions'
+  methods: [GET]
+  requirements:
+    _permission: 'use wotapi_action services'
+  options:
+    _auth: ['cookie', 'basic_auth', 'oauth2']
+
+wotapi_action.action_resource:
+  path: '/wotapi/actions/{action_id}'
+  defaults:
+    _controller: '\Drupal\wotapi_action\Controller\DiscoveryController::action'
+  methods: [GET]
+  requirements:
+    _permission: 'use wotapi_action services'
+  options:
+    _auth: ['cookie', 'basic_auth', 'oauth2']
