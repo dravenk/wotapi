@@ -80,7 +80,9 @@ class AnnotationNormalizer extends NormalizerBase {
         'href' => $self->getGeneratedUrl(),
       ];
     }
-    return $normalized;
+    $action[$object->getId()] = $normalized;
+
+    return $action;
   }
 
   /**
