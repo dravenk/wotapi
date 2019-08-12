@@ -27,17 +27,6 @@ interface WotapiActionInterface extends AccessibleInterface, PluginDefinitionInt
   public function getUsage();
 
   /**
-   * The parameters for this method.
-   *
-   * Can be a keyed array where the parameter names are the keys or an indexed
-   * array for positional parameters.
-   *
-   * @return \Drupal\wotapi_action\WotapiActionInterface[]|null
-   *   The method params or NULL if none are accepted.
-   */
-  public function getParams();
-
-  /**
    * Whether the parameters are by-position.
    *
    * @return bool

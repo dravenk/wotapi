@@ -32,16 +32,6 @@ interface ParameterDefinitionInterface {
   public function isRequired();
 
   /**
-   * Gets the parameter schema.
-   *
-   * Can be derived from the type when the schema property is not defined.
-   *
-   * @return array
-   *   The schema.
-   */
-  public function getSchema();
-
-  /**
    * Get the parameter factory class.
    *
    * @return string

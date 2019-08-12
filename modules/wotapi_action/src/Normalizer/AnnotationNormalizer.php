@@ -6,7 +6,6 @@ use Drupal\Component\Annotation\AnnotationInterface;
 use Drupal\Component\Assertion\Inspector;
 use Drupal\Core\Url;
 use Drupal\wotapi_action\Annotation\WotapiAction;
-use Drupal\wotapi_action\Annotation\WotapiActionParameterDefinition;
 use Drupal\serialization\Normalizer\NormalizerBase;
 
 /**
@@ -33,7 +32,6 @@ class AnnotationNormalizer extends NormalizerBase {
    */
   protected $supportedInterfaceOrClass = [
     WotapiAction::class,
-    WotapiActionParameterDefinition::class,
   ];
 
   /**
@@ -75,9 +73,6 @@ class AnnotationNormalizer extends NormalizerBase {
         'href' => $self->getGeneratedUrl(),
       ];
     }
-    if ($object instanceof WotapiActionParameterDefinition) {
-      $normalized['schema'] = $object->getSchema();
-    }
     return $normalized;
   }
 
@@ -94,10 +89,6 @@ class AnnotationNormalizer extends NormalizerBase {
     switch (get_class($annotation)) {
       case WotapiAction::class:
         return 'WotapiAction';
-
-      case WotapiActionParameterDefinition::class:
-        return 'WotapiActionParameterDefinition';
-
       default:
         return get_class($annotation);
     }

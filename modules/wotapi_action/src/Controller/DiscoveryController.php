@@ -7,7 +7,6 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Http\Exception\CacheableNotFoundHttpException;
-use Drupal\Core\Url;
 use Drupal\wotapi_action\HandlerInterface;
 use Drupal\wotapi_action\WotapiActionInterface;
 use Drupal\wotapi_action\Normalizer\AnnotationNormalizer;

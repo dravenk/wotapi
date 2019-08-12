@@ -6,10 +6,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\wotapi_action\Exception\WotapiActionException;
 use Drupal\wotapi_action\HandlerInterface;
 use Drupal\wotapi_action\Object\Error;
-use Drupal\wotapi_action\Object\ParameterBag;
 use Drupal\wotapi_action\Object\Request;
-use Drupal\wotapi_action\ParameterFactory\RawParameterFactory;
-use Drupal\wotapi_action\ParameterDefinitionInterface;
 use JsonSchema\Constraints\Constraint;
 use JsonSchema\Validator;
 use Shaper\Transformation\TransformationBase;
@@ -107,81 +104,7 @@ class RpcRequestFactory extends TransformationBase {
     $context[static::REQUEST_ID_KEY] = $id;
     $context[static::REQUEST_VERSION_KEY] = $this->handler->supportedVersion();
     $batch = $context[static::REQUEST_IS_BATCH_REQUEST];
-    $params = $this->denormalizeParams($data, $context);
-    return new Request($data['wotapi_action'], $data['action'], $batch, $id, $params);
-  }
-
-  /**
-   * Denormalizes a JSON-RPC request object's parameters.
-   *
-   * @param object $data
-   *   The decoded JSON-RPC request to be denormalized.
-   * @param \Shaper\Util\Context $context
-   *   The denormalized JSON-RPC request.
-   *
-   * @return \Drupal\wotapi_action\Object\ParameterBag|null
-   *   The denormalized parameters or NULL if none were provided.
-   *
-   * @throws \Drupal\wotapi_action\Exception\WotapiActionException
-   */
-  protected function denormalizeParams($data, Context $context) {
-    if (!$this->handler->supportsAction($data['action'])) {
-      throw $this->newException(Error::methodNotFound($data['action']), $context);
-    }
-    $method = $this->handler->getAction($data['action']);
-    $params = $method->getParams();
-    if (is_null($params)) {
-      if (isset($data['params'])) {
-        $error = Error::invalidParams("The ${data['action']} method does not accept parameters.");
-        throw $this->newException($error, $context);
-      }
-      return NULL;
-    }
-    $arguments = [];
-    $positional = $method->areParamsPositional();
-    foreach ($params as $key => $param) {
-      if (isset($data['params'][$key])) {
-        $arguments[$key] = $this->denormalizeParam($data['params'][$key], $param);
-      }
-      // Only force the presence of required parameters.
-      elseif ($param->isRequired()) {
-        throw $this->newException(Error::invalidParams("Missing required parameter: $key"), $context);
-      }
-    }
-    return new ParameterBag($arguments, $positional);
-  }
-
-  /**
-   * Denormalizes a single JSON-RPC request object parameter.
-   *
-   * @param mixed $argument
-   *   The decoded JSON-RPC request parameter to be denormalized.
-   * @param \Drupal\wotapi_action\ParameterDefinitionInterface $parameter_definition
-   *   The JSON-RPC request's parameter definition.
-   *
-   * @return mixed
-   *   The denormalized parameter.
-   *
-   * @throws \Drupal\wotapi_action\Exception\WotapiActionException
-   */
-  protected function denormalizeParam($argument, ParameterDefinitionInterface $parameter_definition) {
-    $factory_class = $parameter_definition->getFactory() ?: RawParameterFactory::class;
-    $factory = call_user_func_array(
-      [$factory_class, 'create'],
-      [$parameter_definition, $this->container]
-    );
-    $context = new Context([
-      ParameterDefinitionInterface::class => $parameter_definition,
-    ]);
-    try {
-      // TODO: Wrap other shaper transformations in a similar way for nicer
-      // error outputs.
-      return $factory->transform($argument, $context);
-    }
-    catch (\TypeError $exception) {
-      $message = "The {$parameter_definition->getId()} parameter does not conform to the parameter schema. {$exception->getMessage()}";
-      throw WotapiActionException::fromError(Error::invalidParams($message));
-    }
+    return new Request($data['wotapi_action'], $data['action'], $batch, $id, NULL);
   }
 
   /**

@@ -72,15 +72,6 @@ class WotapiActionParameterDefinition implements ParameterDefinitionInterface {
     return isset($this->required) ? $this->required : FALSE;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getSchema() {
-    if (!isset($this->schema) && isset($this->factory)) {
-      $this->schema = call_user_func_array([$this->factory, 'schema'], [$this]);
-    }
-    return $this->schema;
-  }
 
   /**
    * {@inheritdoc}

@@ -146,7 +146,7 @@ class Handler implements HandlerInterface {
       $configuration = [HandlerInterface::JSONRPC_REQUEST_KEY => $request];
       $executable = $this->getExecutable($method, $configuration);
       return $request->hasParams()
-        ? $executable->execute($request->getParams())
+        ? $executable->execute(NULL)
         : $executable->execute(new ParameterBag([]));
     }
     else {

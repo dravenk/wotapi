@@ -86,16 +86,6 @@ class Request {
   }
 
   /**
-   * Gets the parameters.
-   *
-   * @return \Drupal\wotapi_action\Object\ParameterBag|null
-   *   The parameter bag.
-   */
-  public function getParams() {
-    return $this->params;
-  }
-
-  /**
    * Checks if this is a batched request.
    *
    * @return bool

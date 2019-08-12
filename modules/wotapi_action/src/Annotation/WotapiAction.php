@@ -44,16 +44,6 @@ class WotapiAction extends AnnotationBase implements WotapiActionInterface {
   public $usage;
 
   /**
-   * The parameters for this method.
-   *
-   * Can be a keyed array where the parameter names are the keys or an indexed
-   * array for positional parameters.
-   *
-   * @var \Drupal\wotapi_action\Annotation\WotapiActionParameterDefinition[]
-   */
-  public $params = [];
-
-  /**
    * {@inheritdoc}
    */
   public function id() {
@@ -75,13 +65,6 @@ class WotapiAction extends AnnotationBase implements WotapiActionInterface {
    */
   public function getUsage() {
     $this->usage;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getParams() {
-    return $this->params;
   }
 
   /**
