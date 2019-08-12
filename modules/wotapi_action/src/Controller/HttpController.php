@@ -9,7 +9,6 @@ use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\wotapi_action\Exception\WotapiActionException;
 use Drupal\wotapi_action\Shaper\RpcRequestFactory;
-use Drupal\wotapi_action\Shaper\RpcResponseFactory;
 use Shaper\Util\Context;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -196,13 +195,12 @@ class HttpController extends ControllerBase {
    */
   protected function serializeRpcResponse(array $rpc_responses, $is_batched_response) {
     $context = new Context([
-      RpcResponseFactory::RESPONSE_VERSION_KEY => $this->handler->supportedVersion(),
       RpcRequestFactory::REQUEST_IS_BATCH_REQUEST => $is_batched_response,
     ]);
     // This following is needed to prevent the serializer from using array
     // indices as JSON object keys like {"0": "foo", "1": "bar"}.
     $data = array_values($rpc_responses);
-    $normalizer = new RpcResponseFactory($this->validator);
+    $normalizer = $this->validator;
     return Json::encode($normalizer->transform($data, $context));
   }
 
@@ -219,10 +217,9 @@ class HttpController extends ControllerBase {
    */
   protected function exceptionResponse(WotapiActionException $e, $status = Response::HTTP_INTERNAL_SERVER_ERROR) {
     $context = new Context([
-      RpcResponseFactory::RESPONSE_VERSION_KEY => $this->handler->supportedVersion(),
       RpcRequestFactory::REQUEST_IS_BATCH_REQUEST => FALSE,
     ]);
-    $normalizer = new RpcResponseFactory($this->validator);
+    $normalizer = $this->validator;
     $rpc_response = $e->getResponse();
     $serialized = Json::encode($normalizer->transform([$rpc_response], $context));
     $response = CacheableJsonResponse::fromJsonString($serialized, $status);
