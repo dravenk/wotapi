@@ -60,13 +60,14 @@ class AnnotationNormalizer extends NormalizerBase {
     $normalized = [
       'type' => static::getAnnotationType($object),
       'id' => $object->getId(),
-      'attributes' => array_filter($attributes),
     ];
-
     $at_type = $object->getAtType();
     if (!is_null($at_type)) {
       $normalized['@type'] = $at_type;
     }
+
+    $normalized += $attributes;
+    unset($normalized['at_type']);
 
     if ($object instanceof WotapiAction) {
       $self = Url::fromRoute('wotapi_action.action_resource', [
