@@ -57,10 +57,11 @@ class AnnotationNormalizer extends NormalizerBase {
           $attributes[$key] = $this->serializer->normalize($child, $format, $context);
       }
     }
-    $normalized = [
-      'type' => static::getAnnotationType($object),
-      'id' => $object->getId(),
-    ];
+//    $normalized = [
+//      'type' => static::getAnnotationType($object),
+//      'id' => $object->getId(),
+//    ];
+    $normalized = [];
     $at_type = $object->getAtType();
     if (!is_null($at_type)) {
       $normalized['@type'] = $at_type;
@@ -69,17 +70,11 @@ class AnnotationNormalizer extends NormalizerBase {
     $normalized += $attributes;
     unset($normalized['at_type']);
 
-    if ($object instanceof WotapiAction) {
-      $self = Url::fromRoute('wotapi_action.action_resource', [
-        'action_id' => $object->id(),
-      ])->setAbsolute()->toString(TRUE);
-      $collection = Url::fromRoute('wotapi_action.action_collection')->setAbsolute()->toString(TRUE);
-      $this->addCacheableDependency($context, $self);
-      $this->addCacheableDependency($context, $collection);
-      $normalized['links'] = [
-        'href' => $self->getGeneratedUrl(),
-      ];
+    $action_input = call_user_func([$object->getClass(), 'input']);
+    if (!is_null($action_input)){
+      $normalized['input'] = $action_input;
     }
+
     $action[$object->getId()] = $normalized;
 
     return $action;

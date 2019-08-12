@@ -18,12 +18,4 @@ interface WotapiActionInterface extends AccessibleInterface, PluginDefinitionInt
    */
   public function call();
 
-  /**
-   * How to use this method.
-   *
-   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
-   *   The usage text for the method.
-   */
-  public function getUsage();
-
 }

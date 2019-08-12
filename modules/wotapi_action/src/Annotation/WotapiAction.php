@@ -35,15 +35,6 @@ class WotapiAction extends AnnotationBase implements WotapiActionInterface {
   public $call;
 
   /**
-   * How to use this method.
-   *
-   * @var \Drupal\Core\Annotation\Translation
-   *
-   * @ingroup plugin_translatable
-   */
-  public $usage;
-
-  /**
    * A semantic @type (a string identifying a type from the linked @context).
    *
    * @var string
@@ -79,13 +70,6 @@ class WotapiAction extends AnnotationBase implements WotapiActionInterface {
       $this->call = 'execute';
     }
     return $this->call;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getUsage() {
-    $this->usage;
   }
 
   /**
