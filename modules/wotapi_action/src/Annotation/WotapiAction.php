@@ -44,6 +44,27 @@ class WotapiAction extends AnnotationBase implements WotapiActionInterface {
   public $usage;
 
   /**
+   * A semantic @type (a string identifying a type from the linked @context).
+   *
+   * @var string
+   */
+  public $at_type;
+
+  /**
+   * A title (A string providing a human friendly name).
+   *
+   * @var string
+   */
+  public $title;
+
+  /**
+   * A description (A string providing a human friendly description).
+   *
+   * @var string
+   */
+  public $description;
+
+  /**
    * {@inheritdoc}
    */
   public function id() {
@@ -65,6 +86,27 @@ class WotapiAction extends AnnotationBase implements WotapiActionInterface {
    */
   public function getUsage() {
     $this->usage;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAtType() {
+   return $this->at_type;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTitle() {
+    return $this->title;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDescription() {
+    return $this->description;
   }
 
   /**
