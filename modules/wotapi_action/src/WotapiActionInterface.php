@@ -26,12 +26,4 @@ interface WotapiActionInterface extends AccessibleInterface, PluginDefinitionInt
    */
   public function getUsage();
 
-  /**
-   * Whether the parameters are by-position.
-   *
-   * @return bool
-   *   True if the parameters are positional.
-   */
-  public function areParamsPositional();
-
 }

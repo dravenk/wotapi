@@ -70,15 +70,6 @@ class WotapiAction extends AnnotationBase implements WotapiActionInterface {
   /**
    * {@inheritdoc}
    */
-  public function areParamsPositional() {
-    return array_reduce(array_keys($this->getParams()), function ($positional, $key) {
-      return $positional ? !is_string($key) : $positional;
-    }, TRUE);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function get() {
     return $this;
   }
