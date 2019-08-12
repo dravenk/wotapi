@@ -72,8 +72,7 @@ class AnnotationNormalizer extends NormalizerBase {
       $this->addCacheableDependency($context, $self);
       $this->addCacheableDependency($context, $collection);
       $normalized['links'] = [
-        'self' => $self->getGeneratedUrl(),
-        'collection' => $collection->getGeneratedUrl(),
+        'href' => $self->getGeneratedUrl(),
       ];
     }
     if ($object instanceof WotapiActionParameterDefinition) {

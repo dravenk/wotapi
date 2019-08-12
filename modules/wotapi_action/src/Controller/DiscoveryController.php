@@ -57,14 +57,7 @@ class DiscoveryController extends ControllerBase {
    */
   public function actions() {
     $cacheability = new CacheableMetadata();
-    $self = Url::fromRoute('wotapi_action.action_collection')->setAbsolute()->toString(TRUE);
-    $cacheability->addCacheableDependency($self);
-    $methods = [
-      'data' => array_values($this->getAvailableActions($cacheability)),
-      'links' => [
-        'self' => $self->getGeneratedUrl(),
-      ],
-    ];
+    $methods =  array_values($this->getAvailableActions($cacheability));
     $serialized = $this->serializer->serialize($methods, 'json', [
       AnnotationNormalizer::DEPTH_KEY => 0,
       NormalizerBase::SERIALIZATION_CONTEXT_CACHEABILITY => $cacheability,
