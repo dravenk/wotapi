@@ -2,13 +2,10 @@
 
 namespace Drupal\wotapi_action\Plugin;
 
-use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\wotapi_action\Annotation\WotapiAction;
-use Drupal\wotapi_action\WotapiActionInterface;
-use Drupal\wotapi_action\ParameterFactoryInterface;
 
 /**
  * Provides the WotapiAction plugin plugin manager.
@@ -38,35 +35,6 @@ class WotapiActionManager extends DefaultPluginManager {
    * {@inheritdoc}
    */
   public function alterDefinitions(&$definitions) {
-    /* @var \Drupal\wotapi_action\Annotation\WotapiAction $method */
-    foreach ($definitions as &$method) {
-      $this->assertValidJsonRpcMethodPlugin($method);
-      if (isset($method->params)) {
-        foreach ($method->params as $key => &$param) {
-          $param->setId($key);
-        }
-      }
-    }
     parent::alterDefinitions($definitions);
   }
-
-  /**
-   * Asserts that the plugin class is valid.
-   *
-   * @param \Drupal\wotapi_action\WotapiActionInterface $method
-   *   The JSON-RPC method definition.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   */
-  protected function assertValidJsonRpcMethodPlugin(WotapiActionInterface $method) {
-    foreach ($method->params as $param) {
-      if (!$param->factory && !$param->schema) {
-        throw new InvalidPluginDefinitionException($method->id(), "Every JsonRpcParameterDefinition must define either a factory or a schema.");
-      }
-      if ($param->factory && !is_subclass_of($param->factory, ParameterFactoryInterface::class)) {
-        throw new InvalidPluginDefinitionException($method->id(), "Parameter factories must implement ParameterFactoryInterface.");
-      }
-    }
-  }
-
 }
