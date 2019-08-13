@@ -78,6 +78,7 @@ class DiscoveryController extends ControllerBase {
       throw new CacheableNotFoundHttpException($cacheability, "The $action_id action is not available.");
     }
     $serialized = $this->serializer->serialize($methods[$action_id], 'json', [
+      AnnotationNormalizer::DEPTH_KEY => 0,
       NormalizerBase::SERIALIZATION_CONTEXT_CACHEABILITY => $cacheability,
     ]);
     return CacheableJsonResponse::fromJsonString($serialized)->addCacheableDependency($cacheability);

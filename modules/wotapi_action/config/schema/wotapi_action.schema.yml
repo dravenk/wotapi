@@ -1,0 +1,7 @@
+field.field_settings.wotapi_action:
+  type: mapping
+  label: 'Thing action settings'
+  mapping:
+    action:
+      type: string
+      label: 'Action'
