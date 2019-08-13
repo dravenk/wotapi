@@ -2,14 +2,20 @@
 
 namespace Drupal\wotapi\Normalizer;
 
+use Drupal\Component\Annotation\AnnotationInterface;
+use Drupal\Component\Assertion\Inspector;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Http\Exception\CacheableNotFoundHttpException;
 use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\wotapi\Routing\Routes;
 use Drupal\wotapi\WotApiResource\ResourceObject;
 use Drupal\wotapi\Normalizer\Value\CacheableNormalization;
 use Drupal\wotapi\Normalizer\Value\CacheableOmission;
+use Drupal\wotapi_action\Normalizer\AnnotationNormalizer;
+use Drupal\wotapi_action\Plugin\Field\FieldType\WotapiActionItem;
+use phpDocumentor\Reflection\Types\Boolean;
 
 /**
  * Converts the WOT:API module ResourceObject into a WOT:API array structure.
@@ -19,6 +25,8 @@ use Drupal\wotapi\Normalizer\Value\CacheableOmission;
  *
  */
 class ResourceObjectNormalizer extends NormalizerBase {
+
+  const DEPTH_KEY = __CLASS__ . '_depth';
 
   /**
    * {@inheritdoc}
@@ -69,14 +77,26 @@ class ResourceObjectNormalizer extends NormalizerBase {
     }
 
     $normalizer_values = [];
+    $normalizer_actions = [];
     foreach ($fields as $field_name => $field) {
       $in_sparse_fieldset = in_array($field_name, $field_names);
       // Omit fields not listed in sparse fieldsets.
       if (!$in_sparse_fieldset) {
         continue;
       }
-      $normalizer_values[$field_name] = $this->serializeField($field, $context, $format);
+
+      if ($this->isActionField($field_name,$field)) {
+          foreach ($field->getValue() as $key => $value) {
+            $action_id = array_values($value)[0];
+            $action = \Drupal::service('wotapi_action.handler')->getAction($action_id);
+            $normalizer_actions += $this->normalizeAction($action, $format,$context) ;
+          }
+          unset($fields,$field_name);
+      } else {
+        $normalizer_values[$field_name] = $this->serializeField($field, $context, $format);
+      }
     }
+
 
     $id = \Drupal::request()->getSchemeAndHttpHost() . Url::fromRoute(Routes::getRouteName($resource_type, 'individual'), ['entity' => $object->getId()])->toString();
     $normalization = [
@@ -101,14 +121,75 @@ class ResourceObjectNormalizer extends NormalizerBase {
     $properties_key = array_intersect_key($normalizer_values, array_flip($properties_names));
     if(count($properties_key)>0) {
       $normalization['properties'] = CacheableNormalization::aggregate($properties_key);
-      $normalization['links'] = CacheableNormalization::permanent(['rel' => 'properties','href' => $id.'/properties']);
     }
 
+    if(!is_null($normalizer_actions)) {
+      $normalization['actions'] = CacheableNormalization::permanent($normalizer_actions);
+    }
+
+    $links = [];
+    foreach (['properties','actions','events'] as $link_rel) {
+      $links[] = ['rel' => $link_rel,'href' => $id.'/'.$link_rel];
+    }
+    $normalization['links'] = CacheableNormalization::permanent($links);
 
     $obj = CacheableNormalization::aggregate($normalization)->withCacheableDependency($object);
     return $obj;
   }
 
+
+  function isActionField($field_name,$field) {
+    if ($field->getFieldDefinition()->getType() == 'wotapi_action') {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function normalizeAction($object, $format = NULL, array $context = []) {
+    $attributes = [];
+    foreach ($object as $key => $value) {
+      switch ($key) {
+        case 'id':
+        case 'call':
+        case 'access':
+          break;
+
+        default:
+          $child = $value instanceof AnnotationInterface ? $value->get() : $value;
+          if (isset($context[static::DEPTH_KEY]) && $child instanceof AnnotationInterface || (is_array($child)) && Inspector::assertAllObjects($child, AnnotationInterface::class)) {
+            if ($context[static::DEPTH_KEY] === 0) {
+              break;
+            }
+            $context[static::DEPTH_KEY] -= 1;
+          }
+          $attributes[$key] = $this->serializer->normalize($child, $format, $context);
+      }
+    }
+    //    $normalized = [
+    //      'type' => static::getAnnotationType($object),
+    //      'id' => $object->getId(),
+    //    ];
+    $normalized = [];
+    $at_type = $object->getAtType();
+    if (!is_null($at_type)) {
+      $normalized['@type'] = $at_type;
+    }
+
+    $normalized += $attributes;
+    unset($normalized['at_type']);
+
+    $action_input = call_user_func([$object->getClass(), 'input']);
+    if (!is_null($action_input)){
+      $normalized['input'] = $action_input;
+    }
+
+    $action[$object->getId()] = $normalized;
+
+    return $action;
+  }
 
   /**
    * Serializes a given field.
