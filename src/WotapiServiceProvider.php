@@ -27,6 +27,8 @@ class WotapiServiceProvider implements ServiceModifierInterface, ServiceProvider
         ->addMethodCall('registerFormat', [
           'api_json',
           ['application/vnd.api+json'],
+          ['application/json'],
+          ['application/td+json'],
         ]);
     }
   }
