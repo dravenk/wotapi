@@ -3,7 +3,10 @@
 namespace Drupal\wotapi\Controller;
 
 use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Component\Serialization\Json;
+use Drupal\Core\Cache\CacheableJsonResponse;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
@@ -22,6 +25,7 @@ use Drupal\wotapi\Context\FieldResolver;
 use Drupal\wotapi\Entity\EntityValidationTrait;
 use Drupal\wotapi\Exception\EntityAccessDeniedHttpException;
 use Drupal\wotapi\Normalizer\PropertiesFieldNormalizer;
+use Drupal\wotapi\Normalizer\ResourceObjectNormalizer;
 use Drupal\wotapi\Normalizer\Value\CacheableNormalization;
 use Drupal\wotapi\WotApiResource\LinkCollection;
 use Drupal\wotapi\WotApiResource\ResourceIdentifier;
@@ -34,7 +38,9 @@ use Drupal\wotapi\ResourceResponse;
 use Drupal\wotapi\ResourceType\ResourceType;
 use Drupal\wotapi\ResourceType\ResourceTypeRepositoryInterface;
 use Drupal\wotapi_property\Entity\Property;
+use phpDocumentor\Reflection\Types\Null_;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Drupal\Core\Http\Exception\CacheableBadRequestHttpException;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -332,6 +338,61 @@ class EntityResource {
     $response = $this->buildWrappedResponse($primary_data, $request);
     // $response does not contain the entity list cache tag. We add the
     // cacheable metadata for the finite list of entities in the relationship.
+    $response->addCacheableDependency($entity);
+    return $response;
+  }
+
+  /**
+   * Gets the relationship of an entity.
+   *
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
+   *   The requested entity.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   *
+   * @return \Drupal\wotapi\ResourceResponse
+   *   The response.
+   */
+  public function getThingActions(FieldableEntityInterface $entity, Request $request) {
+    $resource_object = $this->entityAccessChecker->getAccessCheckedResourceObject($entity);
+    if ($resource_object instanceof EntityAccessDeniedHttpException) {
+      throw $resource_object;
+    }
+    $collection_data = [];
+    $fields = $resource_object->getFields();
+    foreach ($fields as $field_name => $field) {
+      if ($field->getFieldDefinition()->getType() == 'wotapi_action') {
+        foreach ($field->getValue() as $key => $value) {
+          $action_id = array_values($value)[0];
+          $action = \Drupal::service('wotapi_action.handler')->getAction($action_id);
+          $collection_data[] =  $action;
+        }
+      }
+    }
+    $primary_data = new ResourceObjectData($collection_data);
+    $response = $this->buildWrappedResponse($primary_data, $request);
+    // $response does not contain the entity list cache tag. We add the
+    // cacheable metadata for the finite list of entities in the relationship.
+    $response->addCacheableDependency($entity);
+    return $response;
+  }
+
+
+
+  /**
+   * Gets the relationship of an entity.
+   *
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
+   *   The requested entity.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   *
+   * @return \Drupal\wotapi\ResourceResponse
+   *   The response.
+   */
+  public function postThingActions(FieldableEntityInterface $entity, Request $request) {
+    $content = Json::decode($request->getContent(FALSE));
+    $response = $this->buildWrappedResponse($entity, $request);
     $response->addCacheableDependency($entity);
     return $response;
   }

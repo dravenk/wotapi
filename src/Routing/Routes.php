@@ -114,7 +114,7 @@ class Routes implements ContainerInjectionInterface {
 
     // Require the WOT:API media type header on every route, except on file
     // upload routes, where we require `application/octet-stream`.
-    $routes->addRequirements(['_content_type_format' => 'api_json']);
+//    $routes->addRequirements(['_content_type_format' => 'api_json']);
 
     // Enable all available authentication providers.
     $routes->addOptions(['_auth' => $this->providerIds]);
@@ -235,6 +235,18 @@ class Routes implements ContainerInjectionInterface {
     $properties_route->addDefaults([RouteObjectInterface::CONTROLLER_NAME => static::CONTROLLER_SERVICE_NAME . ':getThingProperties']);
     $properties_route->setRequirement('_access', 'TRUE');
     $routes->add(static::getRouteName($resource_type, "properties"), $properties_route);
+
+    $actions_route = new Route("/{$path}/{entity}/actions");
+    $actions_route->setMethods(['GET']);
+    $actions_route->addDefaults([RouteObjectInterface::CONTROLLER_NAME => static::CONTROLLER_SERVICE_NAME . ':getThingActions']);
+    $actions_route->setRequirement('_access', 'TRUE');
+    $routes->add(static::getRouteName($resource_type, "actions"), $actions_route);
+
+    $actions_post_route = clone $actions_route;;
+    $actions_post_route->setMethods(['POST']);
+    $actions_post_route->addDefaults([RouteObjectInterface::CONTROLLER_NAME => static::CONTROLLER_SERVICE_NAME . ':postThingActions']);
+    $routes->add(static::getRouteName($resource_type, "actions.post"), $actions_post_route);
+
 
     // Add entity parameter conversion to every route.
     $routes->addOptions(['parameters' => ['entity' => ['type' => 'entity:' . $entity_type_id]]]);

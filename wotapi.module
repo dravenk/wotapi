@@ -84,25 +84,6 @@ function wotapi_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.wotapi':
       $output = '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The WOT:API module is a fully compliant implementation of the <a href=":spec">WOT:API Specification</a>. By following shared conventions, you can increase productivity, take advantage of generalized tooling, and focus on what matters: your application. Clients built around WOT:API are able to take advantage of features like efficient response caching, which can sometimes eliminate network requests entirely. For more information, see the <a href=":docs">online documentation for the WOT:API module</a>.', [
-        ':spec' => 'https://wotapi.org',
-        ':docs' => 'https://www.drupal.org/docs/8/modules/json-api',
-      ]) . '</p>';
-      $output .= '<dl>';
-      $output .= '<dt>' . t('General') . '</dt>';
-      $output .= '<dd>' . t('WOT:API is a particular implementation of REST that provides conventions for resource properties, collections, filters, pagination, and sorting. These conventions help developers build clients faster and encourages reuse of code.') . '</dd>';
-      $output .= '<dd>' . t('The <a href=":wotapi-docs">WOT:API</a> and <a href=":rest-docs">RESTful Web Services</a> modules serve similar purposes. <a href=":comparison">Read the comparison of the RESTFul Web Services and WOT:API modules</a> to determine the best choice for your site.', [
-        ':wotapi-docs' => 'https://www.drupal.org/docs/8/modules/json-api',
-        ':rest-docs' => 'https://www.drupal.org/docs/8/core/modules/rest',
-        ':comparison' => 'https://www.drupal.org/docs/8/modules/wotapi/wotapi-vs-cores-rest-module',
-      ]) . '</dd>';
-      $output .= '<dd>' . t('Some multilingual features currently do not work well with WOT:API. See the <a href=":wotapi-docs">WOT:API multilingual support documentation</a> for more information on the current status of multilingual support.', [
-        ':wotapi-docs' => 'https://www.drupal.org/docs/8/modules/wotapi/translations',
-      ]) . '</dd>';
-      $output .= '<dd>' . t('Revision support is currently read-only and only for the "Content" and "Media" entity types in WOT:API. See the <a href=":wotapi-docs">WOT:API revision support documentation</a> for more information on the current status of revision support.', [
-        ':wotapi-docs' => 'https://www.drupal.org/docs/8/modules/wotapi/revisions',
-      ]) . '</dd>';
-      $output .= '</dl>';
 
       return $output;
   }

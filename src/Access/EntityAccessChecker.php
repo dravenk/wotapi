@@ -15,8 +15,6 @@ use Drupal\wotapi\WotApiResource\LabelOnlyResourceObject;
 use Drupal\wotapi\WotApiResource\ResourceObject;
 use Drupal\wotapi\WotApiSpec;
 use Drupal\wotapi\ResourceType\ResourceTypeRepositoryInterface;
-use Drupal\media\Access\MediaRevisionAccessCheck;
-use Drupal\media\MediaInterface;
 use Drupal\node\Access\NodeRevisionAccessCheck;
 use Drupal\node\NodeInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -72,15 +70,6 @@ class EntityAccessChecker {
   protected $nodeRevisionAccessCheck = NULL;
 
   /**
-   * The media revision access check service.
-   *
-   * This will be NULL unless the media module is installed.
-   *
-   * @var \Drupal\media\Access\MediaRevisionAccessCheck|null
-   */
-  protected $mediaRevisionAccessCheck = NULL;
-
-  /**
    * The latest revision check service.
    *
    * This will be NULL unless the content_moderation module is installed. This
@@ -122,17 +111,6 @@ class EntityAccessChecker {
     $this->nodeRevisionAccessCheck = $node_revision_access_check;
   }
 
-  /**
-   * Sets the media revision access check service.
-   *
-   * This is only called when media module is installed.
-   *
-   * @param \Drupal\media\Access\MediaRevisionAccessCheck $media_revision_access_check
-   *   The media revision access check service.
-   */
-  public function setMediaRevisionAccessCheck(MediaRevisionAccessCheck $media_revision_access_check) {
-    $this->mediaRevisionAccessCheck = $media_revision_access_check;
-  }
 
   /**
    * Sets the media revision access check service.
@@ -246,11 +224,6 @@ class EntityAccessChecker {
       case 'node':
         assert($entity instanceof NodeInterface);
         $access = AccessResult::allowedIf($this->nodeRevisionAccessCheck->checkAccess($entity, $account, 'view'))->cachePerPermissions()->addCacheableDependency($entity);
-        break;
-
-      case 'media':
-        assert($entity instanceof MediaInterface);
-        $access = AccessResult::allowedIf($this->mediaRevisionAccessCheck->checkAccess($entity, $account, 'view'))->cachePerPermissions()->addCacheableDependency($entity);
         break;
 
       default:
