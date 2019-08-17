@@ -18,13 +18,6 @@ use Drupal\wotapi_action\Object\Response;
 class Handler implements HandlerInterface {
 
   /**
-   * The support JSON-RPC version.
-   *
-   * @var string
-   */
-  const SUPPORTED_VERSION = '2.0';
-
-  /**
    * The JSON-RPC method plugin manager.
    *
    * @var \Drupal\Component\Plugin\PluginManagerInterface
@@ -39,13 +32,6 @@ class Handler implements HandlerInterface {
    */
   public function __construct(PluginManagerInterface $method_manager) {
     $this->methodManager = $method_manager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function supportedVersion() {
-    return static::SUPPORTED_VERSION;
   }
 
   /**
@@ -112,7 +98,7 @@ class Handler implements HandlerInterface {
       }
       $rpc_response = $result instanceof Response
         ? $result
-        : new Response(static::SUPPORTED_VERSION, $request->id(), $result);
+        : new Response($request->id(), $result);
       $methodPluginClass = $this->getAction($request->getAction())->getClass();
       $result_schema = call_user_func([$methodPluginClass, 'outputSchema']);
       $rpc_response->setResultSchema($result_schema);
@@ -141,16 +127,16 @@ class Handler implements HandlerInterface {
    * @throws \Drupal\wotapi_action\Exception\WotapiActionException
    */
   protected function doExecution(Request $request) {
-    if ($method = $this->getAction($request->getAction())) {
-      $this->checkAccess($method);
+    if ($action = $this->getAction($request->getAction())) {
+      $this->checkAccess($action);
       $configuration = [HandlerInterface::JSONRPC_REQUEST_KEY => $request];
-      $executable = $this->getExecutable($method, $configuration);
+      $executable = $this->getExecutable($action, $configuration);
       return $request->hasParams()
         ? $executable->execute(NULL)
         : $executable->execute(new ParameterBag([]));
     }
     else {
-      throw WotapiActionException::fromError(Error::methodNotFound($method->id()));
+      throw WotapiActionException::fromError(Error::methodNotFound($action->id()));
     }
   }
 

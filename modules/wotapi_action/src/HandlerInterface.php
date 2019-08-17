@@ -71,12 +71,4 @@ interface HandlerInterface {
    */
   public function supportsAction($name);
 
-  /**
-   * The supported JSON-RPC version.
-   *
-   * @return string
-   *   The version.
-   */
-  public static function supportedVersion();
-
 }

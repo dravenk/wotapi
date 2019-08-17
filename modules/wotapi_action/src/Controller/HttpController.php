@@ -90,8 +90,8 @@ class HttpController extends ControllerBase {
       }
 
       // Map the RPC response(s) to an HTTP response.
-      $is_batched_response = count($rpc_requests) !== 1 || $rpc_requests[0]->isInBatch();
-      return $this->getHttpResponse($rpc_responses, $is_batched_response);
+//      $is_batched_response = count($rpc_requests) !== 1 || $rpc_requests[0]->isInBatch();
+      return $this->getHttpResponse($rpc_responses, TRUE);
     }
     catch (WotapiActionException $e) {
       return $this->exceptionResponse($e, Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -111,7 +111,6 @@ class HttpController extends ControllerBase {
    *   When there was an error handling the response.
    */
   protected function getRpcRequests(Request $http_request) {
-    $version = $this->handler->supportedVersion();
     try {
       if ($http_request->getMethod() === Request::METHOD_POST) {
         $content = Json::decode($http_request->getContent(FALSE));
@@ -120,14 +119,14 @@ class HttpController extends ControllerBase {
         $content = Json::decode($http_request->query->get('query'));
       }
       $context = new Context([
-        RpcRequestFactory::REQUEST_VERSION_KEY => $version,
+        'jsonrpc_request_version' => '2.0',
       ]);
       $factory = new RpcRequestFactory($this->handler, $this->container, $this->validator);
       return $factory->transform($content, $context);
     }
     catch (\Exception $e) {
       $id = (isset($content) && is_object($content) && isset($content->id)) ? $content->id : FALSE;
-      throw WotapiActionException::fromPrevious($e, $id, $version);
+      throw WotapiActionException::fromPrevious($e, $id);
     }
   }
 
@@ -178,7 +177,7 @@ class HttpController extends ControllerBase {
       }, $http_response);
     }
     catch (\Exception $e) {
-      throw WotapiActionException::fromPrevious($e, FALSE, $this->handler->supportedVersion());
+      throw WotapiActionException::fromPrevious($e, FALSE);
     }
   }
 
@@ -194,14 +193,12 @@ class HttpController extends ControllerBase {
    *   The serialized JSON-RPC response body.
    */
   protected function serializeRpcResponse(array $rpc_responses, $is_batched_response) {
-    $context = new Context([
-      RpcRequestFactory::REQUEST_IS_BATCH_REQUEST => $is_batched_response,
-    ]);
     // This following is needed to prevent the serializer from using array
     // indices as JSON object keys like {"0": "foo", "1": "bar"}.
     $data = array_values($rpc_responses);
-    $normalizer = $this->validator;
-    return Json::encode($normalizer->transform($data, $context));
+//    $normalizer = $this->validator;
+//    return Json::encode($normalizer->transform($data, $context));
+    return Json::encode($data);
   }
 
   /**

@@ -54,20 +54,18 @@ class WotapiActionException extends \Exception implements CacheableDependencyInt
    *   An arbitrary exception.
    * @param mixed $id
    *   The request ID, if available.
-   * @param string $version
-   *   (optional) The JSON-RPC version.
    *
    * @return static
    */
-  public static function fromPrevious($previous, $id = FALSE, $version = NULL) {
+  public static function fromPrevious($previous, $id = FALSE) {
     if ($previous instanceof WotapiActionException) {
       // Ensures that the ID and version context information are set because it
       // might not have been set or accessible at a lower level.
       $response = $previous->getResponse();
-      return static::fromError($response->getError(), $response->id() ?: $id, $response->version());
+      return static::fromError($response->getError(), $response->id() ?: $id);
     }
     $error = Error::internalError($previous->getMessage());
-    $response = static::buildResponse($error, $id, $version);
+    $response = static::buildResponse($error, $id);
     return new static($response, $previous);
   }
 
@@ -78,13 +76,11 @@ class WotapiActionException extends \Exception implements CacheableDependencyInt
    *   The error which caused the exception.
    * @param mixed $id
    *   The request ID, if available.
-   * @param string $version
-   *   (optional) The JSON-RPC version.
    *
    * @return static
    */
-  public static function fromError(Error $error, $id = FALSE, $version = NULL) {
-    return new static(static::buildResponse($error, $id, $version));
+  public static function fromError(Error $error, $id = FALSE) {
+    return new static(static::buildResponse($error, $id));
   }
 
   /**
@@ -94,15 +90,12 @@ class WotapiActionException extends \Exception implements CacheableDependencyInt
    *   The error object.
    * @param mixed $id
    *   The request ID.
-   * @param string $version
-   *   The information version.
    *
    * @return \Drupal\wotapi_action\Object\Response
    *   The RPC response object.
    */
-  protected static function buildResponse(Error $error, $id = FALSE, $version = NULL) {
-    $supported_version = $version ?: \Drupal::service('wotapi_action.handler')->supportedVersion();
-    return new Response($supported_version, $id ? $id : NULL, NULL, $error);
+  protected static function buildResponse(Error $error, $id = FALSE) {
+    return new Response($id ? $id : NULL, NULL, $error);
   }
 
 }

@@ -13,13 +13,6 @@ class Response implements CacheableDependencyInterface {
   use RefinableCacheableDependencyTrait;
 
   /**
-   * The JSON-RPC version.
-   *
-   * @var string
-   */
-  protected $version;
-
-  /**
    * A string, number or NULL ID.
    *
    * @var mixed
@@ -50,8 +43,6 @@ class Response implements CacheableDependencyInterface {
   /**
    * Response constructor.
    *
-   * @param string $version
-   *   The JSON-RPC version.
    * @param mixed $id
    *   The response ID. Must match the ID of the generating request.
    * @param mixed $result
@@ -60,9 +51,8 @@ class Response implements CacheableDependencyInterface {
    *   An error object if the response resulted in an error. Must not be
    *   provided if a result was provided.
    */
-  public function __construct($version, $id, $result = NULL, Error $error = NULL) {
-    $this->assertValidResponse($version, $id, $result, $error);
-    $this->version = $version;
+  public function __construct($id, $result = NULL, Error $error = NULL) {
+    $this->assertValidResponse( $id, $result, $error);
     $this->id = $id;
     if (!is_null($result)) {
       $this->result = $result;
@@ -81,16 +71,6 @@ class Response implements CacheableDependencyInterface {
    */
   public function id() {
     return $this->id;
-  }
-
-  /**
-   * Gets the version.
-   *
-   * @return string
-   *   The version.
-   */
-  public function version() {
-    return $this->version;
   }
 
   /**
@@ -136,9 +116,8 @@ class Response implements CacheableDependencyInterface {
   /**
    * Asserts that the response is valid.
    */
-  protected function assertValidResponse($version, $id, $result, $error) {
+  protected function assertValidResponse( $id, $result, $error) {
     assert(!is_null($result) xor !is_null($error), 'Either the result member or error member MUST be included, but both members MUST NOT be included.');
-    assert($version === "2.0", 'A String specifying the version of the JSON-RPC protocol. MUST be exactly "2.0".');
     assert(is_string($id) || is_numeric($id) || is_null($id), 'An identifier established by the Client that MUST contain a String, Number, or NULL value if included.');
   }
 

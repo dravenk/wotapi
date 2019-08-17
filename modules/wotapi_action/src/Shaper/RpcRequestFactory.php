@@ -23,8 +23,6 @@ class RpcRequestFactory extends TransformationBase {
 
   const REQUEST_ID_KEY = 'jsonrpc_request_id';
 
-  const REQUEST_VERSION_KEY = 'jsonrpc_request_version';
-
   const REQUEST_IS_BATCH_REQUEST = 'jsonrpc_request_is_batch_request';
 
   /**
@@ -60,6 +58,16 @@ class RpcRequestFactory extends TransformationBase {
   /**
    * {@inheritdoc}
    */
+  public function transform($data, Context $context = NULL) {
+    if (!isset($context)) {
+      $context = new Context();
+    }
+    return $this->doTransform($data, $context);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getInputValidator() {
     $schema = Json::decode(file_get_contents(__DIR__ . '/request-schema.json'));
     return new JsonSchemaValidator($schema, $this->validator, Constraint::CHECK_MODE_TYPE_CAST);
@@ -78,9 +86,9 @@ class RpcRequestFactory extends TransformationBase {
    * @throws \Drupal\wotapi_action\Exception\WotapiActionException
    */
   protected function doTransform($data, Context $context) {
-    $context[static::REQUEST_IS_BATCH_REQUEST] = $this->isBatchRequest($data);
-    // Treat everything as a batch of requests for uniformity.
-    $data = $this->isBatchRequest($data) ? $data : [$data];
+//    $context[static::REQUEST_IS_BATCH_REQUEST] = $this->isBatchRequest($data);
+//    // Treat everything as a batch of requests for uniformity.
+//    $data = $this->isBatchRequest($data) ? $data : [$data];
     return array_map(function ($item) use ($context) {
       return $this->denormalizeRequest($item, $context);
     }, $data);
@@ -102,9 +110,8 @@ class RpcRequestFactory extends TransformationBase {
   protected function denormalizeRequest($data, Context $context) {
     $id = isset($data['id']) ? $data['id'] : FALSE;
     $context[static::REQUEST_ID_KEY] = $id;
-    $context[static::REQUEST_VERSION_KEY] = $this->handler->supportedVersion();
     $batch = $context[static::REQUEST_IS_BATCH_REQUEST];
-    return new Request($data['wotapi_action'], $data['action'], $batch, $id, NULL);
+    return new Request($data['action'], $batch, $id, NULL);
   }
 
   /**
@@ -123,14 +130,16 @@ class RpcRequestFactory extends TransformationBase {
     if (isset($data['wotapi_action'])) {
       return FALSE;
     }
-    $supported_version = $this->handler->supportedVersion();
-    $filter = function ($version) use ($supported_version) {
-      return $version === $supported_version;
-    };
+//    $supported_version = $this->handler->supportedVersion();
+//    $filter = function ($version) use ($supported_version) {
+//      return $version === $supported_version;
+//    };
+    $filter = TRUE;
     if (count(array_filter(array_column($data, 'wotapi_action'), $filter)) === count($data)) {
       return TRUE;
     }
-    throw WotapiActionException::fromError(Error::invalidRequest("Every request must include a 'wotapi_action' member with a value of $supported_version."));
+    throw WotapiActionException::fromError(Error::invalidRequest("Every request must include a 'wotapi_action' member with a value of versiono."));
+//    return TRUE;
   }
 
   /**
@@ -145,7 +154,7 @@ class RpcRequestFactory extends TransformationBase {
    *   The new exception object.
    */
   protected function newException(Error $error, Context $context) {
-    return WotapiActionException::fromError($error, $context[static::REQUEST_ID_KEY], $context[static::REQUEST_VERSION_KEY]);
+    return WotapiActionException::fromError($error, $context[static::REQUEST_ID_KEY]);
   }
 
 }

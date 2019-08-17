@@ -2,6 +2,7 @@
 
 namespace Drupal\wotapi\Controller;
 
+use Drupal\action_example\Plugin\wotapi_action\Action\FadeAction;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\CacheableJsonResponse;

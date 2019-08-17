@@ -8,18 +8,11 @@ namespace Drupal\wotapi_action\Object;
 class Request {
 
   /**
-   * The JSON-RPC version.
+   * The  action id.
    *
    * @var string
    */
-  protected $version;
-
-  /**
-   * The RPC service method id.
-   *
-   * @var string
-   */
-  protected $method;
+  protected $acton;
 
   /**
    * The request parameters, if any.
@@ -44,10 +37,7 @@ class Request {
 
   /**
    * Request constructor.
-   *
-   * @param string $version
-   *   The JSON-RPC version.
-   * @param string $method
+   * @param string $acton
    *   The RPC service method id.
    * @param bool $in_batch
    *   Indicates if the request is part of a batch or not.
@@ -56,10 +46,9 @@ class Request {
    * @param \Drupal\wotapi_action\Object\ParameterBag|null $params
    *   The request parameters, if any.
    */
-  public function __construct($version, $method, $in_batch = FALSE, $id = FALSE, ParameterBag $params = NULL) {
-    $this->assertValidRequest($version, $method, $id);
-    $this->version = $version;
-    $this->method = $method;
+  public function __construct($acton, $in_batch = FALSE, $id = FALSE, ParameterBag $params = NULL) {
+    $this->assertValidRequest( $acton, $id);
+    $this->acton = $acton;
     $this->inBatch = $in_batch;
     $this->params = $params;
     $this->id = $id;
@@ -76,13 +65,13 @@ class Request {
   }
 
   /**
-   * Gets the method's name.
+   * Gets the action's name.
    *
    * @return string
    *   The name of the method to execute.
    */
-  public function getMethod() {
-    return $this->method;
+  public function getAction() {
+    return $this->acton;
   }
 
   /**
@@ -134,16 +123,13 @@ class Request {
   /**
    * Asserts this is a valid request.
    *
-   * @param string $version
-   *   The JSON-RPC version.
-   * @param string $method
-   *   The RPC service method id.
+   * @param string $acton
+   *   The RPC service action id.
    * @param mixed|false $id
    *   A string, number or NULL ID. FALSE for notification requests.
    */
-  protected function assertValidRequest($version, $method, $id) {
-    assert($version === "2.0", 'A String specifying the version of the JSON-RPC protocol. MUST be exactly "2.0".');
-    assert(strpos($method, 'rpc.') !== 0, 'Method names that begin with the word rpc followed by a period character (U+002E or ASCII 46) are reserved for rpc-internal methods and extensions and MUST NOT be used for anything else.');
+  protected function assertValidRequest($acton, $id) {
+    assert(strpos($acton, 'rpc.') !== 0, 'Method names that begin with the word rpc followed by a period character (U+002E or ASCII 46) are reserved for rpc-internal methods and extensions and MUST NOT be used for anything else.');
     assert($id === FALSE || is_string($id) || is_numeric($id) || is_null($id), 'An identifier established by the Client that MUST contain a String, Number, or NULL value if included.');
   }
 
