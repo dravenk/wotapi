@@ -111,7 +111,8 @@ class RpcRequestFactory extends TransformationBase {
     $id = isset($data['id']) ? $data['id'] : FALSE;
     $context[static::REQUEST_ID_KEY] = $id;
     $batch = $context[static::REQUEST_IS_BATCH_REQUEST];
-    return new Request($data['action'], $batch, $id, NULL);
+//    return new Request($data['action'], $batch, $id, NULL);
+    return new Request($data, $batch, $id, NULL);
   }
 
   /**

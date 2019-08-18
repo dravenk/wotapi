@@ -47,7 +47,7 @@ class Request {
    *   The request parameters, if any.
    */
   public function __construct($acton, $in_batch = FALSE, $id = FALSE, ParameterBag $params = NULL) {
-    $this->assertValidRequest( $acton, $id);
+//    $this->assertValidRequest( $acton, $id);
     $this->acton = $acton;
     $this->inBatch = $in_batch;
     $this->params = $params;
@@ -66,6 +66,16 @@ class Request {
 
   /**
    * Gets the action's name.
+   *
+   * Action request like this:
+   * {
+   *  "fade": {
+   *    "input": {
+   *      "field.brightness": 50,
+   *      "duration": 2000
+   *    }
+   *  }
+   * }
    *
    * @return string
    *   The name of the method to execute.

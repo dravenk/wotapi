@@ -38,6 +38,11 @@ use Drupal\wotapi\WotApiResource\WotApiDocumentTopLevel;
 use Drupal\wotapi\ResourceResponse;
 use Drupal\wotapi\ResourceType\ResourceType;
 use Drupal\wotapi\ResourceType\ResourceTypeRepositoryInterface;
+use Drupal\wotapi_action\Controller\HttpController;
+use Drupal\wotapi_action\Exception\WotapiActionException;
+use Drupal\wotapi_action\HandlerInterface;
+use Drupal\wotapi_action\Object\Error;
+use Drupal\wotapi_action\Object\ParameterBag;
 use Drupal\wotapi_property\Entity\Property;
 use phpDocumentor\Reflection\Types\Null_;
 use Symfony\Component\HttpFoundation\Request;
@@ -393,6 +398,12 @@ class EntityResource {
    */
   public function postThingActions(FieldableEntityInterface $entity, Request $request) {
     $content = Json::decode($request->getContent(FALSE));
+    foreach ($content as $action_id => $value) {
+      $action_handler = \Drupal::service('wotapi_action.handler');
+      $action_request =  new \Drupal\wotapi_action\Object\Request($action_id, FALSE, FALSE, NULL);
+      $rpc_responses = $action_handler->batch([$action_request]);
+    }
+
     $response = $this->buildWrappedResponse($entity, $request);
     $response->addCacheableDependency($entity);
     return $response;

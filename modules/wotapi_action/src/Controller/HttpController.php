@@ -118,9 +118,7 @@ class HttpController extends ControllerBase {
       elseif ($http_request->getMethod() === Request::METHOD_GET) {
         $content = Json::decode($http_request->query->get('query'));
       }
-      $context = new Context([
-        'jsonrpc_request_version' => '2.0',
-      ]);
+      $context = new Context([]);
       $factory = new RpcRequestFactory($this->handler, $this->container, $this->validator);
       return $factory->transform($content, $context);
     }
