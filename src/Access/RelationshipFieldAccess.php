@@ -19,7 +19,6 @@ use Symfony\Component\Routing\Route;
  *
  * @internal WOT:API maintains no PHP API. The API is the HTTP API. This class
  *   may change at any time and could break any dependencies on it.
- *
  */
 class RelationshipFieldAccess implements AccessInterface {
 

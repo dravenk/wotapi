@@ -8,4 +8,3 @@ entity.wotapi_property_type.add_form:
   title: 'Add Property type'
   appears_on:
     - entity.wotapi_property_type.collection
-

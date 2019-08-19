@@ -17,6 +17,7 @@ use Drupal\Core\Field\FormatterBase;
  * )
  */
 class WotapiActionDefaultFormatter extends FormatterBase {
+
   /**
    * {@inheritdoc}
    */
@@ -39,4 +40,5 @@ class WotapiActionDefaultFormatter extends FormatterBase {
 
     return $element;
   }
+
 }

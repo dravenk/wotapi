@@ -54,6 +54,6 @@ class ResourceIdentifierNormalizer extends NormalizerBase implements Denormalize
   /**
    * {@inheritdoc}
    */
-  public function denormalize($data, $class, $format = null, array $context = []){}
+  public function denormalize($data, $class, $format = NULL, array $context = []){}
 
 }

@@ -37,6 +37,7 @@ class Request {
 
   /**
    * Request constructor.
+   *
    * @param string $acton
    *   The RPC service method id.
    * @param bool $in_batch
@@ -47,7 +48,7 @@ class Request {
    *   The request parameters, if any.
    */
   public function __construct($acton, $in_batch = FALSE, $id = FALSE, ParameterBag $params = NULL) {
-//    $this->assertValidRequest( $acton, $id);
+    // $this->assertValidRequest( $acton, $id);
     $this->acton = $acton;
     $this->inBatch = $in_batch;
     $this->params = $params;

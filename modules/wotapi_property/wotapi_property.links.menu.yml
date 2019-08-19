@@ -21,4 +21,3 @@ entity.wotapi_property_type.collection:
   description: 'List Property type (bundles)'
   parent: wotapi_property.admin.structure
   weight: 99
-

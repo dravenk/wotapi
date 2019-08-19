@@ -17,7 +17,6 @@ use Drupal\wotapi\WotApiResource\ResourceIdentifierTrait;
  *
  * @internal WOT:API maintains no PHP API. The API is the HTTP API. This class
  *   may change at any time and could break any dependencies on it.
- *
  */
 class EntityAccessDeniedHttpException extends CacheableAccessDeniedHttpException implements ResourceIdentifierInterface {
 

@@ -8,14 +8,11 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\FieldableEntityInterface;
-use Drupal\Core\Field\FieldItemList;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\TypedData\TypedDataInternalPropertiesHelper;
 use Drupal\Core\Url;
 use Drupal\wotapi\ResourceType\ResourceType;
 use Drupal\wotapi\Routing\Routes;
-use Drupal\wotapi_thing\Entity\Thing;
 
 /**
  * Represents a WOT:API resource object.
@@ -26,7 +23,6 @@ use Drupal\wotapi_thing\Entity\Thing;
  *
  * @internal WOT:API maintains no PHP API. The API is the HTTP API. This class
  *   may change at any time and could break any dependencies on it.
- *
  */
 class ResourceObject implements CacheableDependencyInterface, ResourceIdentifierInterface {
 
@@ -54,7 +50,7 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
   /**
    * The resource object's source field.
    *
-   * field_switch(source_field)
+   * Field_switch(source_field)
    *   - target:$this(OnOffProperty)
    *
    * @var \Drupal\Core\Field\FieldItemListInterface
@@ -161,13 +157,12 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
   /**
    * Gets the ResourceObject's thing.
    *
-   * @return \Drupal\Core\Field\FieldItemListInterface $source_field
+   * @return \Drupal\Core\Field\FieldItemListInterface
    *   The resource object's $source_field.
    */
   public function getSourceField() {
     return $this->source_field;
   }
-
 
   /**
    * Sets thing; useful for value object constructors.

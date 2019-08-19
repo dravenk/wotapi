@@ -51,8 +51,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 class PropertyType extends ConfigEntityBundleBase implements PropertyTypeInterface {
 
   /**
-   * https://w3c.github.io/wot-thing-description/#dataschema
-   *
+   * Https://w3c.github.io/wot-thing-description/#dataschema.
    */
 
 

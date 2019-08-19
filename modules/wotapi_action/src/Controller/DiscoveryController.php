@@ -55,7 +55,7 @@ class DiscoveryController extends ControllerBase {
    */
   public function actions() {
     $cacheability = new CacheableMetadata();
-    $methods =  array_values($this->getAvailableActions($cacheability));
+    $methods = array_values($this->getAvailableActions($cacheability));
     $serialized = $this->serializer->serialize($methods, 'json', [
       AnnotationNormalizer::DEPTH_KEY => 0,
       NormalizerBase::SERIALIZATION_CONTEXT_CACHEABILITY => $cacheability,

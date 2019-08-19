@@ -56,7 +56,7 @@ class ThingType extends ConfigEntityBundleBase implements ThingTypeInterface {
   protected $label;
 
   /**
-   * https://iot.mozilla.org/wot/#type-member
+   * Https://iot.mozilla.org/wot/#type-member.
    *
    * EXAMPLE 4: Example @type member
    * "@type": ["Light", "OnOffSwitch"]
@@ -64,4 +64,5 @@ class ThingType extends ConfigEntityBundleBase implements ThingTypeInterface {
    * @var array
    */
   protected $at_type;
+
 }

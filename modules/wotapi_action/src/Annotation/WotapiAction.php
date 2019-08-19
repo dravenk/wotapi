@@ -76,7 +76,7 @@ class WotapiAction extends AnnotationBase implements WotapiActionInterface {
    * {@inheritdoc}
    */
   public function getAtType() {
-   return $this->at_type;
+    return $this->at_type;
   }
 
   /**

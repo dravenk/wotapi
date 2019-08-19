@@ -90,7 +90,7 @@ class HttpController extends ControllerBase {
       }
 
       // Map the RPC response(s) to an HTTP response.
-//      $is_batched_response = count($rpc_requests) !== 1 || $rpc_requests[0]->isInBatch();
+      //      $is_batched_response = count($rpc_requests) !== 1 || $rpc_requests[0]->isInBatch();
       return $this->getHttpResponse($rpc_responses, TRUE);
     }
     catch (WotapiActionException $e) {
@@ -194,8 +194,8 @@ class HttpController extends ControllerBase {
     // This following is needed to prevent the serializer from using array
     // indices as JSON object keys like {"0": "foo", "1": "bar"}.
     $data = array_values($rpc_responses);
-//    $normalizer = $this->validator;
-//    return Json::encode($normalizer->transform($data, $context));
+    // $normalizer = $this->validator;
+    //    return Json::encode($normalizer->transform($data, $context));
     return Json::encode($data);
   }
 

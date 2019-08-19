@@ -9,7 +9,6 @@ use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
  *
  * @internal WOT:API maintains no PHP API. The API is the HTTP API. This class
  *   may change at any time and could break any dependencies on it.
- *
  */
 class WotApiDocumentTopLevel {
 
@@ -36,7 +35,7 @@ class WotApiDocumentTopLevel {
    * @param \Drupal\wotapi\WotApiResource\LinkCollection $links
    *   A collection of links to resources related to the top-level document.
    */
-  public function __construct($data,LinkCollection $links) {
+  public function __construct($data, LinkCollection $links) {
     assert($data instanceof ResourceIdentifierInterface || $data instanceof Data || $data instanceof ErrorCollection || $data instanceof EntityReferenceFieldItemListInterface);
     $this->data = $data instanceof ResourceObjectData ? $data->getAccessible() : $data;
     $this->links = $links->withContext($this);

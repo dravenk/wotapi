@@ -86,9 +86,9 @@ class RpcRequestFactory extends TransformationBase {
    * @throws \Drupal\wotapi_action\Exception\WotapiActionException
    */
   protected function doTransform($data, Context $context) {
-//    $context[static::REQUEST_IS_BATCH_REQUEST] = $this->isBatchRequest($data);
-//    // Treat everything as a batch of requests for uniformity.
-//    $data = $this->isBatchRequest($data) ? $data : [$data];
+    // $context[static::REQUEST_IS_BATCH_REQUEST] = $this->isBatchRequest($data);
+    //    // Treat everything as a batch of requests for uniformity.
+    //    $data = $this->isBatchRequest($data) ? $data : [$data];
     return array_map(function ($item) use ($context) {
       return $this->denormalizeRequest($item, $context);
     }, $data);
@@ -111,7 +111,7 @@ class RpcRequestFactory extends TransformationBase {
     $id = isset($data['id']) ? $data['id'] : FALSE;
     $context[static::REQUEST_ID_KEY] = $id;
     $batch = $context[static::REQUEST_IS_BATCH_REQUEST];
-//    return new Request($data['action'], $batch, $id, NULL);
+    // Return new Request($data['action'], $batch, $id, NULL);.
     return new Request($data, $batch, $id, NULL);
   }
 
@@ -131,16 +131,16 @@ class RpcRequestFactory extends TransformationBase {
     if (isset($data['wotapi_action'])) {
       return FALSE;
     }
-//    $supported_version = $this->handler->supportedVersion();
-//    $filter = function ($version) use ($supported_version) {
-//      return $version === $supported_version;
-//    };
+    // $supported_version = $this->handler->supportedVersion();
+    //    $filter = function ($version) use ($supported_version) {
+    //      return $version === $supported_version;
+    //    };
     $filter = TRUE;
     if (count(array_filter(array_column($data, 'wotapi_action'), $filter)) === count($data)) {
       return TRUE;
     }
     throw WotapiActionException::fromError(Error::invalidRequest("Every request must include a 'wotapi_action' member with a value of versiono."));
-//    return TRUE;
+    // Return TRUE;.
   }
 
   /**

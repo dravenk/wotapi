@@ -15,7 +15,6 @@ use Symfony\Component\HttpKernel\KernelEvents;
  *
  * @internal WOT:API maintains no PHP API. The API is the HTTP API. This class
  *   may change at any time and could break any dependencies on it.
- *
  */
 class WotApiRequestValidator implements EventSubscriberInterface {
 

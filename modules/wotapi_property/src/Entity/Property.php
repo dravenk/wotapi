@@ -128,4 +128,3 @@ class Property extends ContentEntityBase implements PropertyInterface {
   }
 
 }
-

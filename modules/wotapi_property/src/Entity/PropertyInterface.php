@@ -4,12 +4,13 @@ namespace Drupal\wotapi_property\Entity;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
+
 /**
  * Provides an interface for defining Property entities.
  *
  * @ingroup wotapi_property
  */
-interface PropertyInterface extends  ContentEntityInterface, EntityChangedInterface {
+interface PropertyInterface extends ContentEntityInterface, EntityChangedInterface {
 
   // Add get/set methods for your configuration properties here.
 
@@ -35,8 +36,8 @@ interface PropertyInterface extends  ContentEntityInterface, EntityChangedInterf
   /**
    * Gets the Property read_only value.
    *
-   * @return boolean
-   *  The Property read_only value.
+   * @return bool
+   *   The Property read_only value.
    */
   public function isReadOnly();
 

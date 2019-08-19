@@ -2,6 +2,7 @@
 
 namespace Drupal\wotapi\Controller;
 
+use Drupal\wotapi_action\Object\Request;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\CacheableMetadata;
@@ -39,7 +40,6 @@ use Symfony\Component\Serializer\SerializerInterface;
  *
  * @internal WOT:API maintains no PHP API. The API is the HTTP API. This class
  *   may change at any time and could break any dependencies on it.
- *
  */
 class EntityResource {
 
@@ -313,7 +313,7 @@ class EntityResource {
     $fields = $resource_object->getFields();
     foreach ($fields as $field) {
       /* @var $field \Drupal\Core\Field\FieldItemList */
-      $field_target =  $field->getSetting('target_type');
+      $field_target = $field->getSetting('target_type');
       if ($field_target == 'wotapi_property') {
         $entities = $field->referencedEntities();
         foreach ($entities as $referenced_entity) {
@@ -348,16 +348,16 @@ class EntityResource {
       throw $resource_object;
     }
     $collection_data = [];
-//    $fields = $resource_object->getFields();
-//    foreach ($fields as $field_name => $field) {
-//      if ($field->getFieldDefinition()->getType() == 'wotapi_action') {
-//        foreach ($field->getValue() as $key => $value) {
-//          $action_id = array_values($value)[0];
-//          $action = \Drupal::service('wotapi_action.handler')->getAction($action_id);
-//          $collection_data[] =  $action;
-//        }
-//      }
-//    }
+    // $fields = $resource_object->getFields();
+    //    foreach ($fields as $field_name => $field) {
+    //      if ($field->getFieldDefinition()->getType() == 'wotapi_action') {
+    //        foreach ($field->getValue() as $key => $value) {
+    //          $action_id = array_values($value)[0];
+    //          $action = \Drupal::service('wotapi_action.handler')->getAction($action_id);
+    //          $collection_data[] =  $action;
+    //        }
+    //      }
+    //    }
     $primary_data = new ResourceObjectData($collection_data);
     $response = $this->buildWrappedResponse($primary_data, $request);
     // $response does not contain the entity list cache tag. We add the
@@ -365,8 +365,6 @@ class EntityResource {
     $response->addCacheableDependency($entity);
     return $response;
   }
-
-
 
   /**
    * Gets the relationship of an entity.
@@ -383,13 +381,13 @@ class EntityResource {
     $content = Json::decode($request->getContent(FALSE));
     foreach ($content as $action_id => $value) {
       $action_handler = \Drupal::service('wotapi_action.handler');
-      $action_request =  new \Drupal\wotapi_action\Object\Request($action_id, FALSE, FALSE, NULL);
+      $action_request = new Request($action_id, FALSE, FALSE, NULL);
       $action_responses = $action_handler->batch([$action_request]);
     }
-//
-//    $response = $this->buildWrappedResponse($entity, $request);
-//    $response->addCacheableDependency($entity);
-//    return $response;
+    //
+    //    $response = $this->buildWrappedResponse($entity, $request);
+    //    $response->addCacheableDependency($entity);
+    //    return $response;
     return new ResourceResponse();
   }
 
@@ -439,7 +437,7 @@ class EntityResource {
    */
   protected function buildWrappedResponse($data, Request $request, $response_code = 200, array $headers = [], LinkCollection $links = NULL) {
     assert($data instanceof Data || $data instanceof FieldItemListInterface);
-    $links = ($links ? $links: new LinkCollection([]));
+    $links = ($links ? $links : new LinkCollection([]));
     $response = new ResourceResponse(new WotApiDocumentTopLevel($data, $links), $response_code, $headers);
     return $response;
   }
@@ -459,10 +457,10 @@ class EntityResource {
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected function respondWithCollection(ResourceObjectData $primary_data, Request $request, ResourceType $resource_type ) {
+  protected function respondWithCollection(ResourceObjectData $primary_data, Request $request, ResourceType $resource_type) {
 
     $collection_links = new LinkCollection([]);
-    $response = $this->buildWrappedResponse($primary_data, $request,200, [], $collection_links);
+    $response = $this->buildWrappedResponse($primary_data, $request, 200, [], $collection_links);
 
     // When a new change to any entity in the resource happens, we cannot ensure
     // the validity of this cached list. Add the list tag to deal with that.

@@ -9,7 +9,6 @@ use Drupal\Component\Assertion\Inspector;
  *
  * @internal WOT:API maintains no PHP API. The API is the HTTP API. This class
  *   may change at any time and could break any dependencies on it.
- *
  */
 final class LinkCollection implements \IteratorAggregate {
 

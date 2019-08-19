@@ -34,6 +34,10 @@ class WotapiActionItem extends FieldItemBase implements FieldItemInterface {
       ],
     ];
   }
+
+  /**
+   *
+   */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
 
     $properties['action'] = DataDefinition::create('string')
@@ -50,4 +54,5 @@ class WotapiActionItem extends FieldItemBase implements FieldItemInterface {
     $value = $this->get('action')->getValue();
     return $value === NULL || $value === '';
   }
+
 }

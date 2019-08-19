@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityDescriptionInterface;
 interface PropertyTypeInterface extends ConfigEntityInterface, EntityDescriptionInterface {
 
   // Add get/set methods for your configuration properties here.
+
   /**
    * {@inheritdoc}
    */
@@ -25,6 +26,7 @@ interface PropertyTypeInterface extends ConfigEntityInterface, EntityDescription
    * {@inheritdoc}
    */
   public function getDescription();
+
   /**
    * {@inheritdoc}
    */
@@ -34,6 +36,7 @@ interface PropertyTypeInterface extends ConfigEntityInterface, EntityDescription
    * {@inheritdoc}
    */
   public function getAtType();
+
   /**
    * {@inheritdoc}
    */
@@ -43,6 +46,7 @@ interface PropertyTypeInterface extends ConfigEntityInterface, EntityDescription
    * {@inheritdoc}
    */
   public function getUnit();
+
   /**
    * {@inheritdoc}
    */

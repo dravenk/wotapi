@@ -21,4 +21,3 @@ entity.wotapi_thing_type.collection:
   description: 'List Thing type (bundles)'
   parent: wotapi_thing.admin.structure
   weight: 99
-

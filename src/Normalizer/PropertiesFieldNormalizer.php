@@ -11,7 +11,6 @@ use Drupal\wotapi\WotApiResource\ResourceIdentifierInterface;
 use Drupal\wotapi\WotApiResource\ResourceObject;
 use Drupal\wotapi\Normalizer\Value\CacheableNormalization;
 use Drupal\wotapi\Routing\Routes;
-use Drupal\wotapi_property\Entity\Property;
 use Drupal\wotapi_property\Entity\PropertyType;
 
 /**
@@ -19,7 +18,6 @@ use Drupal\wotapi_property\Entity\PropertyType;
  *
  * @internal WOT:API maintains no PHP API since its API is the HTTP API. This
  *   class may change at any time and this will break any dependencies on it.
- *
  */
 class PropertiesFieldNormalizer extends FieldNormalizer {
 
@@ -59,18 +57,18 @@ class PropertiesFieldNormalizer extends FieldNormalizer {
 
     $normalization = $cardinality === 1 ? array_shift($data_normalization) : $data_normalization;
 
-    //      "@type": "BrightnessProperty",
+    // "@type": "BrightnessProperty",
     //      "type": "integer",
     //      "title": "Brightness",
     //      "description": "The level of light from 0-100",
     //      "minimum" : 0,
     //      "maximum" : 100,
     //      "readOnly": true,
-    if ($field->getItemDefinition()->getSetting('target_type') == 'wotapi_property'){
+    if ($field->getItemDefinition()->getSetting('target_type') == 'wotapi_property') {
       $normalization = [];
       foreach ($field->referencedEntities() as $referenced_entity) {
         $bundle = PropertyType::load($referenced_entity->bundle());
-        if ($bundle){
+        if ($bundle) {
           $at_type = $bundle->getAtType();
           $title = $bundle->getTitle();
           $unit = $bundle->getUnit();
@@ -90,10 +88,10 @@ class PropertiesFieldNormalizer extends FieldNormalizer {
         }
         foreach ($referenced_entity->getFields() as $referenced_entity_field) {
           $field_definition = $referenced_entity_field->getFieldDefinition();
-          if($referenced_entity->isReadOnly()) {
+          if ($referenced_entity->isReadOnly()) {
             $normalization['readOnly'] = TRUE;
           }
-          if ($field_definition instanceof FieldConfig){
+          if ($field_definition instanceof FieldConfig) {
             $field_definition_type = $field_definition->getType();
             $normalization['type'] = $field_definition_type;
             if ($field_definition_type == 'integer') {

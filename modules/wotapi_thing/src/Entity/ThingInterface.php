@@ -4,12 +4,13 @@ namespace Drupal\wotapi_thing\Entity;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
+
 /**
  * Provides an interface for defining Thing entities.
  *
  * @ingroup wotapi_thing
  */
-interface ThingInterface extends  ContentEntityInterface, EntityChangedInterface {
+interface ThingInterface extends ContentEntityInterface, EntityChangedInterface {
 
   // Add get/set methods for your configuration properties here.
 

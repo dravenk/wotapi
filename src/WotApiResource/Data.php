@@ -10,7 +10,6 @@ use Drupal\wotapi\Exception\EntityAccessDeniedHttpException;
  *
  * @internal WOT:API maintains no PHP API. The API is the HTTP API. This class
  *   may change at any time and could break any dependencies on it.
- *
  */
 abstract class Data implements \IteratorAggregate, \Countable {
 

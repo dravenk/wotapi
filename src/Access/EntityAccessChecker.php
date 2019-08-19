@@ -24,7 +24,6 @@ use Symfony\Component\Routing\RouterInterface;
  *
  * @internal WOT:API maintains no PHP API. The API is the HTTP API. This class
  *   may change at any time and could break any dependencies on it.
- *
  */
 class EntityAccessChecker {
 
@@ -106,7 +105,6 @@ class EntityAccessChecker {
   public function setNodeRevisionAccessCheck(NodeRevisionAccessCheck $node_revision_access_check) {
     $this->nodeRevisionAccessCheck = $node_revision_access_check;
   }
-
 
   /**
    * Sets the media revision access check service.

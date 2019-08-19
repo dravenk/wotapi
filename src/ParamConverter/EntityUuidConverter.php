@@ -19,7 +19,6 @@ use Symfony\Component\Routing\Route;
  *   class may change at any time and this will break any dependencies on it.
  *
  * @see \Drupal\Core\ParamConverter\EntityConverter
- *
  */
 class EntityUuidConverter extends EntityConverter {
 

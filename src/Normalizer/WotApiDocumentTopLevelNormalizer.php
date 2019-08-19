@@ -3,10 +3,8 @@
 namespace Drupal\wotapi\Normalizer;
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Console\Bootstrap\Drupal;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\wotapi\WotApiResource\ResourceObject;
 use Drupal\wotapi\WotApiResource\WotApiDocumentTopLevel;
 use Drupal\wotapi\Normalizer\Value\CacheableNormalization;
@@ -73,17 +71,17 @@ class WotApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorma
     foreach ($data as $value) {
       // Add data.
       // @todo: remove this if-else and just call $this->serializer->normalize($data...) in https://www.drupal.org/project/jsonapi/issues/3036285.
-//      if ($data instanceof EntityReferenceFieldItemListInterface) {
-//        $doc[$key] = $this->normalizeEntityReferenceFieldItemList($object, $format, $context);
-//      }
-//      else {
-//        $doc[$key] = $this->serializer->normalize($value, $format, $context);
-//      }
+      //      if ($data instanceof EntityReferenceFieldItemListInterface) {
+      //        $doc[$key] = $this->normalizeEntityReferenceFieldItemList($object, $format, $context);
+      //      }
+      //      else {
+      //        $doc[$key] = $this->serializer->normalize($value, $format, $context);
+      //      }
       $doc[] = $this->serializer->normalize($value, $format, $context);
     }
 
     // @todo there must be a better way. Maybe Merging is the best way to do this before normalize.
-    if(strrchr(\Drupal::routeMatch()->getRouteName(),'.properties') == '.properties') {
+    if (strrchr(\Drupal::routeMatch()->getRouteName(), '.properties') == '.properties') {
       $values = [];
       foreach ($doc as $value) {
         $values += $value->getNormalization();
@@ -91,7 +89,7 @@ class WotApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorma
       return CacheableNormalization::permanent($values)->withCacheableDependency((new CacheableMetadata())->addCacheContexts(['url.site']));
     }
 
-    if (count($doc) == 1){
+    if (count($doc) == 1) {
       return CacheableNormalization::permanent($doc[0]->getNormalization())->withCacheableDependency((new CacheableMetadata())->addCacheContexts(['url.site']));
     }
 

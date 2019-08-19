@@ -71,7 +71,7 @@ final class Link implements CacheableDependencyInterface {
   public function __construct(CacheableMetadata $cacheability, Url $url, array $link_relation_types, array $target_attributes = []) {
     // @todo: uncomment the extra assertion below when WOT:API begins to use its own extension relation types.
     assert(/* !empty($link_relation_types) && */Inspector::assertAllStrings($link_relation_types));
-//    assert(Inspector::assertAllStrings(array_keys($target_attributes)));
+    //    assert(Inspector::assertAllStrings(array_keys($target_attributes)));
     assert(Inspector::assertAll(function ($target_attribute_value) {
       return is_string($target_attribute_value)
         || is_array($target_attribute_value)

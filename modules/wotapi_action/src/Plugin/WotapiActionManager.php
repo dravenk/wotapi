@@ -37,4 +37,5 @@ class WotapiActionManager extends DefaultPluginManager {
   public function alterDefinitions(&$definitions) {
     parent::alterDefinitions($definitions);
   }
+
 }

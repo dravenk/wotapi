@@ -82,15 +82,15 @@ class PropertyTypeForm extends EntityForm {
 
     switch ($status) {
       case SAVED_NEW:
-//        $this->messenger()->addMessage('Created the %label Property type.', [
-//          '%label' => $wotapi_property_type->label(),
-//        ]);
+        // $this->messenger()->addMessage('Created the %label Property type.', [
+        //          '%label' => $wotapi_property_type->label(),
+        //        ]);
         break;
 
       default:
-//        $this->messenger()->addMessage('Saved the %label Property type.', [
-//          '%label' => $wotapi_property_type->label(),
-//        ]);
+        // $this->messenger()->addMessage('Saved the %label Property type.', [
+        //          '%label' => $wotapi_property_type->label(),
+        //        ]);
     }
     $form_state->setRedirectUrl($wotapi_property_type->toUrl('collection'));
   }

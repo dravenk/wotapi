@@ -6,23 +6,18 @@ use Drupal\Component\Annotation\AnnotationInterface;
 use Drupal\Component\Assertion\Inspector;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Http\Exception\CacheableNotFoundHttpException;
 use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\wotapi\Routing\Routes;
 use Drupal\wotapi\WotApiResource\ResourceObject;
 use Drupal\wotapi\Normalizer\Value\CacheableNormalization;
 use Drupal\wotapi\Normalizer\Value\CacheableOmission;
-use Drupal\wotapi_action\Normalizer\AnnotationNormalizer;
-use Drupal\wotapi_action\Plugin\Field\FieldType\WotapiActionItem;
-use phpDocumentor\Reflection\Types\Boolean;
 
 /**
  * Converts the WOT:API module ResourceObject into a WOT:API array structure.
  *
  * @internal WOT:API maintains no PHP API since its API is the HTTP API. This
  *   class may change at any time and this will break any dependencies on it.
- *
  */
 class ResourceObjectNormalizer extends NormalizerBase {
 
@@ -61,17 +56,17 @@ class ResourceObjectNormalizer extends NormalizerBase {
 
     // The property returns a single value: {"temperature": 21}
     // See https://iot.mozilla.org/wot/#property-resource
-    if ($resource_type->getEntityTypeId()=='wotapi_property'){
+    if ($resource_type->getEntityTypeId() == 'wotapi_property') {
       $properties = [];
       foreach ($fields as $field_name => $field) {
-        if ($field->getFieldDefinition() instanceof FieldConfig){
+        if ($field->getFieldDefinition() instanceof FieldConfig) {
           $source_field = $object->getSourceField();
-          if($source_field){
+          if ($source_field) {
             $properties[$source_field->getName()] = $this->serializeField($field, $context, $format);
           }
         }
       }
-      if (count($properties) == 1 ){
+      if (count($properties) == 1) {
         return CacheableNormalization::aggregate($properties)->withCacheableDependency($object);
       }
     }
@@ -85,18 +80,18 @@ class ResourceObjectNormalizer extends NormalizerBase {
         continue;
       }
 
-      if ($this->isActionField($field_name,$field)) {
-          foreach ($field->getValue() as $key => $value) {
-            $action_id = array_values($value)[0];
-            $action = \Drupal::service('wotapi_action.handler')->getAction($action_id);
-            $normalizer_actions += $this->normalizeAction($action, $format,$context) ;
-          }
-          unset($fields,$field_name);
-      } else {
+      if ($this->isActionField($field_name, $field)) {
+        foreach ($field->getValue() as $key => $value) {
+          $action_id = array_values($value)[0];
+          $action = \Drupal::service('wotapi_action.handler')->getAction($action_id);
+          $normalizer_actions += $this->normalizeAction($action, $format, $context);
+        }
+        unset($fields, $field_name);
+      }
+      else {
         $normalizer_values[$field_name] = $this->serializeField($field, $context, $format);
       }
     }
-
 
     $id = \Drupal::request()->getSchemeAndHttpHost() . Url::fromRoute(Routes::getRouteName($resource_type, 'individual'), ['entity' => $object->getId()])->toString();
     $normalization = [
@@ -110,26 +105,26 @@ class ResourceObjectNormalizer extends NormalizerBase {
     $normalization += $attributes;
 
     $properties_names = [];
-    foreach ($related_resource_types as $property_field_name => $related ) {
+    foreach ($related_resource_types as $property_field_name => $related) {
       foreach ($related as $K => $related_resource) {
-        $related_resource_name =  $related_resource->getEntityTypeId();
-        if ( $related_resource_name=='wotapi_property') {
-          array_push($properties_names,$property_field_name);
+        $related_resource_name = $related_resource->getEntityTypeId();
+        if ($related_resource_name == 'wotapi_property') {
+          array_push($properties_names, $property_field_name);
         }
       }
     }
     $properties_key = array_intersect_key($normalizer_values, array_flip($properties_names));
-    if(count($properties_key)>0) {
+    if (count($properties_key) > 0) {
       $normalization['properties'] = CacheableNormalization::aggregate($properties_key);
     }
 
-    if(!is_null($normalizer_actions)) {
+    if (!is_null($normalizer_actions)) {
       $normalization['actions'] = CacheableNormalization::permanent($normalizer_actions);
     }
 
     $links = [];
-    foreach (['properties','actions','events'] as $link_rel) {
-      $links[] = ['rel' => $link_rel,'href' => $id.'/'.$link_rel];
+    foreach (['properties', 'actions', 'events'] as $link_rel) {
+      $links[] = ['rel' => $link_rel, 'href' => $id . '/' . $link_rel];
     }
     $normalization['links'] = CacheableNormalization::permanent($links);
 
@@ -137,8 +132,10 @@ class ResourceObjectNormalizer extends NormalizerBase {
     return $obj;
   }
 
-
-  function isActionField($field_name,$field) {
+  /**
+   *
+   */
+  public function isActionField($field_name, $field) {
     if ($field->getFieldDefinition()->getType() == 'wotapi_action') {
       return TRUE;
     }
@@ -168,7 +165,7 @@ class ResourceObjectNormalizer extends NormalizerBase {
           $attributes[$key] = $this->serializer->normalize($child, $format, $context);
       }
     }
-    //    $normalized = [
+    // $normalized = [
     //      'type' => static::getAnnotationType($object),
     //      'id' => $object->getId(),
     //    ];
@@ -182,7 +179,7 @@ class ResourceObjectNormalizer extends NormalizerBase {
     unset($normalized['at_type']);
 
     $action_input = call_user_func([$object->getClass(), 'input']);
-    if (!is_null($action_input)){
+    if (!is_null($action_input)) {
       $normalized['input'] = $action_input;
     }
 

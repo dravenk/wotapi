@@ -11,7 +11,6 @@ namespace Drupal\wotapi\ResourceType;
  * @internal WOT:API maintains no PHP API since its API is the HTTP API. This
  *   class may change at any time and this will break any dependencies on it.
  *
- *
  * @see \Drupal\wotapi\ResourceType\ResourceTypeRepository
  */
 class ResourceType {
@@ -377,11 +376,13 @@ class ResourceType {
    */
   public function getPath() {
     $entity_type_id = $this->getEntityTypeId();
-    switch ($entity_type_id){
+    switch ($entity_type_id) {
       case "wotapi_thing":
-        return"/things";
+        return "/things";
+
       case "wotapi_property":
         return "/properties";
+
       default:
         return sprintf('/%s/%s', $entity_type_id, $this->getBundle());
     }

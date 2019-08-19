@@ -23,7 +23,6 @@ use Drupal\wotapi\Normalizer\Value\CacheableNormalization;
  *
  * @internal WOT:API maintains no PHP API since its API is the HTTP API. This
  *   class may change at any time and this will break any dependencies on it.
- *
  */
 class LinkCollectionNormalizer extends NormalizerBase {
 
@@ -71,7 +70,7 @@ class LinkCollectionNormalizer extends NormalizerBase {
       $is_multiple = count($links) > 1;
       foreach ($links as $link) {
         $link_key = $is_multiple ? sprintf('%s:%s', $key, $this->hashByHref($link)) : $key;
-//        $attributes = $link->getTargetAttributes();
+        // $attributes = $link->getTargetAttributes();
         $normalization = ['href' => $link->getHref()];
         $normalized[$link_key] = new CacheableNormalization($link, $normalization);
       }

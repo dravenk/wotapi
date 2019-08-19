@@ -72,7 +72,6 @@ class WotapiActionParameterDefinition implements ParameterDefinitionInterface {
     return isset($this->required) ? $this->required : FALSE;
   }
 
-
   /**
    * {@inheritdoc}
    */

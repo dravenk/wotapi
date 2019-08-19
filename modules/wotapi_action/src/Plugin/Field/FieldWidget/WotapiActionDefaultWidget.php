@@ -20,6 +20,9 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class WotapiActionDefaultWidget extends WidgetBase implements WidgetInterface {
 
+  /**
+   *
+   */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $options = [];
     if (!$element['#required']) {
@@ -33,11 +36,12 @@ class WotapiActionDefaultWidget extends WidgetBase implements WidgetInterface {
     }
 
     $element['action'] = $element + [
-        '#type' => 'select',
-        '#default_value' => isset($items[$delta]->action) ? $items[$delta]->action : NULL,
-        '#options' => $options,
-      ];
+      '#type' => 'select',
+      '#default_value' => isset($items[$delta]->action) ? $items[$delta]->action : NULL,
+      '#options' => $options,
+    ];
 
     return $element;
   }
+
 }
