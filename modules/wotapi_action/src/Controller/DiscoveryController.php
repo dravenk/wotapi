@@ -6,7 +6,6 @@ use Drupal\Core\Cache\CacheableJsonResponse;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Http\Exception\CacheableNotFoundHttpException;
 use Drupal\wotapi_action\HandlerInterface;
 use Drupal\wotapi_action\WotapiActionInterface;
 use Drupal\wotapi_action\Normalizer\AnnotationNormalizer;
@@ -58,26 +57,6 @@ class DiscoveryController extends ControllerBase {
     $cacheability = new CacheableMetadata();
     $methods =  array_values($this->getAvailableActions($cacheability));
     $serialized = $this->serializer->serialize($methods, 'json', [
-      AnnotationNormalizer::DEPTH_KEY => 0,
-      NormalizerBase::SERIALIZATION_CONTEXT_CACHEABILITY => $cacheability,
-    ]);
-    return CacheableJsonResponse::fromJsonString($serialized)->addCacheableDependency($cacheability);
-  }
-
-  /**
-   * Information about the method.
-   *
-   * @return \Drupal\Core\Cache\CacheableJsonResponse
-   *   The response object.
-   */
-  public function action($action_id) {
-    $cacheability = new CacheableMetadata();
-    $cacheability->addCacheContexts(['url.path']);
-    $methods = $this->getAvailableActions($cacheability);
-    if (!isset($methods[$action_id])) {
-      throw new CacheableNotFoundHttpException($cacheability, "The $action_id action is not available.");
-    }
-    $serialized = $this->serializer->serialize($methods[$action_id], 'json', [
       AnnotationNormalizer::DEPTH_KEY => 0,
       NormalizerBase::SERIALIZATION_CONTEXT_CACHEABILITY => $cacheability,
     ]);

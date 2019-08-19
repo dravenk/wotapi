@@ -4,11 +4,8 @@ namespace Drupal\wotapi\Access;
 
 use Drupal\content_moderation\Access\LatestRevisionCheck;
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Access\AccessResultReasonInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
-use Drupal\Core\Entity\RevisionableInterface;
-use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\wotapi\Exception\EntityAccessDeniedHttpException;
 use Drupal\wotapi\WotApiResource\LabelOnlyResourceObject;
@@ -16,7 +13,6 @@ use Drupal\wotapi\WotApiResource\ResourceObject;
 use Drupal\wotapi\WotApiSpec;
 use Drupal\wotapi\ResourceType\ResourceTypeRepositoryInterface;
 use Drupal\node\Access\NodeRevisionAccessCheck;
-use Drupal\node\NodeInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -150,7 +146,7 @@ class EntityAccessChecker {
     if (!$access->isAllowed()) {
       // If this is the default revision or the entity is not revisionable, then
       // check access to the entity label. Revision support is all or nothing.
-      if (!$entity->getEntityType()->isRevisionable() || $entity->isDefaultRevision()) {
+      if (!$entity->getEntityType()->isRevisionable()) {
         $label_access = $entity->access('view label', NULL, TRUE);
         $entity->addCacheableDependency($label_access);
         if ($label_access->isAllowed()) {
@@ -181,70 +177,6 @@ class EntityAccessChecker {
     $access = $entity->access($operation, $account, TRUE);
     if ($entity->getEntityType()->isRevisionable()) {
       $access = AccessResult::neutral()->addCacheContexts(['url.query_args:' . WotApiSpec::VERSION_QUERY_PARAMETER])->orIf($access);
-      if (!$entity->isDefaultRevision()) {
-        assert($operation === 'view', 'WOT:API does not yet support mutable operations on revisions.');
-        $revision_access = $this->checkRevisionViewAccess($entity, $account);
-        $access = $access->andIf($revision_access);
-        // The revision access reason should trump the primary access reason.
-        if (!$access->isAllowed()) {
-          $reason = $access instanceof AccessResultReasonInterface ? $access->getReason() : '';
-          $access->setReason(trim('The user does not have access to the requested version. ' . $reason));
-        }
-      }
-    }
-    return $access;
-  }
-
-  /**
-   * Checks access to the given revision entity.
-   *
-   * This should only be called for non-default revisions.
-   *
-   * There is no standardized API for revision access checking in Drupal core
-   * and this method shims that missing API.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The revised entity for which to check access.
-   * @param \Drupal\Core\Session\AccountInterface $account
-   *   (optional) The account with which access should be checked. Defaults to
-   *   the current user.
-   *
-   * @return \Drupal\Core\Access\AccessResultInterface|\Drupal\Core\Access\AccessResultReasonInterface
-   *   The access check result.
-   *
-   * @todo: remove when a generic revision access API exists in Drupal core, and
-   * also remove the injected "node" and "media" services.
-   * @see https://www.drupal.org/project/jsonapi/issues/2992833#comment-12818386
-   */
-  protected function checkRevisionViewAccess(EntityInterface $entity, AccountInterface $account) {
-    assert($entity instanceof RevisionableInterface);
-    assert(!$entity->isDefaultRevision(), 'It is not necessary to check revision access when the entity is the default revision.');
-    $entity_type = $entity->getEntityType();
-    switch ($entity_type->id()) {
-      case 'node':
-        assert($entity instanceof NodeInterface);
-        $access = AccessResult::allowedIf($this->nodeRevisionAccessCheck->checkAccess($entity, $account, 'view'))->cachePerPermissions()->addCacheableDependency($entity);
-        break;
-
-      default:
-        $reason = 'Only node and media revisions are supported by WOT:API.';
-        $reason .= ' For context, see https://www.drupal.org/project/wotapi/issues/2992833#comment-12818258.';
-        $reason .= ' To contribute, see https://www.drupal.org/project/drupal/issues/2350939 and https://www.drupal.org/project/drupal/issues/2809177.';
-        $access = AccessResult::neutral($reason);
-    }
-    // Apply content_moderation's additional access logic.
-    // @see \Drupal\content_moderation\Access\LatestRevisionCheck::access()
-    if ($entity_type->getLinkTemplate('latest-version') && $entity->isLatestRevision() && isset($this->latestRevisionCheck)) {
-      // The latest revision access checker only expects to be invoked by the
-      // routing system, which makes it necessary to fake a route match.
-      $routes = $this->router->getRouteCollection();
-      $resource_type = $this->resourceTypeRepository->get($entity->getEntityTypeId(), $entity->bundle());
-      $route_name = sprintf('wotapi.%s.individual', $resource_type->getTypeName());
-      $route = $routes->get($route_name);
-      $route->setOption('_content_moderation_entity_type', 'entity');
-      $route_match = new RouteMatch($route_name, $route, ['entity' => $entity], ['entity' => $entity->uuid()]);
-      $moderation_access_result = $this->latestRevisionCheck->access($route, $route_match, $account);
-      $access = $access->andIf($moderation_access_result);
     }
     return $access;
   }

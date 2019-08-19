@@ -130,17 +130,4 @@ class Request {
     return $this->id === FALSE;
   }
 
-  /**
-   * Asserts this is a valid request.
-   *
-   * @param string $acton
-   *   The RPC service action id.
-   * @param mixed|false $id
-   *   A string, number or NULL ID. FALSE for notification requests.
-   */
-  protected function assertValidRequest($acton, $id) {
-    assert(strpos($acton, 'rpc.') !== 0, 'Method names that begin with the word rpc followed by a period character (U+002E or ASCII 46) are reserved for rpc-internal methods and extensions and MUST NOT be used for anything else.');
-    assert($id === FALSE || is_string($id) || is_numeric($id) || is_null($id), 'An identifier established by the Client that MUST contain a String, Number, or NULL value if included.');
-  }
-
 }

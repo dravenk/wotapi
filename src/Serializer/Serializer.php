@@ -57,7 +57,7 @@ final class Serializer extends SymfonySerializer {
     if ($this->selfSupportsNormalization($data, $format, $context)) {
       return parent::normalize($data, $format, $context);
     }
-    if ($this->fallbackNormalizer->supportsNormalization($data, $format, $context)) {
+    if ($this->fallbackNormalizer->supportsNormalization($data, $format)) {
       return $this->fallbackNormalizer->normalize($data, $format, $context);
     }
     return parent::normalize($data, $format, $context);
@@ -77,7 +77,7 @@ final class Serializer extends SymfonySerializer {
    * {@inheritdoc}
    */
   public function supportsNormalization($data, $format = NULL, array $context = []) {
-    return $this->selfSupportsNormalization($data, $format, $context) || $this->fallbackNormalizer->supportsNormalization($data, $format, $context);
+    return $this->selfSupportsNormalization($data, $format, $context) || $this->fallbackNormalizer->supportsNormalization($data, $format);
   }
 
   /**
@@ -101,7 +101,7 @@ final class Serializer extends SymfonySerializer {
    * {@inheritdoc}
    */
   public function supportsDenormalization($data, $type, $format = NULL, array $context = []) {
-    return $this->selfSupportsDenormalization($data, $type, $format, $context) || $this->fallbackNormalizer->supportsDenormalization($data, $type, $format, $context);
+    return $this->selfSupportsDenormalization($data, $type, $format, $context) || $this->fallbackNormalizer->supportsDenormalization($data, $type, $format);
   }
 
   /**

@@ -52,7 +52,6 @@ class Response implements CacheableDependencyInterface {
    *   provided if a result was provided.
    */
   public function __construct($id, $result = NULL, Error $error = NULL) {
-    $this->assertValidResponse( $id, $result, $error);
     $this->id = $id;
     if (!is_null($result)) {
       $this->result = $result;
@@ -111,14 +110,6 @@ class Response implements CacheableDependencyInterface {
    */
   public function isErrorResponse() {
     return isset($this->error);
-  }
-
-  /**
-   * Asserts that the response is valid.
-   */
-  protected function assertValidResponse( $id, $result, $error) {
-    assert(!is_null($result) xor !is_null($error), 'Either the result member or error member MUST be included, but both members MUST NOT be included.');
-    assert(is_string($id) || is_numeric($id) || is_null($id), 'An identifier established by the Client that MUST contain a String, Number, or NULL value if included.');
   }
 
   /**

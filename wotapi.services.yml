@@ -123,13 +123,6 @@ services:
     tags:
       - { name: access_check, applies_to: _wotapi_relationship_field_access, needs_incoming_request: TRUE }
 
-  # Route filters.
-  method_filter.wotapi:
-    public: false
-    class: Drupal\wotapi\Routing\ReadOnlyModeMethodFilter
-    decorates: method_filter
-    arguments: ['@method_filter.wotapi.inner', '@config.factory']
-
   # Controller.
   wotapi.entity_resource:
     class: Drupal\wotapi\Controller\EntityResource

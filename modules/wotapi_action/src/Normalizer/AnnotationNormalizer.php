@@ -4,7 +4,6 @@ namespace Drupal\wotapi_action\Normalizer;
 
 use Drupal\Component\Annotation\AnnotationInterface;
 use Drupal\Component\Assertion\Inspector;
-use Drupal\Core\Url;
 use Drupal\wotapi_action\Annotation\WotapiAction;
 use Drupal\serialization\Normalizer\NormalizerBase;
 

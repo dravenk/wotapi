@@ -2,32 +2,24 @@
 
 namespace Drupal\wotapi\Controller;
 
-use Drupal\action_example\Plugin\wotapi_action\Action\FadeAction;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Serialization\Json;
-use Drupal\Core\Cache\CacheableJsonResponse;
 use Drupal\Core\Cache\CacheableMetadata;
-use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
-use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Entity\RevisionableStorageInterface;
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Url;
 use Drupal\wotapi\Access\EntityAccessChecker;
 use Drupal\wotapi\Context\FieldResolver;
 use Drupal\wotapi\Entity\EntityValidationTrait;
 use Drupal\wotapi\Exception\EntityAccessDeniedHttpException;
 use Drupal\wotapi\Normalizer\PropertiesFieldNormalizer;
-use Drupal\wotapi\Normalizer\ResourceObjectNormalizer;
-use Drupal\wotapi\Normalizer\Value\CacheableNormalization;
 use Drupal\wotapi\WotApiResource\LinkCollection;
 use Drupal\wotapi\WotApiResource\ResourceIdentifier;
 use Drupal\wotapi\WotApiResource\Link;
@@ -38,17 +30,8 @@ use Drupal\wotapi\WotApiResource\WotApiDocumentTopLevel;
 use Drupal\wotapi\ResourceResponse;
 use Drupal\wotapi\ResourceType\ResourceType;
 use Drupal\wotapi\ResourceType\ResourceTypeRepositoryInterface;
-use Drupal\wotapi_action\Controller\HttpController;
-use Drupal\wotapi_action\Exception\WotapiActionException;
-use Drupal\wotapi_action\HandlerInterface;
-use Drupal\wotapi_action\Object\Error;
-use Drupal\wotapi_action\Object\ParameterBag;
-use Drupal\wotapi_property\Entity\Property;
-use phpDocumentor\Reflection\Types\Null_;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Drupal\Core\Http\Exception\CacheableBadRequestHttpException;
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
@@ -416,10 +399,10 @@ class EntityResource {
    * @param \Drupal\wotapi\WotApiResource\ResourceIdentifier $resource_identifier
    *   A resource identifier.
    *
-   * @return \Drupal\Core\Entity\EntityInterface
+   * @return \Drupal\Core\Entity\EntityInterface|null
    *   The entity targeted by a resource identifier.
    *
-   * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
+   * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException | \Drupal\Core\Entity\EntityStorageException
    *   Thrown if the given resource identifier targets a resource type or
    *   resource which does not exist.
    */
@@ -473,6 +456,8 @@ class EntityResource {
    *
    * @return \Drupal\wotapi\ResourceResponse
    *   The response.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function respondWithCollection(ResourceObjectData $primary_data, Request $request, ResourceType $resource_type ) {
 
@@ -527,6 +512,9 @@ class EntityResource {
    *
    * @return bool
    *   Whether the entity already has been created.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function entityExists(EntityInterface $entity) {
     $entity_storage = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
@@ -535,46 +523,4 @@ class EntityResource {
     ]));
   }
 
-  /**
-   * Get the full URL for a given request object.
-   *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
-   * @param array|null $query
-   *   The query parameters to use. Leave it empty to get the query from the
-   *   request object.
-   *
-   * @return \Drupal\Core\Url
-   *   The full URL.
-   */
-  protected static function getRequestLink(Request $request, $query = NULL) {
-    if ($query === NULL) {
-      return Url::fromUri($request->getUri());
-    }
-
-    $uri_without_query_string = $request->getSchemeAndHttpHost() . $request->getBaseUrl() . $request->getPathInfo();
-    return Url::fromUri($uri_without_query_string)->setOption('query', $query);
-  }
-
-  /**
-   * Get the pager links for a given request object.
-   *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
-   * @param array $link_context
-   *   An associative array with extra data to build the links.
-   *
-   * @return \Drupal\wotapi\WotApiResource\LinkCollection
-   *   An LinkCollection, with:
-   *   - a 'next' key if it is not the last page;
-   *   - 'prev' and 'first' keys if it's not the first page.
-   */
-  protected static function getPagerLinks(Request $request,  array $link_context = []) {
-    $pager_links = new LinkCollection([]);
-    if (!empty($link_context['total_count']) && !$total = (int) $link_context['total_count']) {
-      return $pager_links;
-    }
-
-    return $pager_links;
-  }
 }
