@@ -365,16 +365,16 @@ class EntityResource {
       throw $resource_object;
     }
     $collection_data = [];
-    $fields = $resource_object->getFields();
-    foreach ($fields as $field_name => $field) {
-      if ($field->getFieldDefinition()->getType() == 'wotapi_action') {
-        foreach ($field->getValue() as $key => $value) {
-          $action_id = array_values($value)[0];
-          $action = \Drupal::service('wotapi_action.handler')->getAction($action_id);
-          $collection_data[] =  $action;
-        }
-      }
-    }
+//    $fields = $resource_object->getFields();
+//    foreach ($fields as $field_name => $field) {
+//      if ($field->getFieldDefinition()->getType() == 'wotapi_action') {
+//        foreach ($field->getValue() as $key => $value) {
+//          $action_id = array_values($value)[0];
+//          $action = \Drupal::service('wotapi_action.handler')->getAction($action_id);
+//          $collection_data[] =  $action;
+//        }
+//      }
+//    }
     $primary_data = new ResourceObjectData($collection_data);
     $response = $this->buildWrappedResponse($primary_data, $request);
     // $response does not contain the entity list cache tag. We add the
@@ -401,12 +401,13 @@ class EntityResource {
     foreach ($content as $action_id => $value) {
       $action_handler = \Drupal::service('wotapi_action.handler');
       $action_request =  new \Drupal\wotapi_action\Object\Request($action_id, FALSE, FALSE, NULL);
-      $rpc_responses = $action_handler->batch([$action_request]);
+      $action_responses = $action_handler->batch([$action_request]);
     }
-
-    $response = $this->buildWrappedResponse($entity, $request);
-    $response->addCacheableDependency($entity);
-    return $response;
+//
+//    $response = $this->buildWrappedResponse($entity, $request);
+//    $response->addCacheableDependency($entity);
+//    return $response;
+    return new ResourceResponse();
   }
 
   /**
