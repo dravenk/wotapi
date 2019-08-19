@@ -6,3 +6,6 @@ package: WOTAPI
 dependencies:
   - drupal:serialization
   - inline_entity_form:inline_entity_form
+  - wotapi_action:wotapi_action
+  - wotapi_property:wotapi_property
+  - wotapi_thing:wotapi_thing
