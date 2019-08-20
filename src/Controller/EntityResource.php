@@ -2,7 +2,7 @@
 
 namespace Drupal\wotapi\Controller;
 
-use Drupal\wotapi_action\Object\Request;
+use Drupal\wotapi_action\Object\Request as ActionRequest;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\CacheableMetadata;
@@ -381,7 +381,7 @@ class EntityResource {
     $content = Json::decode($request->getContent(FALSE));
     foreach ($content as $action_id => $value) {
       $action_handler = \Drupal::service('wotapi_action.handler');
-      $action_request = new Request($action_id, FALSE, FALSE, NULL);
+      $action_request = new ActionRequest($action_id, FALSE, FALSE, NULL);
       $action_responses = $action_handler->batch([$action_request]);
     }
     //
