@@ -153,3 +153,22 @@ services:
   serializer.normalizer.htt_exception.wotapi:
     alias: serializer.normalizer.http_exception.wotapi
     deprecated: The "%service_id%" service is deprecated. You should use the 'serializer.normalizer.http_exception.wotapi' service instead.
+
+  # Thing action services.
+  plugin.manager.wotapi_action:
+    parent: default_plugin_manager
+    class: Drupal\wotapi\Plugin\WotapiActionManager
+    public: false
+
+  wotapi_action.handler:
+    class: Drupal\wotapi\Handler
+    arguments: ['@plugin.manager.wotapi_action']
+
+  wotapi_action.schema_validator:
+    class: JsonSchema\Validator
+
+  serializer.normalizer.wotapi_action_annotation:
+    class: Drupal\wotapi\Normalizer\AnnotationNormalizer
+    public: false
+    tags:
+      - { name: normalizer }

@@ -53,3 +53,23 @@ entity.wotapi_thing.collection:
   requirements:
     # Checks for permission directly.
     _permission: 'access thing overview'
+
+wotapi_action.handler:
+  path: '/wotapi_action'
+  defaults:
+    _controller: '\Drupal\wotapi\Controller\HttpController::resolve'
+  methods: [POST, GET]
+  requirements:
+    _permission: 'use wotapi_action services'
+  options:
+    _auth: ['basic_auth', 'oauth2']
+
+wotapi_action.action_collection:
+  path: '/wotapi/actions'
+  defaults:
+    _controller: '\Drupal\wotapi\Controller\DiscoveryController::actions'
+  methods: [GET]
+  requirements:
+    _permission: 'use wotapi_action services'
+  options:
+    _auth: ['cookie', 'basic_auth', 'oauth2']

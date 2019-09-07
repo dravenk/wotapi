@@ -39,3 +39,6 @@ access thing overview:
 
 view thing entities:
   title: 'View Thing entities'
+
+use wotapi_action services:
+  title: 'Use WotapiAction services.'

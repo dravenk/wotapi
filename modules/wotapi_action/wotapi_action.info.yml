@@ -1,7 +1,0 @@
-name: WOT:API-Action
-type: module
-description: An action object describes a function which can be carried out on a device.
-core: 8.x
-package: WOTAPI
-dependencies:
-  - wotapi_thing

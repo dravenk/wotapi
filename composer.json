@@ -4,6 +4,7 @@
     "type": "drupal-module",
     "license": "GPL-2.0+",
     "require-dev": {
-        "drupal/inline_entity_form": "1.x-dev"
+        "drupal/inline_entity_form": "1.x-dev",
+        "e0ipso/shaper": "^1.2.1"
     }
 }
