@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\wotapi_thing\Form;
+namespace Drupal\wotapi\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;

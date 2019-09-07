@@ -18,3 +18,24 @@ access property overview:
 
 view property entities:
   title: 'View Property entities'
+
+## thing
+add thing entities:
+  title: 'Create new Thing entities'
+
+administer thing entities:
+  title: 'Administer Thing entities'
+  description: 'Allow to access the administration form to configure Thing entities.'
+  restrict access: true
+
+delete thing entities:
+  title: 'Delete Thing entities'
+
+edit thing entities:
+  title: 'Edit Thing entities'
+
+access thing overview:
+  title: 'Access the Thing overview page'
+
+view thing entities:
+  title: 'View Thing entities'

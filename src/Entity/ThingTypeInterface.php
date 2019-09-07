@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\wotapi_thing\Entity;
+namespace Drupal\wotapi\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 

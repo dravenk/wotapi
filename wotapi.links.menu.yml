@@ -21,3 +21,27 @@ entity.wotapi_property_type.collection:
   description: 'List Property type (bundles)'
   parent: wotapi_property.admin.structure
   weight: 99
+
+# Thing menu entry
+wotapi_thing.admin.structure:
+  title: 'Things'
+  description: 'Manage thing entities, types and configurations'
+  route_name:  wotapi_thing.admin
+  parent: system.admin_structure
+
+# Thing menu items definition
+entity.wotapi_thing.collection:
+  title: 'Thing list'
+  route_name: entity.wotapi_thing.collection
+  description: 'List Thing entities'
+  parent: wotapi_thing.admin.structure
+  weight: 100
+
+
+# Thing type menu items definition
+entity.wotapi_thing_type.collection:
+  title: 'Thing type'
+  route_name: entity.wotapi_thing_type.collection
+  description: 'List Thing type (bundles)'
+  parent: wotapi_thing.admin.structure
+  weight: 99

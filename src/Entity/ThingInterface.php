@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\wotapi_thing\Entity;
+namespace Drupal\wotapi\Entity;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
@@ -8,7 +8,7 @@ use Drupal\Core\Entity\EntityChangedInterface;
 /**
  * Provides an interface for defining Thing entities.
  *
- * @ingroup wotapi_thing
+ * @ingroup wotapi
  */
 interface ThingInterface extends ContentEntityInterface, EntityChangedInterface {
 
@@ -28,7 +28,7 @@ interface ThingInterface extends ContentEntityInterface, EntityChangedInterface 
    * @param int $timestamp
    *   The Thing creation timestamp.
    *
-   * @return \Drupal\wotapi_thing\Entity\ThingInterface
+   * @return \Drupal\wotapi\Entity\ThingInterface
    *   The called Thing entity.
    */
   public function setCreatedTime($timestamp);

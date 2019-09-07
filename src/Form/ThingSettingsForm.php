@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\wotapi_thing\Form;
+namespace Drupal\wotapi\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -8,9 +8,9 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Class ThingSettingsForm.
  *
- * @package Drupal\wotapi_thing\Form
+ * @package Drupal\wotapi\Form
  *
- * @ingroup wotapi_thing
+ * @ingroup wotapi
  */
 class ThingSettingsForm extends FormBase {
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\wotapi_thing\Form;
+namespace Drupal\wotapi\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
@@ -8,7 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Class ThingTypeForm.
  *
- * @package Drupal\wotapi_thing\Form
+ * @package Drupal\wotapi\Form
  */
 class ThingTypeForm extends EntityForm {
 

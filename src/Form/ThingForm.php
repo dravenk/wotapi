@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\wotapi_thing\Form;
+namespace Drupal\wotapi\Form;
 
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
@@ -8,7 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Form controller for Thing edit forms.
  *
- * @ingroup wotapi_thing
+ * @ingroup wotapi
  */
 class ThingForm extends ContentEntityForm {
 
@@ -16,7 +16,7 @@ class ThingForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    /* @var $entity \Drupal\wotapi_thing\Entity\Thing */
+    /* @var $entity \Drupal\wotapi\Entity\Thing */
     $form = parent::buildForm($form, $form_state);
 
     return $form;

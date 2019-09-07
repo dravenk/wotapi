@@ -1,4 +1,4 @@
-wotapi_thing.wotapi_thing_type.*:
+wotapi.wotapi_thing_type.*:
   type: config_entity
   label: 'Thing type config'
   mapping:

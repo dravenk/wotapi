@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\wotapi_thing;
+namespace Drupal\wotapi;
 
 use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityInterface;
@@ -10,7 +10,7 @@ use Drupal\Core\Access\AccessResult;
 /**
  * Access controller for the Thing entity.
  *
- * @see \Drupal\wotapi_thing\Entity\Thing.
+ * @see \Drupal\wotapi\Entity\Thing.
  */
 class ThingAccessControlHandler extends EntityAccessControlHandler {
 
@@ -18,7 +18,7 @@ class ThingAccessControlHandler extends EntityAccessControlHandler {
    * {@inheritdoc}
    */
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
-    /** @var \Drupal\wotapi_thing\Entity\ThingInterface $entity */
+    /** @var \Drupal\wotapi\Entity\ThingInterface $entity */
     switch ($operation) {
       case 'view':
         return AccessResult::allowedIfHasPermission($account, 'view thing entities');

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\wotapi_thing;
+namespace Drupal\wotapi;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
@@ -8,7 +8,7 @@ use Drupal\Core\Entity\EntityListBuilder;
 /**
  * Defines a class to build a listing of Thing entities.
  *
- * @ingroup wotapi_thing
+ * @ingroup wotapi
  */
 class ThingListBuilder extends EntityListBuilder {
 
@@ -27,7 +27,7 @@ class ThingListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    /* @var $entity \Drupal\wotapi_thing\Entity\Thing */
+    /* @var $entity \Drupal\wotapi\Entity\Thing */
     $row['id'] = $entity->id();
     $row['title'] = $entity->getTitle();
     $row['description'] = $entity->getDescription();

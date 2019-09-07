@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\wotapi_thing\Entity;
+namespace Drupal\wotapi\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 
@@ -12,11 +12,11 @@ use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
  *   label = @Translation("Thing type"),
  *   handlers = {
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
- *     "list_builder" = "Drupal\wotapi_thing\ThingTypeListBuilder",
+ *     "list_builder" = "Drupal\wotapi\ThingTypeListBuilder",
  *     "form" = {
- *       "add" = "Drupal\wotapi_thing\Form\ThingTypeForm",
- *       "edit" = "Drupal\wotapi_thing\Form\ThingTypeForm",
- *       "delete" = "Drupal\wotapi_thing\Form\ThingTypeDeleteForm"
+ *       "add" = "Drupal\wotapi\Form\ThingTypeForm",
+ *       "edit" = "Drupal\wotapi\Form\ThingTypeForm",
+ *       "delete" = "Drupal\wotapi\Form\ThingTypeDeleteForm"
  *     },
  *     "route_provider" = {
  *       "default" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\wotapi_thing\Entity;
+namespace Drupal\wotapi\Entity;
 
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -11,7 +11,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 /**
  * Defines the Thing entity.
  *
- * @ingroup wotapi_thing
+ * @ingroup wotapi
  *
  * @ContentEntityType(
  *   id = "wotapi_thing",
@@ -19,17 +19,17 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *   bundle_label = @Translation("Thing type"),
  *   handlers = {
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
- *     "list_builder" = "Drupal\wotapi_thing\ThingListBuilder",
- *     "views_data" = "Drupal\wotapi_thing\Entity\ThingViewsData",
+ *     "list_builder" = "Drupal\wotapi\ThingListBuilder",
+ *     "views_data" = "Drupal\wotapi\Entity\ThingViewsData",
  *
  *     "form" = {
- *       "default" = "Drupal\wotapi_thing\Form\ThingForm",
- *       "add" = "Drupal\wotapi_thing\Form\ThingForm",
- *       "edit" = "Drupal\wotapi_thing\Form\ThingForm",
- *       "delete" = "Drupal\wotapi_thing\Form\ThingDeleteForm",
+ *       "default" = "Drupal\wotapi\Form\ThingForm",
+ *       "add" = "Drupal\wotapi\Form\ThingForm",
+ *       "edit" = "Drupal\wotapi\Form\ThingForm",
+ *       "delete" = "Drupal\wotapi\Form\ThingDeleteForm",
  *     },
- *     "inline_form" = "Drupal\wotapi_thing\Form\ThingInlineForm",
- *     "access" = "Drupal\wotapi_thing\ThingAccessControlHandler",
+ *     "inline_form" = "Drupal\wotapi\Form\ThingInlineForm",
+ *     "access" = "Drupal\wotapi\ThingAccessControlHandler",
  *     "route_provider" = {
  *       "default" = "Drupal\Core\Entity\Routing\AdminHtmlRouteProvider",
  *     },
