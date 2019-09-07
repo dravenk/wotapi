@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.wotapi_property.activeenergy.field_integer
+    - wotapi.wotapi_property_type.activeenergy
+id: wotapi_property.activeenergy.default
+targetEntityType: wotapi_property
+bundle: activeenergy
+mode: default
+content:
+  field_integer:
+    weight: 1
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+hidden: {  }

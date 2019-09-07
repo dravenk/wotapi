@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.wotapi_property.field_decimal
+    - wotapi.wotapi_property_type.activepower
+id: wotapi_property.activepower.field_decimal
+field_name: field_decimal
+entity_type: wotapi_property
+bundle: activepower
+label: ActivePowerData
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: decimal

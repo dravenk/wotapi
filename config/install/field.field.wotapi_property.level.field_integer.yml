@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.wotapi_property.field_integer
+    - wotapi.wotapi_property_type.level
+id: wotapi_property.level.field_integer
+field_name: field_integer
+entity_type: wotapi_property
+bundle: level
+label: LevelProperty
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

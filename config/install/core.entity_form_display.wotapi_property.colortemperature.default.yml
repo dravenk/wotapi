@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.wotapi_property.colortemperature.field_integer
+    - wotapi.wotapi_property_type.colortemperature
+id: wotapi_property.colortemperature.default
+targetEntityType: wotapi_property
+bundle: colortemperature
+mode: default
+content:
+  field_integer:
+    weight: 0
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+hidden: {  }

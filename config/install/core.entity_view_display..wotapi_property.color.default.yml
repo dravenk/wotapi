@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.wotapi_property.color.field_string
+    - wotapi.wotapi_property_type.color
+id: wotapi_property.color.default
+targetEntityType: wotapi_property
+bundle: color
+mode: default
+content:
+  field_string:
+    weight: 0
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden: {  }

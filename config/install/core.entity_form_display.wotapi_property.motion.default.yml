@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.wotapi_property.motion.field_boolean
+    - wotapi.wotapi_property_type.motion
+id: wotapi_property.motion.default
+targetEntityType: wotapi_property
+bundle: motion
+mode: default
+content:
+  field_boolean:
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+    type: options_buttons
+    region: content
+hidden: {  }

@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.wotapi_property.field_string
+    - wotapi.wotapi_property_type.color
+id: wotapi_property.color.field_string
+field_name: field_string
+entity_type: wotapi_property
+bundle: color
+label: ColorProperty
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

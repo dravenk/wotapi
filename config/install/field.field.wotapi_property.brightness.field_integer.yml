@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.wotapi_property.field_integer
+    - wotapi.wotapi_property_type.brightness
+id: wotapi_property.brightness.field_integer
+field_name: field_integer
+entity_type: wotapi_property
+bundle: brightness
+label: BrightnessProperty
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 0
+  max: 100
+  prefix: ''
+  suffix: ''
+field_type: integer

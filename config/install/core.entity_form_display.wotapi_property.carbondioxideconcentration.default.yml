@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.wotapi_property.carbondioxideconcentration.field_integer
+    - wotapi.wotapi_property_type.carbondioxideconcentration
+id: wotapi_property.carbondioxideconcentration.default
+targetEntityType: wotapi_property
+bundle: carbondioxideconcentration
+mode: default
+content:
+  field_integer:
+    weight: 0
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+hidden: {  }

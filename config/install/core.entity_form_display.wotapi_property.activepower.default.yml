@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.wotapi_property.activepower.field_decimal
+    - wotapi.wotapi_property_type.activepower
+id: wotapi_property.activepower.default
+targetEntityType: wotapi_property
+bundle: activepower
+mode: default
+content:
+  field_decimal:
+    weight: 1
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+hidden: {  }

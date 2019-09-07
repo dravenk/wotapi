@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.wotapi_property.field_integer
+    - wotapi.wotapi_property_type.instantaneouspower
+id: wotapi_property.instantaneouspower.field_integer
+field_name: field_integer
+entity_type: wotapi_property
+bundle: instantaneouspower
+label: InstantaneousPowerProperty
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer
