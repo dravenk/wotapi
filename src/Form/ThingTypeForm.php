@@ -32,7 +32,7 @@ class ThingTypeForm extends EntityForm {
       '#type' => 'machine_name',
       '#default_value' => $wotapi_thing_type->id(),
       '#machine_name' => [
-        'exists' => '\Drupal\wotapi_thing\Entity\ThingType::load',
+        'exists' => '\Drupal\wotapi\Entity\ThingType::load',
       ],
       '#disabled' => !$wotapi_thing_type->isNew(),
     ];

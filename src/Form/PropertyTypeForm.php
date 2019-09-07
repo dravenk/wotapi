@@ -32,7 +32,7 @@ class PropertyTypeForm extends EntityForm {
       '#type' => 'machine_name',
       '#default_value' => $wotapi_property_type->id(),
       '#machine_name' => [
-        'exists' => '\Drupal\wotapi_property\Entity\PropertyType::load',
+        'exists' => '\Drupal\wotapi\Entity\PropertyType::load',
       ],
       '#disabled' => !$wotapi_property_type->isNew(),
     ];
