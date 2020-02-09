@@ -11,7 +11,7 @@ use Drupal\wotapi\WotApiResource\ResourceIdentifierInterface;
 use Drupal\wotapi\WotApiResource\ResourceObject;
 use Drupal\wotapi\Normalizer\Value\CacheableNormalization;
 use Drupal\wotapi\Routing\Routes;
-use Drupal\wotapi_property\Entity\PropertyType;
+use Drupal\wotapi\Entity\PropertyType;
 
 /**
  * Normalizer class specific for entity reference field objects.
